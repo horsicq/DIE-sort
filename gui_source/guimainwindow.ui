@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GuiMainWindow</class>
+ <widget class="QMainWindow" name="GuiMainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>763</width>
+    <height>466</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>GuiMainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout_4">
+    <item>
+     <widget class="QGroupBox" name="groupBoxDirectory">
+      <property name="title">
+       <string>Directory</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <property name="leftMargin">
+        <number>1</number>
+       </property>
+       <property name="topMargin">
+        <number>1</number>
+       </property>
+       <property name="rightMargin">
+        <number>1</number>
+       </property>
+       <property name="bottomMargin">
+        <number>1</number>
+       </property>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QLineEdit" name="lineEditDirectoryName"/>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QCheckBox" name="checkBoxScanSubdirectories">
+             <property name="text">
+              <string>Subdirectories</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBoxRecursive">
+             <property name="text">
+              <string>Recursive</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBoxDeepScan">
+             <property name="text">
+              <string>Deep Scan</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>158</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QPushButton" name="pushButtonOpenDirectory">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButtonScan">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Scan</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <item>
+       <widget class="QGroupBox" name="groupBoxFileTypes">
+        <property name="title">
+         <string>File types</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>1</number>
+         </property>
+         <property name="leftMargin">
+          <number>1</number>
+         </property>
+         <property name="topMargin">
+          <number>1</number>
+         </property>
+         <property name="rightMargin">
+          <number>1</number>
+         </property>
+         <property name="bottomMargin">
+          <number>1</number>
+         </property>
+         <item>
+          <widget class="QCheckBox" name="checkBoxAllFileTypes">
+           <property name="text">
+            <string>All</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBoxBinary">
+           <property name="text">
+            <string>Binary</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBoxMSDOS">
+           <property name="text">
+            <string>MSDOS</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBoxPE32">
+           <property name="text">
+            <string>PE32</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBoxPE64">
+           <property name="text">
+            <string>PE64</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBoxELF32">
+           <property name="text">
+            <string>ELF32</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBoxELF64">
+           <property name="text">
+            <string>ELF64</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBoxMACHO32">
+           <property name="text">
+            <string>MACHO32</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBoxMACHO64">
+           <property name="text">
+            <string>MACHO64</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBoxTypes">
+        <property name="title">
+         <string>Types</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="3" column="0">
+          <widget class="QCheckBox" name="checkBoxCertificate">
+           <property name="text">
+            <string>Certificate</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QCheckBox" name="checkBoxConverter">
+           <property name="text">
+            <string>Converter</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QCheckBox" name="checkBoxCompiler">
+           <property name="text">
+            <string>Compiler</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0">
+          <widget class="QCheckBox" name="checkBoxDatabase">
+           <property name="text">
+            <string>Database</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="0">
+          <widget class="QCheckBox" name="checkBoxDebugData">
+           <property name="text">
+            <string>Debug data</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QCheckBox" name="checkBoxArchive">
+           <property name="text">
+            <string>Archive</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="checkBoxAllTypes">
+           <property name="text">
+            <string>All</string>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="0">
+          <widget class="QCheckBox" name="checkBoxDongleProtection">
+           <property name="text">
+            <string>Dongle protection</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QCheckBox" name="checkBoxDOSExtender">
+           <property name="text">
+            <string>DOS extender</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QCheckBox" name="checkBoxFormat">
+           <property name="text">
+            <string>Format</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QCheckBox" name="checkBoxGeneric">
+           <property name="text">
+            <string>Generic</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QCheckBox" name="checkBoxImage">
+           <property name="text">
+            <string>Image</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QCheckBox" name="checkBoxInstaller">
+           <property name="text">
+            <string>Installer</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="1">
+          <widget class="QCheckBox" name="checkBoxInstallerData">
+           <property name="text">
+            <string>Installer data</string>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="1">
+          <widget class="QCheckBox" name="checkBoxLibrary">
+           <property name="text">
+            <string>Library</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QCheckBox" name="checkBoxLinker">
+           <property name="text">
+            <string>Linker</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QCheckBox" name="checkBoxNETObfuscator">
+           <property name="text">
+            <string>.NET obfuscator</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="2">
+          <widget class="QCheckBox" name="checkBoxPacker">
+           <property name="text">
+            <string>Packer</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="3">
+          <widget class="QCheckBox" name="checkBoxStub">
+           <property name="text">
+            <string>Stub</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="3">
+          <widget class="QCheckBox" name="checkBoxTool">
+           <property name="text">
+            <string>Tool</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="3">
+          <widget class="QCheckBox" name="checkBoxSourceCode">
+           <property name="text">
+            <string>Source code</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="3">
+          <widget class="QCheckBox" name="checkBoxSignTool">
+           <property name="text">
+            <string>Sign tool</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <widget class="QCheckBox" name="checkBoxSFXData">
+           <property name="text">
+            <string>SFX data</string>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="2">
+          <widget class="QCheckBox" name="checkBoxSFX">
+           <property name="text">
+            <string>SFX</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="2">
+          <widget class="QCheckBox" name="checkBoxProtectorData">
+           <property name="text">
+            <string>Protector data</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="2">
+          <widget class="QCheckBox" name="checkBoxProtector">
+           <property name="text">
+            <string>Protector</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="2">
+          <widget class="QCheckBox" name="checkBoxPETool">
+           <property name="text">
+            <string>PE tool</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="groupBoxCopyTo">
+      <property name="title">
+       <string>Copy to</string>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <property name="leftMargin">
+        <number>1</number>
+       </property>
+       <property name="topMargin">
+        <number>1</number>
+       </property>
+       <property name="rightMargin">
+        <number>1</number>
+       </property>
+       <property name="bottomMargin">
+        <number>1</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLineEdit" name="lineEditOut"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButtonOut">
+           <property name="text">
+            <string>...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBoxCopyCount">
+         <property name="title">
+          <string>Copy Count</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_13">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QSpinBox" name="spinBoxCopyCount">
+            <property name="maximum">
+             <number>1000000</number>
+            </property>
+            <property name="value">
+             <number>50</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <widget class="QPushButton" name="pushButtonInfo">
+        <property name="text">
+         <string>Info</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonExit">
+        <property name="text">
+         <string>Exit</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
