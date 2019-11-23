@@ -4,3 +4,6 @@
 [submodule "die_script"]
 	path = die_script
 	url = https://github.com/horsicq/die_script.git
+[submodule "Detect-It-Easy"]
+	path = Detect-It-Easy
+	url = https://github.com/horsicq/Detect-It-Easy.git
