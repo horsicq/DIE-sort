@@ -31,16 +31,20 @@
 class ScanProgress : public QObject
 {
     Q_OBJECT
+
 public:
     struct SCAN_OPTIONS
     {
-        bool bRecursive;
         bool bDeepScan;
         bool bSubdirectories;
-        QSet<XBinary::FT> stFileTypes;
+        bool bShowVersion;
+        bool bShowOptions;
+        QSet<DiE_ScriptEngine::FT> stFileTypes;
+        bool bAllTypes;
         QSet<QString> stTypes;
         qint32 nCopyCount;
         QString sResultDirectory;
+        QString sSignatures;
         QSqlDatabase dbSQLLite;
         bool bContinue;
     };

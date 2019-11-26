@@ -211,7 +211,7 @@ void ScanProgress::process()
 
     DiE_Script dieScript;
 
-    // TODO load database
+    dieScript.loadDatabase(_pOptions->sSignatures);
 
     for(int i=0; (i<currentStats.nTotal)&&(!bIsStop); i++)
     {
@@ -225,9 +225,9 @@ void ScanProgress::process()
 
         DiE_Script::SCAN_OPTIONS options={};
 
-//        options.bDeepScan=_pOptions->bDeepScan;
-//        options.bRecursive=_pOptions->bRecursive;
-//        options.bSubdirectories=_pOptions->bSubdirectories;
+        options.bDeepScan=_pOptions->bDeepScan;
+        options.bShowVersion=_pOptions->bShowVersion;
+        options.bShowOptions=_pOptions->bShowOptions;
 
         setFileStat(currentStats.sStatus,"",QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 
@@ -239,20 +239,20 @@ void ScanProgress::process()
         {
             DiE_Script::SCAN_STRUCT ss=scanResult.listRecords.at(i);
 
-//            if(_pOptions->stFileTypes.contains(ss.id.filetype)&&_pOptions->stTypes.contains(ss.type))
+            if(_pOptions->stFileTypes.contains(ss.fileType)&&((_pOptions->stTypes.contains(ss.sType))||(_pOptions->bAllTypes)))
             {
-//                QString sResult=SpecAbstract::recordNameIdToString(ss.name);
-                QString sResult;
+                QString sResult=ss.sString;
+//                QString sResult=ss.sName;
 
-                if(ss.sVersion!="")
-                {
-                    sResult+=QString("(%1)").arg(ss.sVersion);
-                }
+//                if(ss.sVersion!="")
+//                {
+//                    sResult+=QString("(%1)").arg(ss.sVersion);
+//                }
 
-                if(ss.sInfo!="")
-                {
-                    sResult+=QString("[%1]").arg(ss.sInfo);
-                }
+//                if(ss.sOptions!="")
+//                {
+//                    sResult+=QString("[%1]").arg(ss.sOptions);
+//                }
 
                 sResult=XBinary::convertFileNameSymbols(sResult);
 
@@ -275,9 +275,9 @@ void ScanProgress::process()
                     QString sFileName=_pOptions->sResultDirectory;
 
                     XBinary::createDirectory(sFileName);
-//                    sFileName+=QDir::separator()+SpecAbstract::recordFiletypeIdToString(ss.id.filetype);
+                    sFileName+=QDir::separator()+DiE_ScriptEngine::fileTypeIdToString(ss.fileType);
                     XBinary::createDirectory(sFileName);
-//                    sFileName+=QDir::separator()+SpecAbstract::recordTypeIdToString(ss.type);
+                    sFileName+=QDir::separator()+ss.sType;
                     XBinary::createDirectory(sFileName);
                     sFileName+=QDir::separator()+sResult;
                     XBinary::createDirectory(sFileName);

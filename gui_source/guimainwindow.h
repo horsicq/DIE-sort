@@ -50,6 +50,7 @@ private slots:
 
     void on_checkBoxAllFileTypes_toggled(bool checked);
     void on_checkBoxBinary_toggled(bool checked);
+    void on_checkBoxText_toggled(bool checked);
     void on_checkBoxMSDOS_toggled(bool checked);
     void on_checkBoxPE32_toggled(bool checked);
     void on_checkBoxPE64_toggled(bool checked);
@@ -84,8 +85,8 @@ private slots:
     void on_checkBoxStub_toggled(bool checked);
     void on_checkBoxTool_toggled(bool checked);
     void on_pushButtonInfo_clicked();
-
     void on_checkBoxPETool_toggled(bool checked);
+    void on_pushButtonSignatures_clicked();
 
 private:
     Ui::GuiMainWindow *ui;

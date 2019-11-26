@@ -39,6 +39,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     ui->checkBoxAllTypes->setChecked(true);
 
     ui->lineEditDirectoryName->setText(settings.value("DirectoryName",QDir::currentPath()).toString());
+    ui->lineEditSignatures->setText(settings.value("Signatures","$app/db").toString());
     ui->lineEditOut->setText(settings.value("ResultName",QDir::currentPath()).toString());
 
     options.bContinue=settings.value("Continue",false).toBool();
@@ -58,6 +59,7 @@ GuiMainWindow::~GuiMainWindow()
 
     settings.setValue("DirectoryName",ui->lineEditDirectoryName->text());
     settings.setValue("ResultName",ui->lineEditOut->text());
+    settings.setValue("Signatures",ui->lineEditSignatures->text());
 
     delete ui;
 }
@@ -103,16 +105,19 @@ void GuiMainWindow::_scan()
 
     options.stFileTypes.clear();
 
-//    if(ui->checkBoxBinary->isChecked())             options.stFileTypes.insert(SpecAbstract::RECORD_FILETYPE_BINARY);
-//    if(ui->checkBoxMSDOS->isChecked())              options.stFileTypes.insert(SpecAbstract::RECORD_FILETYPE_MSDOS);
-//    if(ui->checkBoxPE32->isChecked())               options.stFileTypes.insert(SpecAbstract::RECORD_FILETYPE_PE32);
-//    if(ui->checkBoxPE64->isChecked())               options.stFileTypes.insert(SpecAbstract::RECORD_FILETYPE_PE64);
-//    if(ui->checkBoxELF32->isChecked())              options.stFileTypes.insert(SpecAbstract::RECORD_FILETYPE_ELF32);
-//    if(ui->checkBoxELF64->isChecked())              options.stFileTypes.insert(SpecAbstract::RECORD_FILETYPE_ELF64);
-//    if(ui->checkBoxMACHO32->isChecked())            options.stFileTypes.insert(SpecAbstract::RECORD_FILETYPE_MACH32);
-//    if(ui->checkBoxMACHO64->isChecked())            options.stFileTypes.insert(SpecAbstract::RECORD_FILETYPE_MACH64);
+    if(ui->checkBoxBinary->isChecked())             options.stFileTypes.insert(DiE_ScriptEngine::FT_BINARY);
+    if(ui->checkBoxText->isChecked())               options.stFileTypes.insert(DiE_ScriptEngine::FT_TEXT);
+    if(ui->checkBoxMSDOS->isChecked())              options.stFileTypes.insert(DiE_ScriptEngine::FT_MSDOS);
+    if(ui->checkBoxPE32->isChecked())               options.stFileTypes.insert(DiE_ScriptEngine::FT_PE32);
+    if(ui->checkBoxPE64->isChecked())               options.stFileTypes.insert(DiE_ScriptEngine::FT_PE64);
+    if(ui->checkBoxELF32->isChecked())              options.stFileTypes.insert(DiE_ScriptEngine::FT_ELF32);
+    if(ui->checkBoxELF64->isChecked())              options.stFileTypes.insert(DiE_ScriptEngine::FT_ELF64);
+    if(ui->checkBoxMACHO32->isChecked())            options.stFileTypes.insert(DiE_ScriptEngine::FT_MACH32);
+    if(ui->checkBoxMACHO64->isChecked())            options.stFileTypes.insert(DiE_ScriptEngine::FT_MACH64);
 
     options.stTypes.clear();
+
+    options.bAllTypes=ui->checkBoxAllTypes->isChecked();
 
 //    if(ui->checkBoxArchive->isChecked())            options.stTypes.insert(SpecAbstract::RECORD_TYPE_ARCHIVE);
 //    if(ui->checkBoxCertificate->isChecked())        options.stTypes.insert(SpecAbstract::RECORD_TYPE_CERTIFICATE);
@@ -141,9 +146,11 @@ void GuiMainWindow::_scan()
 //    if(ui->checkBoxStub->isChecked())               options.stTypes.insert(SpecAbstract::RECORD_TYPE_STUB);
 //    if(ui->checkBoxTool->isChecked())               options.stTypes.insert(SpecAbstract::RECORD_TYPE_TOOL);
 
-    options.bRecursive=ui->checkBoxRecursive->isChecked();
     options.bDeepScan=ui->checkBoxDeepScan->isChecked();
+    options.bShowVersion=ui->checkBoxShowVersion->isChecked();
+    options.bShowOptions=ui->checkBoxShowOptions->isChecked();
     options.bSubdirectories=ui->checkBoxScanSubdirectories->isChecked();
+    options.sSignatures=ui->lineEditSignatures->text();
 
     DialogScanProgress ds(this);
 
@@ -161,6 +168,7 @@ void GuiMainWindow::_scan()
 void GuiMainWindow::on_checkBoxAllFileTypes_toggled(bool checked)
 {
     ui->checkBoxBinary->setChecked(checked);
+    ui->checkBoxText->setChecked(checked);
     ui->checkBoxMSDOS->setChecked(checked);
     ui->checkBoxPE32->setChecked(checked);
     ui->checkBoxPE64->setChecked(checked);
@@ -171,6 +179,16 @@ void GuiMainWindow::on_checkBoxAllFileTypes_toggled(bool checked)
 }
 
 void GuiMainWindow::on_checkBoxBinary_toggled(bool checked)
+{
+    QSignalBlocker blocker(ui->checkBoxAllFileTypes);
+
+    if(!checked)
+    {
+        ui->checkBoxAllFileTypes->setChecked(false);
+    }
+}
+
+void GuiMainWindow::on_checkBoxText_toggled(bool checked)
 {
     QSignalBlocker blocker(ui->checkBoxAllFileTypes);
 
@@ -543,5 +561,18 @@ void GuiMainWindow::on_checkBoxPETool_toggled(bool checked)
     if(!checked)
     {
         ui->checkBoxAllTypes->setChecked(false);
+    }
+}
+
+
+void GuiMainWindow::on_pushButtonSignatures_clicked()
+{
+    QString sInitDirectory=ui->lineEditSignatures->text();
+
+    QString sDirectoryName=QFileDialog::getExistingDirectory(this,tr("Open signatures directory..."),sInitDirectory,QFileDialog::ShowDirsOnly);
+
+    if(!sDirectoryName.isEmpty())
+    {
+        ui->lineEditSignatures->setText(sDirectoryName);
     }
 }
