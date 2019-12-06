@@ -105,15 +105,15 @@ void GuiMainWindow::_scan()
 
     options.stFileTypes.clear();
 
-    if(ui->checkBoxBinary->isChecked())             options.stFileTypes.insert(DiE_ScriptEngine::FT_BINARY);
-    if(ui->checkBoxText->isChecked())               options.stFileTypes.insert(DiE_ScriptEngine::FT_TEXT);
-    if(ui->checkBoxMSDOS->isChecked())              options.stFileTypes.insert(DiE_ScriptEngine::FT_MSDOS);
-    if(ui->checkBoxPE32->isChecked())               options.stFileTypes.insert(DiE_ScriptEngine::FT_PE32);
-    if(ui->checkBoxPE64->isChecked())               options.stFileTypes.insert(DiE_ScriptEngine::FT_PE64);
-    if(ui->checkBoxELF32->isChecked())              options.stFileTypes.insert(DiE_ScriptEngine::FT_ELF32);
-    if(ui->checkBoxELF64->isChecked())              options.stFileTypes.insert(DiE_ScriptEngine::FT_ELF64);
-    if(ui->checkBoxMACHO32->isChecked())            options.stFileTypes.insert(DiE_ScriptEngine::FT_MACH32);
-    if(ui->checkBoxMACHO64->isChecked())            options.stFileTypes.insert(DiE_ScriptEngine::FT_MACH64);
+    if(ui->checkBoxBinary->isChecked())             options.stFileTypes.insert(XBinary::FT_BINARY);
+    if(ui->checkBoxText->isChecked())               options.stFileTypes.insert(XBinary::FT_TEXT);
+    if(ui->checkBoxMSDOS->isChecked())              options.stFileTypes.insert(XBinary::FT_MSDOS);
+    if(ui->checkBoxPE32->isChecked())               options.stFileTypes.insert(XBinary::FT_PE32);
+    if(ui->checkBoxPE64->isChecked())               options.stFileTypes.insert(XBinary::FT_PE64);
+    if(ui->checkBoxELF32->isChecked())              options.stFileTypes.insert(XBinary::FT_ELF32);
+    if(ui->checkBoxELF64->isChecked())              options.stFileTypes.insert(XBinary::FT_ELF64);
+    if(ui->checkBoxMACHO32->isChecked())            options.stFileTypes.insert(XBinary::FT_MACH32);
+    if(ui->checkBoxMACHO64->isChecked())            options.stFileTypes.insert(XBinary::FT_MACH64);
 
     options.stTypes.clear();
 

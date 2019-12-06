@@ -39,7 +39,7 @@ public:
         bool bSubdirectories;
         bool bShowVersion;
         bool bShowOptions;
-        QSet<DiE_ScriptEngine::FT> stFileTypes;
+        QSet<XBinary::FT> stFileTypes;
         bool bAllTypes;
         QSet<QString> stTypes;
         qint32 nCopyCount;

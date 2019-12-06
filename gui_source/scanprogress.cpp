@@ -275,7 +275,7 @@ void ScanProgress::process()
                     QString sFileName=_pOptions->sResultDirectory;
 
                     XBinary::createDirectory(sFileName);
-                    sFileName+=QDir::separator()+DiE_ScriptEngine::fileTypeIdToString(ss.fileType);
+                    sFileName+=QDir::separator()+XBinary::fileTypeIdToString(ss.fileType);
                     XBinary::createDirectory(sFileName);
                     sFileName+=QDir::separator()+ss.sType;
                     XBinary::createDirectory(sFileName);
