@@ -27,6 +27,7 @@ ScanProgress::ScanProgress(QObject *parent) : QObject(parent)
     _pOptions=nullptr;
     currentStats=STATS();
     pElapsedTimer=nullptr;
+    pSemaphore=nullptr;
 }
 
 void ScanProgress::setData(QString sDirectoryName, ScanProgress::SCAN_OPTIONS *pOptions)
@@ -37,6 +38,8 @@ void ScanProgress::setData(QString sDirectoryName, ScanProgress::SCAN_OPTIONS *p
 
 quint32 ScanProgress::getFileCount(quint32 nCRC)
 {
+    QMutexLocker locker(&mutexDB);
+
     quint32 nResult=0;
 
     QSqlQuery query(_pOptions->dbSQLLite);
@@ -59,6 +62,8 @@ quint32 ScanProgress::getFileCount(quint32 nCRC)
 
 void ScanProgress::setFileCount(quint32 nCRC, quint32 nCount)
 {
+    QMutexLocker locker(&mutexDB);
+
     QSqlQuery query(_pOptions->dbSQLLite);
 
     query.exec(QString("INSERT OR REPLACE INTO records(FILECRC,FILECOUNT) VALUES('%1','%2')").arg(nCRC).arg(nCount));
@@ -72,6 +77,8 @@ void ScanProgress::setFileCount(quint32 nCRC, quint32 nCount)
 
 void ScanProgress::setFileStat(QString sFileName, QString sTimeCount, QString sDate)
 {
+    QMutexLocker locker(&mutexDB);
+
     QSqlQuery query(_pOptions->dbSQLLite);
 
     query.exec(QString("INSERT OR REPLACE INTO files(FILENAME,TIMECOUNT,DATETIME) VALUES('%1','%2','%3')")
@@ -100,6 +107,8 @@ void ScanProgress::createTables()
 
 QString ScanProgress::getCurrentFileName()
 {
+    QMutexLocker locker(&mutexDB);
+
     QString sResult;
 
     QSqlQuery query(_pOptions->dbSQLLite);
@@ -120,8 +129,45 @@ QString ScanProgress::getCurrentFileName()
     return sResult;
 }
 
+QString ScanProgress::getCurrentFileNameAndLock()
+{
+    QMutexLocker locker(&mutexDB);
+
+    QString sResult;
+
+    QSqlQuery query(_pOptions->dbSQLLite);
+
+    query.exec(QString("SELECT FILENAME FROM files where TIMECOUNT='' AND DATETIME='' LIMIT 1"));
+
+    if(query.next())
+    {
+        sResult=query.value("FILENAME").toString().trimmed();
+    }
+
+    if(query.lastError().text().trimmed()!="")
+    {
+        qDebug(query.lastQuery().toLatin1().data());
+        qDebug(query.lastError().text().toLatin1().data());
+    }
+
+    query.exec(QString("INSERT OR REPLACE INTO files(FILENAME,TIMECOUNT,DATETIME) VALUES('%1','%2','%3')")
+               .arg(sResult)
+               .arg(0)
+               .arg(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")));
+
+    if(query.lastError().text().trimmed()!="")
+    {
+        qDebug(query.lastQuery().toLatin1().data());
+        qDebug(query.lastError().text().toLatin1().data());
+    }
+
+    return sResult;
+}
+
 qint64 ScanProgress::getNumberOfFile()
 {
+    QMutexLocker locker(&mutexDB);
+
     qint64 nResult=0;
 
     QSqlQuery query(_pOptions->dbSQLLite);
@@ -182,45 +228,28 @@ void ScanProgress::endTransaction()
     query.exec("COMMIT");
 }
 
-void ScanProgress::process()
+void ScanProgress::_processFile(QString sFileName)
 {
-    pElapsedTimer=new QElapsedTimer;
-    pElapsedTimer->start();
+    pSemaphore->acquire();
 
-    if(!(_pOptions->bContinue))
+    mutexStats.lock();
+    currentStats.nCurrent++;
+    currentStats.sStatus=sFileName;
+    mutexStats.unlock();
+
+    if(currentStats.sStatus!="")
     {
-        createTables();
-    }
-    currentStats.nTotal=0;
-    currentStats.nCurrent=0;
+        QString sTempFile;
 
-    bIsStop=false;
-
-    currentStats.sStatus=tr("Directory scan");
-
-    if(!(_pOptions->bContinue))
-    {
-        startTransaction();
-
-        findFiles(_sDirectoryName);
-
-        endTransaction();
-    }
-
-    currentStats.nTotal=getNumberOfFile();
-
-    DiE_Script dieScript;
-
-    dieScript.loadDatabase(_pOptions->sSignatures);
-
-    for(int i=0; (i<currentStats.nTotal)&&(!bIsStop); i++)
-    {
-        currentStats.nCurrent=i+1;
-        currentStats.sStatus=getCurrentFileName();
-
-        if(currentStats.sStatus=="")
+        if(_pOptions->bDebug)
         {
-            break;
+            sTempFile=_pOptions->sResultDirectory;
+
+            XBinary::createDirectory(sFileName);
+
+            sTempFile+=QDir::separator()+XBinary::getBaseFileName(currentStats.sStatus);
+
+            XBinary::copyFile(currentStats.sStatus,sTempFile);
         }
 
         DiE_Script::SCAN_OPTIONS options={};
@@ -242,17 +271,6 @@ void ScanProgress::process()
             if(_pOptions->stFileTypes.contains(ss.fileType)&&((_pOptions->stTypes.contains(ss.sType))||(_pOptions->bAllTypes)))
             {
                 QString sResult=ss.sString;
-//                QString sResult=ss.sName;
-
-//                if(ss.sVersion!="")
-//                {
-//                    sResult+=QString("(%1)").arg(ss.sVersion);
-//                }
-
-//                if(ss.sOptions!="")
-//                {
-//                    sResult+=QString("[%1]").arg(ss.sOptions);
-//                }
 
                 sResult=XBinary::convertFileNameSymbols(sResult);
 
@@ -304,7 +322,87 @@ void ScanProgress::process()
         }
 
         setFileStat(scanResult.sFileName,QString::number(scanResult.nScanTime),QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+
+
+        if(_pOptions->bDebug)
+        {
+            XBinary::removeFile(sTempFile);
+        }
     }
+
+    pSemaphore->release();
+}
+
+void ScanProgress::process()
+{
+    pSemaphore=new QSemaphore(N_MAXNUMBEROFTHREADS);
+    pElapsedTimer=new QElapsedTimer;
+    pElapsedTimer->start();
+
+    if(!(_pOptions->bContinue))
+    {
+        createTables();
+    }
+    currentStats.nTotal=0;
+    currentStats.nCurrent=0;
+
+    bIsStop=false;
+
+    currentStats.sStatus=tr("Directory scan");
+
+    if(!(_pOptions->bContinue))
+    {
+        startTransaction();
+
+        findFiles(_sDirectoryName);
+
+        endTransaction();
+    }
+
+    currentStats.nTotal=getNumberOfFile();
+
+    dieScript.loadDatabase(_pOptions->sSignatures);
+
+    while(!bIsStop)
+    {
+        QString sFileName=getCurrentFileNameAndLock();
+
+        if(currentStats.sStatus=="")
+        {
+            break;
+        }
+
+        QFuture<void> future=QtConcurrent::run(this,&ScanProgress::_processFile,sFileName);
+
+        QThread::msleep(100);
+
+        while(true)
+        {
+            int nAvailable=pSemaphore->available();
+            currentStats.nNumberOfThreads=N_MAXNUMBEROFTHREADS-nAvailable;
+            if(nAvailable)
+            {
+                break;
+            }
+
+            QThread::msleep(500);
+        }
+    }
+
+    while(true)
+    {
+        int nAvailable=pSemaphore->available();
+        currentStats.nNumberOfThreads=N_MAXNUMBEROFTHREADS-nAvailable;
+
+        if(nAvailable==N_MAXNUMBEROFTHREADS)
+        {
+            break;
+        }
+
+        QThread::msleep(1000);
+    }
+
+    delete pSemaphore;
 
     emit completed(pElapsedTimer->elapsed());
     delete pElapsedTimer;

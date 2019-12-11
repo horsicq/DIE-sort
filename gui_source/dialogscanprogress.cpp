@@ -73,7 +73,6 @@ void DialogScanProgress::on_pushButtonCancel_clicked()
     if(bIsRun)
     {
         pScan->stop();
-        pTimer->stop();
         bIsRun=false;
     }
 }
@@ -81,6 +80,7 @@ void DialogScanProgress::on_pushButtonCancel_clicked()
 void DialogScanProgress::onCompleted(qint64 nElapsed)
 {
     bIsRun=false;
+    pTimer->stop();
     this->close();
 }
 
@@ -100,6 +100,7 @@ void DialogScanProgress::timerSlot()
 
     ui->labelTotal->setText(QString::number(stats.nTotal));
     ui->labelCurrent->setText(QString::number(stats.nCurrent));
+    ui->labelThreads->setText(QString::number(stats.nNumberOfThreads));
     ui->labelCurrentStatus->setText(stats.sStatus);
 
     if(stats.nTotal)

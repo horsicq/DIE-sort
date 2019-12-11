@@ -27,6 +27,11 @@
 #include <QSqlError>
 #include <QSqlQuery>
 #include "die_script.h"
+#include <QMutex>
+#include <QMutexLocker>
+#include <QFutureWatcher>
+#include <QtConcurrent>
+#include <QSemaphore>
 
 class ScanProgress : public QObject
 {
@@ -47,6 +52,7 @@ public:
         QString sSignatures;
         QSqlDatabase dbSQLLite;
         bool bContinue;
+        bool bDebug;
     };
     struct STATS
     {
@@ -54,6 +60,7 @@ public:
         qint32 nCurrent;
         qint64 nElapsed;
         QString sStatus;
+        qint32 nNumberOfThreads;
     };
 
     explicit ScanProgress(QObject *parent=nullptr);
@@ -65,11 +72,14 @@ public:
     void setFileStat(QString sFileName, QString sTimeCount, QString sDate);
     void createTables();
     QString getCurrentFileName();
+    QString getCurrentFileNameAndLock();
     qint64 getNumberOfFile();
     void findFiles(QString sDirectoryName);
 
     void startTransaction();
     void endTransaction();
+
+    void _processFile(QString sFileName);
 
 signals:
     void completed(qint64 nElapsedTime);
@@ -81,11 +91,16 @@ public slots:
     static bool createDatabase(QSqlDatabase *pDb,QString sDatabaseName);
 
 private:
+    const int N_MAXNUMBEROFTHREADS=8;
     QString _sDirectoryName;
     SCAN_OPTIONS *_pOptions;
     bool bIsStop;
     STATS currentStats;
     QElapsedTimer *pElapsedTimer;
+    QMutex mutexDB;
+    QMutex mutexStats;
+    QSemaphore *pSemaphore;
+    DiE_Script dieScript;
 };
 
 #endif // SCANPROGRESS_H

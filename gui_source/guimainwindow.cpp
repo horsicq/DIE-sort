@@ -50,6 +50,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
         QMessageBox::critical(this,tr("Error"),tr("Cannot open SQLITE database"));
         exit(1);
     }
+
+    options.bDebug=true;
 }
 
 GuiMainWindow::~GuiMainWindow()
