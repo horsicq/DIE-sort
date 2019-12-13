@@ -374,7 +374,7 @@ void ScanProgress::process()
 
         QFuture<void> future=QtConcurrent::run(this,&ScanProgress::_processFile,sFileName);
 
-        QThread::msleep(100);
+        QThread::msleep(50);
 
         while(true)
         {

@@ -109,6 +109,7 @@ void GuiMainWindow::_scan()
 
     if(ui->checkBoxBinary->isChecked())             options.stFileTypes.insert(XBinary::FT_BINARY);
     if(ui->checkBoxText->isChecked())               options.stFileTypes.insert(XBinary::FT_TEXT);
+    if(ui->checkBoxCOM->isChecked())                options.stFileTypes.insert(XBinary::FT_COM);
     if(ui->checkBoxMSDOS->isChecked())              options.stFileTypes.insert(XBinary::FT_MSDOS);
     if(ui->checkBoxPE32->isChecked())               options.stFileTypes.insert(XBinary::FT_PE32);
     if(ui->checkBoxPE64->isChecked())               options.stFileTypes.insert(XBinary::FT_PE64);
@@ -171,6 +172,7 @@ void GuiMainWindow::on_checkBoxAllFileTypes_toggled(bool checked)
 {
     ui->checkBoxBinary->setChecked(checked);
     ui->checkBoxText->setChecked(checked);
+    ui->checkBoxCOM->setChecked(checked);
     ui->checkBoxMSDOS->setChecked(checked);
     ui->checkBoxPE32->setChecked(checked);
     ui->checkBoxPE64->setChecked(checked);
@@ -576,5 +578,15 @@ void GuiMainWindow::on_pushButtonSignatures_clicked()
     if(!sDirectoryName.isEmpty())
     {
         ui->lineEditSignatures->setText(sDirectoryName);
+    }
+}
+
+void GuiMainWindow::on_checkBoxCOM_toggled(bool checked)
+{
+    QSignalBlocker blocker(ui->checkBoxAllFileTypes);
+
+    if(!checked)
+    {
+        ui->checkBoxAllFileTypes->setChecked(false);
     }
 }
