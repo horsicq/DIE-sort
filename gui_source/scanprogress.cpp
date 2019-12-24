@@ -323,7 +323,6 @@ void ScanProgress::_processFile(QString sFileName)
 
         setFileStat(scanResult.sFileName,QString::number(scanResult.nScanTime),QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 
-
         if(_pOptions->bDebug)
         {
             XBinary::removeFile(sTempFile);
