@@ -35,6 +35,49 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     QString sSettingsFile=QApplication::applicationDirPath()+QDir::separator()+QString("%1.ini").arg(X_APPLICATIONNAME);
     QSettings settings(sSettingsFile,QSettings::IniFormat);
 
+    connect(ui->checkBoxBinary,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxText,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxCOM,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxMSDOS,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxPE32,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxPE64,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxELF32,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxELF64,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxMACHO32,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxMACHO64,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
+
+    connect(ui->checkBox_archive,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_audio,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_boot,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_compiler,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_converter,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_driver,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_emulator,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_extender,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_format,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_framework,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_image,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_immunizer,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_installer,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_joiner,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_keygen,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_library,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_linker,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_loader,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_other,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_overlay,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_packer,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_patcher,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_player,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_protection,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_protector,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_script,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_self_displayer,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_sfx,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_source,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_system,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_type,SIGNAL(toggled(bool)),this,SLOT(onTypeToggled(bool)));
+
     ui->checkBoxAllFileTypes->setChecked(true);
     ui->checkBoxAllTypes->setChecked(true);
 
@@ -122,32 +165,37 @@ void GuiMainWindow::_scan()
 
     options.bAllTypes=ui->checkBoxAllTypes->isChecked();
 
-//    if(ui->checkBoxArchive->isChecked())            options.stTypes.insert(SpecAbstract::RECORD_TYPE_ARCHIVE);
-//    if(ui->checkBoxCertificate->isChecked())        options.stTypes.insert(SpecAbstract::RECORD_TYPE_CERTIFICATE);
-//    if(ui->checkBoxCompiler->isChecked())           options.stTypes.insert(SpecAbstract::RECORD_TYPE_COMPILER);
-//    if(ui->checkBoxConverter->isChecked())          options.stTypes.insert(SpecAbstract::RECORD_TYPE_CONVERTER);
-//    if(ui->checkBoxDatabase->isChecked())           options.stTypes.insert(SpecAbstract::RECORD_TYPE_DATABASE);
-//    if(ui->checkBoxDebugData->isChecked())          options.stTypes.insert(SpecAbstract::RECORD_TYPE_DEBUGDATA);
-//    if(ui->checkBoxDongleProtection->isChecked())   options.stTypes.insert(SpecAbstract::RECORD_TYPE_DONGLEPROTECTION);
-//    if(ui->checkBoxDOSExtender->isChecked())        options.stTypes.insert(SpecAbstract::RECORD_TYPE_DOSEXTENDER);
-//    if(ui->checkBoxFormat->isChecked())             options.stTypes.insert(SpecAbstract::RECORD_TYPE_FORMAT);
-//    if(ui->checkBoxGeneric->isChecked())            options.stTypes.insert(SpecAbstract::RECORD_TYPE_GENERIC);
-//    if(ui->checkBoxImage->isChecked())              options.stTypes.insert(SpecAbstract::RECORD_TYPE_IMAGE);
-//    if(ui->checkBoxInstaller->isChecked())          options.stTypes.insert(SpecAbstract::RECORD_TYPE_INSTALLER);
-//    if(ui->checkBoxInstallerData->isChecked())      options.stTypes.insert(SpecAbstract::RECORD_TYPE_INSTALLERDATA);
-//    if(ui->checkBoxLibrary->isChecked())            options.stTypes.insert(SpecAbstract::RECORD_TYPE_LIBRARY);
-//    if(ui->checkBoxLinker->isChecked())             options.stTypes.insert(SpecAbstract::RECORD_TYPE_LINKER);
-//    if(ui->checkBoxNETObfuscator->isChecked())      options.stTypes.insert(SpecAbstract::RECORD_TYPE_NETOBFUSCATOR);
-//    if(ui->checkBoxPacker->isChecked())             options.stTypes.insert(SpecAbstract::RECORD_TYPE_PACKER);
-//    if(ui->checkBoxPETool->isChecked())             options.stTypes.insert(SpecAbstract::RECORD_TYPE_PETOOL);
-//    if(ui->checkBoxProtector->isChecked())          options.stTypes.insert(SpecAbstract::RECORD_TYPE_PROTECTOR);
-//    if(ui->checkBoxProtectorData->isChecked())      options.stTypes.insert(SpecAbstract::RECORD_TYPE_PROTECTORDATA);
-//    if(ui->checkBoxSFX->isChecked())                options.stTypes.insert(SpecAbstract::RECORD_TYPE_SFX);
-//    if(ui->checkBoxSFXData->isChecked())            options.stTypes.insert(SpecAbstract::RECORD_TYPE_SFXDATA);
-//    if(ui->checkBoxSignTool->isChecked())           options.stTypes.insert(SpecAbstract::RECORD_TYPE_SIGNTOOL);
-//    if(ui->checkBoxSourceCode->isChecked())         options.stTypes.insert(SpecAbstract::RECORD_TYPE_SOURCECODE);
-//    if(ui->checkBoxStub->isChecked())               options.stTypes.insert(SpecAbstract::RECORD_TYPE_STUB);
-//    if(ui->checkBoxTool->isChecked())               options.stTypes.insert(SpecAbstract::RECORD_TYPE_TOOL);
+    if(ui->checkBox_archive->isChecked())           options.stTypes.insert("archive");
+    if(ui->checkBox_audio->isChecked())             options.stTypes.insert("audio");
+    if(ui->checkBox_boot->isChecked())              options.stTypes.insert("boot");
+    if(ui->checkBox_compiler->isChecked())          options.stTypes.insert("compiler");
+    if(ui->checkBox_converter->isChecked())         options.stTypes.insert("converter");
+    if(ui->checkBox_driver->isChecked())            options.stTypes.insert("driver");
+    if(ui->checkBox_emulator->isChecked())          options.stTypes.insert("emulator");
+    if(ui->checkBox_extender->isChecked())          options.stTypes.insert("extender");
+    if(ui->checkBox_format->isChecked())            options.stTypes.insert("format");
+    if(ui->checkBox_framework->isChecked())         options.stTypes.insert("framework");
+    if(ui->checkBox_image->isChecked())             options.stTypes.insert("image");
+    if(ui->checkBox_immunizer->isChecked())         options.stTypes.insert("immunizer");
+    if(ui->checkBox_installer->isChecked())         options.stTypes.insert("installer");
+    if(ui->checkBox_joiner->isChecked())            options.stTypes.insert("joiner");
+    if(ui->checkBox_keygen->isChecked())            options.stTypes.insert("keygen");
+    if(ui->checkBox_library->isChecked())           options.stTypes.insert("library");
+    if(ui->checkBox_linker->isChecked())            options.stTypes.insert("linker");
+    if(ui->checkBox_loader->isChecked())            options.stTypes.insert("loader");
+    if(ui->checkBox_other->isChecked())             options.stTypes.insert("other");
+    if(ui->checkBox_overlay->isChecked())           options.stTypes.insert("overlay");
+    if(ui->checkBox_packer->isChecked())            options.stTypes.insert("packer");
+    if(ui->checkBox_patcher->isChecked())           options.stTypes.insert("patcher");
+    if(ui->checkBox_player->isChecked())            options.stTypes.insert("player");
+    if(ui->checkBox_protection->isChecked())        options.stTypes.insert("protection");
+    if(ui->checkBox_protector->isChecked())         options.stTypes.insert("protector");
+    if(ui->checkBox_script->isChecked())            options.stTypes.insert("script");
+    if(ui->checkBox_self_displayer->isChecked())    options.stTypes.insert("self-displayer");
+    if(ui->checkBox_sfx->isChecked())               options.stTypes.insert("sfx");
+    if(ui->checkBox_source->isChecked())            options.stTypes.insert("source");
+    if(ui->checkBox_system->isChecked())            options.stTypes.insert("system");
+    if(ui->checkBox_type->isChecked())              options.stTypes.insert("type");
 
     options.bDeepScan=ui->checkBoxDeepScan->isChecked();
     options.bShowVersion=ui->checkBoxShowVersion->isChecked();
@@ -182,374 +230,49 @@ void GuiMainWindow::on_checkBoxAllFileTypes_toggled(bool checked)
     ui->checkBoxMACHO64->setChecked(checked);
 }
 
-void GuiMainWindow::on_checkBoxBinary_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllFileTypes);
+//void GuiMainWindow::on_checkBoxBinary_toggled(bool checked)
+//{
+//    QSignalBlocker blocker(ui->checkBoxAllFileTypes);
 
-    if(!checked)
-    {
-        ui->checkBoxAllFileTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxText_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllFileTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllFileTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxMSDOS_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllFileTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllFileTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxPE32_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllFileTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllFileTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxPE64_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllFileTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllFileTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxELF32_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllFileTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllFileTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxELF64_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllFileTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllFileTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxMACHO32_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllFileTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllFileTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxMACHO64_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllFileTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllFileTypes->setChecked(false);
-    }
-}
+//    if(!checked)
+//    {
+//        ui->checkBoxAllFileTypes->setChecked(false);
+//    }
+//}
 
 void GuiMainWindow::on_checkBoxAllTypes_toggled(bool checked)
 {
-    ui->checkBoxArchive->setChecked(checked);
-    ui->checkBoxCertificate->setChecked(checked);
-    ui->checkBoxCompiler->setChecked(checked);
-    ui->checkBoxConverter->setChecked(checked);
-    ui->checkBoxDatabase->setChecked(checked);
-    ui->checkBoxDebugData->setChecked(checked);
-    ui->checkBoxDongleProtection->setChecked(checked);
-    ui->checkBoxDOSExtender->setChecked(checked);
-    ui->checkBoxFormat->setChecked(checked);
-    ui->checkBoxGeneric->setChecked(checked);
-    ui->checkBoxImage->setChecked(checked);
-    ui->checkBoxInstaller->setChecked(checked);
-    ui->checkBoxInstallerData->setChecked(checked);
-    ui->checkBoxLibrary->setChecked(checked);
-    ui->checkBoxLinker->setChecked(checked);
-    ui->checkBoxNETObfuscator->setChecked(checked);
-    ui->checkBoxPacker->setChecked(checked);
-    ui->checkBoxPETool->setChecked(checked);
-    ui->checkBoxProtector->setChecked(checked);
-    ui->checkBoxProtectorData->setChecked(checked);
-    ui->checkBoxSFX->setChecked(checked);
-    ui->checkBoxSFXData->setChecked(checked);
-    ui->checkBoxSignTool->setChecked(checked);
-    ui->checkBoxSourceCode->setChecked(checked);
-    ui->checkBoxStub->setChecked(checked);
-    ui->checkBoxTool->setChecked(checked);
-}
-
-void GuiMainWindow::on_checkBoxArchive_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxCertificate_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxCompiler_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxConverter_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxDatabase_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxDebugData_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxDongleProtection_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxDOSExtender_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxFormat_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxGeneric_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxImage_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxInstaller_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxInstallerData_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxLibrary_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxLinker_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxNETObfuscator_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxPacker_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxProtector_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxProtectorData_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxSFX_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxSFXData_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxSignTool_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxSourceCode_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxStub_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-void GuiMainWindow::on_checkBoxTool_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
+    ui->checkBox_archive->setChecked(checked);
+    ui->checkBox_audio->setChecked(checked);
+    ui->checkBox_boot->setChecked(checked);
+    ui->checkBox_compiler->setChecked(checked);
+    ui->checkBox_converter->setChecked(checked);
+    ui->checkBox_driver->setChecked(checked);
+    ui->checkBox_emulator->setChecked(checked);
+    ui->checkBox_extender->setChecked(checked);
+    ui->checkBox_format->setChecked(checked);
+    ui->checkBox_framework->setChecked(checked);
+    ui->checkBox_image->setChecked(checked);
+    ui->checkBox_immunizer->setChecked(checked);
+    ui->checkBox_installer->setChecked(checked);
+    ui->checkBox_joiner->setChecked(checked);
+    ui->checkBox_keygen->setChecked(checked);
+    ui->checkBox_library->setChecked(checked);
+    ui->checkBox_linker->setChecked(checked);
+    ui->checkBox_loader->setChecked(checked);
+    ui->checkBox_other->setChecked(checked);
+    ui->checkBox_overlay->setChecked(checked);
+    ui->checkBox_packer->setChecked(checked);
+    ui->checkBox_patcher->setChecked(checked);
+    ui->checkBox_player->setChecked(checked);
+    ui->checkBox_protection->setChecked(checked);
+    ui->checkBox_protector->setChecked(checked);
+    ui->checkBox_script->setChecked(checked);
+    ui->checkBox_self_displayer->setChecked(checked);
+    ui->checkBox_sfx->setChecked(checked);
+    ui->checkBox_source->setChecked(checked);
+    ui->checkBox_system->setChecked(checked);
+    ui->checkBox_type->setChecked(checked);
 }
 
 void GuiMainWindow::on_pushButtonInfo_clicked()
@@ -557,36 +280,22 @@ void GuiMainWindow::on_pushButtonInfo_clicked()
     QMessageBox::information(this,tr("Info"),tr("Bugreports: horsicq@gmail.com"));
 }
 
-
-void GuiMainWindow::on_checkBoxPETool_toggled(bool checked)
-{
-    QSignalBlocker blocker(ui->checkBoxAllTypes);
-
-    if(!checked)
-    {
-        ui->checkBoxAllTypes->setChecked(false);
-    }
-}
-
-
-void GuiMainWindow::on_pushButtonSignatures_clicked()
-{
-    QString sInitDirectory=ui->lineEditSignatures->text();
-
-    QString sDirectoryName=QFileDialog::getExistingDirectory(this,tr("Open signatures directory..."),sInitDirectory,QFileDialog::ShowDirsOnly);
-
-    if(!sDirectoryName.isEmpty())
-    {
-        ui->lineEditSignatures->setText(sDirectoryName);
-    }
-}
-
-void GuiMainWindow::on_checkBoxCOM_toggled(bool checked)
+void GuiMainWindow::onFileTypeToggled(bool checked)
 {
     QSignalBlocker blocker(ui->checkBoxAllFileTypes);
 
     if(!checked)
     {
         ui->checkBoxAllFileTypes->setChecked(false);
+    }
+}
+
+void GuiMainWindow::onTypeToggled(bool checked)
+{
+    QSignalBlocker blocker(ui->checkBoxAllTypes);
+
+    if(!checked)
+    {
+        ui->checkBoxAllTypes->setChecked(false);
     }
 }

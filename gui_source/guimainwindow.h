@@ -49,45 +49,12 @@ private slots:
     void _scan();
 
     void on_checkBoxAllFileTypes_toggled(bool checked);
-    void on_checkBoxBinary_toggled(bool checked);
-    void on_checkBoxText_toggled(bool checked);
-    void on_checkBoxMSDOS_toggled(bool checked);
-    void on_checkBoxPE32_toggled(bool checked);
-    void on_checkBoxPE64_toggled(bool checked);
-    void on_checkBoxELF32_toggled(bool checked);
-    void on_checkBoxELF64_toggled(bool checked);
-    void on_checkBoxMACHO32_toggled(bool checked);
-    void on_checkBoxMACHO64_toggled(bool checked);
     void on_checkBoxAllTypes_toggled(bool checked);
-    void on_checkBoxArchive_toggled(bool checked);
-    void on_checkBoxCertificate_toggled(bool checked);
-    void on_checkBoxCompiler_toggled(bool checked);
-    void on_checkBoxConverter_toggled(bool checked);
-    void on_checkBoxDatabase_toggled(bool checked);
-    void on_checkBoxDebugData_toggled(bool checked);
-    void on_checkBoxDongleProtection_toggled(bool checked);
-    void on_checkBoxDOSExtender_toggled(bool checked);
-    void on_checkBoxFormat_toggled(bool checked);
-    void on_checkBoxGeneric_toggled(bool checked);
-    void on_checkBoxImage_toggled(bool checked);
-    void on_checkBoxInstaller_toggled(bool checked);
-    void on_checkBoxInstallerData_toggled(bool checked);
-    void on_checkBoxLibrary_toggled(bool checked);
-    void on_checkBoxLinker_toggled(bool checked);
-    void on_checkBoxNETObfuscator_toggled(bool checked);
-    void on_checkBoxPacker_toggled(bool checked);
-    void on_checkBoxProtector_toggled(bool checked);
-    void on_checkBoxProtectorData_toggled(bool checked);
-    void on_checkBoxSFX_toggled(bool checked);
-    void on_checkBoxSFXData_toggled(bool checked);
-    void on_checkBoxSignTool_toggled(bool checked);
-    void on_checkBoxSourceCode_toggled(bool checked);
-    void on_checkBoxStub_toggled(bool checked);
-    void on_checkBoxTool_toggled(bool checked);
+
     void on_pushButtonInfo_clicked();
-    void on_checkBoxPETool_toggled(bool checked);
-    void on_pushButtonSignatures_clicked();
-    void on_checkBoxCOM_toggled(bool checked);
+
+    void onFileTypeToggled(bool checked);
+    void onTypeToggled(bool checked);
 
 private:
     Ui::GuiMainWindow *ui;

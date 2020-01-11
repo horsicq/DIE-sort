@@ -362,6 +362,15 @@ void ScanProgress::process()
 
     dieScript.loadDatabase(_pOptions->sSignatures);
 
+    DiE_Script::STATS stats=dieScript.getStats();
+
+    QList<QString> list=stats.mapTypes.keys();
+
+    for(int i=0;i<list.count();i++)
+    {
+        qDebug(list.at(i).toLatin1().data());
+    }
+
     while(!bIsStop)
     {
         QString sFileName=getCurrentFileNameAndLock();
