@@ -264,17 +264,71 @@ void ScanProgress::_processFile(QString sFileName)
 
         int nCount=scanResult.listRecords.count();
 
-        for(int i=0;i<nCount;i++)
+        bool bGlobalCopy=false;
+        bool bIdentified=false;
+
+        if(nCount)
         {
-            DiE_Script::SCAN_STRUCT ss=scanResult.listRecords.at(i);
-
-            if(_pOptions->stFileTypes.contains(ss.fileType)&&((_pOptions->stTypes.contains(ss.sType))||(_pOptions->bAllTypes)))
+            for(int i=0;i<nCount;i++)
             {
-                QString sResult=ss.sString;
+                DiE_Script::SCAN_STRUCT ss=scanResult.listRecords.at(i);
 
-                sResult=XBinary::convertFileNameSymbols(sResult);
+                if(_pOptions->stFileTypes.contains(ss.scanHeader.fileType))
+                {
+                    if((_pOptions->stTypes.contains(ss.sType))||(_pOptions->bAllTypes))
+                    {
+                        bIdentified=true;
 
-                quint32 nCRC=XBinary::getStringCustomCRC32(sResult);
+                        if((_pOptions->copyType==CT_IDENT)||(_pOptions->copyType==CT_IDENT_UNK))
+                        {
+                            QString sResult=ss.sString;
+
+                            sResult=XBinary::convertFileNameSymbols(sResult);
+
+                            quint32 nCRC=XBinary::getStringCustomCRC32(XBinary::fileTypeIdToString(ss.scanHeader.fileType)+ss.scanHeader.sArch+ss.sType+sResult);
+
+                            bool bCopy=true;
+
+                            int nCurrentCount=getFileCount(nCRC);
+
+                            if(_pOptions->nCopyCount)
+                            {
+                                if(nCurrentCount>=_pOptions->nCopyCount)
+                                {
+                                    bCopy=false;
+                                }
+                            }
+
+                            if(bCopy)
+                            {
+                                QString sFileName=  _pOptions->sResultDirectory+QDir::separator()+
+                                                    createPath(_pOptions->copyFormat,ss.scanHeader)+QDir::separator()+
+                                                    ss.sType+QDir::separator()+sResult;
+
+                                XBinary::createDirectory(sFileName);
+
+                                sFileName+=QDir::separator()+XBinary::getBaseFileName(scanResult.sFileName);
+
+                                if(XBinary::copyFile(scanResult.sFileName,sFileName))
+                                {
+                                    bGlobalCopy=true;
+
+                                    setFileCount(nCRC,nCurrentCount+1);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if((!bIdentified)&&((_pOptions->copyType==CT_IDENT_UNK)||(_pOptions->copyType==CT_UNK)))
+        {
+            if(_pOptions->stFileTypes.contains(scanResult.scanHeader.fileType))
+            {
+                DiE_Script::SCAN_HEADER sh=scanResult.scanHeader;
+
+                quint32 nCRC=XBinary::getStringCustomCRC32(XBinary::fileTypeIdToString(sh.fileType)+sh.sArch+"__UNKNOWN");
 
                 bool bCopy=true;
 
@@ -290,19 +344,18 @@ void ScanProgress::_processFile(QString sFileName)
 
                 if(bCopy)
                 {
-                    QString sFileName=_pOptions->sResultDirectory;
+                    QString sFileName=  _pOptions->sResultDirectory+QDir::separator()+
+                                        createPath(_pOptions->copyFormat,sh)+QDir::separator()+
+                                        "__UNKNOWN";
 
                     XBinary::createDirectory(sFileName);
-                    sFileName+=QDir::separator()+XBinary::fileTypeIdToString(ss.fileType);
-                    XBinary::createDirectory(sFileName);
-                    sFileName+=QDir::separator()+ss.sType;
-                    XBinary::createDirectory(sFileName);
-                    sFileName+=QDir::separator()+sResult;
-                    XBinary::createDirectory(sFileName);
+
                     sFileName+=QDir::separator()+XBinary::getBaseFileName(scanResult.sFileName);
 
                     if(XBinary::copyFile(scanResult.sFileName,sFileName))
                     {
+                        bGlobalCopy=true;
+
                         setFileCount(nCRC,nCurrentCount+1);
                     }
                 }
@@ -314,7 +367,7 @@ void ScanProgress::_processFile(QString sFileName)
             QString sFileName=_pOptions->sResultDirectory;
 
             XBinary::createDirectory(sFileName);
-            sFileName+=QDir::separator()+QString("ERRORS");
+            sFileName+=QDir::separator()+QString("__ERRORS");
             XBinary::createDirectory(sFileName);
             sFileName+=QDir::separator()+XBinary::getBaseFileName(scanResult.sFileName);
 
@@ -327,9 +380,34 @@ void ScanProgress::_processFile(QString sFileName)
         {
             XBinary::removeFile(sTempFile);
         }
+
+        if((_pOptions->bRemoveCopied)&&bGlobalCopy)
+        {
+            XBinary::removeFile(scanResult.sFileName);
+        }
     }
 
     pSemaphore->release();
+}
+
+QString ScanProgress::createPath(ScanProgress::CF copyFormat, DiE_Script::SCAN_HEADER scanHeader)
+{
+    QString sResult;
+
+    if(copyFormat==ScanProgress::CF_TYPE_FT_NAME)
+    {
+        sResult=XBinary::fileTypeIdToString(scanHeader.fileType);
+    }
+    else if(copyFormat==ScanProgress::CF_TYPE_ARCH_FT_NAME)
+    {
+        sResult=XBinary::fileTypeIdToString(scanHeader.fileType)+QDir::separator()+scanHeader.sArch;
+    }
+    else if(copyFormat==ScanProgress::CF_ARCH_TYPE_FT_NAME)
+    {
+        sResult=scanHeader.sArch+QDir::separator()+XBinary::fileTypeIdToString(scanHeader.fileType);
+    }
+
+    return sResult;
 }
 
 void ScanProgress::process()
@@ -413,6 +491,7 @@ void ScanProgress::process()
 void ScanProgress::stop()
 {
     bIsStop=true;
+    dieScript.stop();
 }
 
 ScanProgress::STATS ScanProgress::getCurrentStats()

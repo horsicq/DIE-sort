@@ -81,11 +81,24 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     ui->checkBoxAllFileTypes->setChecked(true);
     ui->checkBoxAllTypes->setChecked(true);
 
+    ui->comboBoxCopyFormat->addItem("Type/FileType/Name");
+    ui->comboBoxCopyFormat->addItem("Arch/Type/FileType/Name");
+    ui->comboBoxCopyFormat->addItem("Type/Arch/FileType/Name");
+
+    ui->comboBoxCopyType->addItem("Identified");
+    ui->comboBoxCopyType->addItem("Identified/Unknown");
+    ui->comboBoxCopyType->addItem("Unknown");
+
+    ui->comboBoxCopyFormat->setCurrentIndex(settings.value("CopyFormat",0).toInt());
+    ui->comboBoxCopyType->setCurrentIndex(settings.value("CopyType",0).toInt());
+
     ui->lineEditDirectoryName->setText(settings.value("DirectoryName",QDir::currentPath()).toString());
     ui->lineEditSignatures->setText(settings.value("Signatures","$app/db").toString());
     ui->lineEditOut->setText(settings.value("ResultName",QDir::currentPath()).toString());
 
     ui->spinBoxCopyCount->setValue(settings.value("CopyCount",0).toInt());
+
+    ui->checkBoxRemoveCopied->setChecked(settings.value("RemoveCopied",false).toBool());
 
     options.bContinue=settings.value("Continue",false).toBool();
     options.bDebug=settings.value("Debug",false).toBool();
@@ -108,6 +121,9 @@ GuiMainWindow::~GuiMainWindow()
     settings.setValue("ResultName",ui->lineEditOut->text());
     settings.setValue("Signatures",ui->lineEditSignatures->text());
     settings.setValue("CopyCount",ui->spinBoxCopyCount->value());
+    settings.setValue("CopyFormat",ui->comboBoxCopyFormat->currentIndex());
+    settings.setValue("CopyType",ui->comboBoxCopyType->currentIndex());
+    settings.setValue("RemoveCopied",ui->checkBoxRemoveCopied->isChecked());
 
     delete ui;
 }
@@ -205,6 +221,10 @@ void GuiMainWindow::_scan()
     options.bShowOptions=ui->checkBoxShowOptions->isChecked();
     options.bSubdirectories=ui->checkBoxScanSubdirectories->isChecked();
     options.sSignatures=ui->lineEditSignatures->text();
+
+    options.copyFormat=(ScanProgress::CF)ui->comboBoxCopyFormat->currentIndex();
+    options.copyType=(ScanProgress::CT)ui->comboBoxCopyType->currentIndex();
+    options.bRemoveCopied=ui->checkBoxRemoveCopied->isChecked();
 
     DialogScanProgress ds(this);
 

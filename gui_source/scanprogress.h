@@ -40,9 +40,9 @@ class ScanProgress : public QObject
 public:
     enum CF
     {
-        CF_TYPE_FT=0,
-        CF_ARCH_TYPE_FT,
-        CF_TYPE_ARCH_FT
+        CF_TYPE_FT_NAME=0,
+        CF_ARCH_TYPE_FT_NAME,
+        CF_TYPE_ARCH_FT_NAME
     };
 
     enum CT
@@ -69,6 +69,7 @@ public:
         bool bDebug;
         CF copyFormat;
         CT copyType;
+        bool bRemoveCopied;
     };
     struct STATS
     {
@@ -96,6 +97,8 @@ public:
     void endTransaction();
 
     void _processFile(QString sFileName);
+
+    static QString createPath(CF copyFormat,DiE_Script::SCAN_HEADER scanHeader);
 
 signals:
     void completed(qint64 nElapsedTime);
