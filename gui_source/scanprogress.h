@@ -38,6 +38,20 @@ class ScanProgress : public QObject
     Q_OBJECT
 
 public:
+    enum CF
+    {
+        CF_TYPE_FT=0,
+        CF_ARCH_TYPE_FT,
+        CF_TYPE_ARCH_FT
+    };
+
+    enum CT
+    {
+        CT_IDENT=0,
+        CT_IDENT_UNK,
+        CT_UNK
+    };
+
     struct SCAN_OPTIONS
     {
         bool bDeepScan;
@@ -53,6 +67,8 @@ public:
         QSqlDatabase dbSQLLite;
         bool bContinue;
         bool bDebug;
+        CF copyFormat;
+        CT copyType;
     };
     struct STATS
     {

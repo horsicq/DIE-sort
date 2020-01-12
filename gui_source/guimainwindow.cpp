@@ -85,7 +85,11 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     ui->lineEditSignatures->setText(settings.value("Signatures","$app/db").toString());
     ui->lineEditOut->setText(settings.value("ResultName",QDir::currentPath()).toString());
 
+    ui->spinBoxCopyCount->setValue(settings.value("CopyCount",0).toInt());
+
     options.bContinue=settings.value("Continue",false).toBool();
+    options.bDebug=settings.value("Debug",false).toBool();
+
     QString sDatabaseName=settings.value("DatabaseName",":memory:").toString();
 
     if(!ScanProgress::createDatabase(&options.dbSQLLite,sDatabaseName))
@@ -93,8 +97,6 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
         QMessageBox::critical(this,tr("Error"),tr("Cannot open SQLITE database"));
         exit(1);
     }
-
-    options.bDebug=true;
 }
 
 GuiMainWindow::~GuiMainWindow()
@@ -105,6 +107,7 @@ GuiMainWindow::~GuiMainWindow()
     settings.setValue("DirectoryName",ui->lineEditDirectoryName->text());
     settings.setValue("ResultName",ui->lineEditOut->text());
     settings.setValue("Signatures",ui->lineEditSignatures->text());
+    settings.setValue("CopyCount",ui->spinBoxCopyCount->value());
 
     delete ui;
 }
