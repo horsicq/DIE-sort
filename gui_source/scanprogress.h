@@ -52,6 +52,21 @@ public:
         CT_UNK
     };
 
+    enum UP
+    {
+        UP_NONE=0,
+        UP_EP_BYTES,
+        UP_HEADER_BYTES,
+        UP_OVERLAY_BYTES
+    };
+
+    enum FF
+    {
+        FF_ORIGINAL=0,
+        FF_MD5,
+        FF_MD5_ORIGINAL
+    };
+
     struct SCAN_OPTIONS
     {
         bool bDeepScan;
@@ -69,8 +84,12 @@ public:
         bool bDebug;
         CF copyFormat;
         CT copyType;
+        UP unknownPrefix;
+        FF fileFormat;
+        qint64 nUnknownCount;
         bool bRemoveCopied;
     };
+
     struct STATS
     {
         qint32 nTotal;

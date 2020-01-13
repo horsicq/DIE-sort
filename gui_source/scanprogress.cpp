@@ -262,6 +262,22 @@ void ScanProgress::_processFile(QString sFileName)
 
         DiE_Script::SCAN_RESULT scanResult=dieScript.scanFile(currentStats.sStatus,&options);
 
+        QString _sBaseFileName=XBinary::getBaseFileName(scanResult.sFileName);
+
+        if((_pOptions->fileFormat==FF_MD5)||(_pOptions->fileFormat==FF_MD5_ORIGINAL))
+        {
+            QString sMD5=XBinary::getHash(XBinary::HASH_MD5,scanResult.sFileName);
+
+            if(_pOptions->fileFormat==FF_MD5)
+            {
+                _sBaseFileName=sMD5;
+            }
+            else if(_pOptions->fileFormat==FF_MD5_ORIGINAL)
+            {
+                _sBaseFileName=sMD5+_sBaseFileName;
+            }
+        }
+
         int nCount=scanResult.listRecords.count();
 
         bool bGlobalCopy=false;
@@ -307,7 +323,7 @@ void ScanProgress::_processFile(QString sFileName)
 
                                 XBinary::createDirectory(sFileName);
 
-                                sFileName+=QDir::separator()+XBinary::getBaseFileName(scanResult.sFileName);
+                                sFileName+=QDir::separator()+_sBaseFileName;
 
                                 if(XBinary::copyFile(scanResult.sFileName,sFileName))
                                 {
@@ -348,9 +364,130 @@ void ScanProgress::_processFile(QString sFileName)
                                         createPath(_pOptions->copyFormat,sh)+QDir::separator()+
                                         "__UNKNOWN";
 
+                    if((_pOptions->unknownPrefix==UP_EP_BYTES)||(_pOptions->unknownPrefix==UP_HEADER_BYTES)||(_pOptions->unknownPrefix==UP_OVERLAY_BYTES))
+                    {
+                        QString sFolderName;
+                        qint32 nUnknownCount=_pOptions->nUnknownCount;
+
+                        QFile file;
+
+                        file.setFileName(scanResult.sFileName);
+
+                        if(file.open(QIODevice::ReadOnly))
+                        {
+                            if((sh.fileType==XBinary::FT_PE32)||(sh.fileType==XBinary::FT_PE64))
+                            {
+                                XPE pe(&file);
+
+                                if(_pOptions->unknownPrefix==UP_EP_BYTES)
+                                {
+                                    sFolderName=pe.getSignature(pe._getEntryPointOffset(),nUnknownCount);
+                                }
+                                else if(_pOptions->unknownPrefix==UP_OVERLAY_BYTES)
+                                {
+                                    if(pe.isOverlayPresent())
+                                    {
+                                        sFolderName=pe.getSignature(pe.getOverlayOffset(),nUnknownCount);
+                                    }
+                                }
+                                else if(_pOptions->unknownPrefix==UP_HEADER_BYTES)
+                                {
+                                    sFolderName=pe.getSignature(0,nUnknownCount);
+                                }
+                            }
+                            else if((sh.fileType==XBinary::FT_ELF32)||(sh.fileType==XBinary::FT_ELF64))
+                            {
+                                XELF elf(&file);
+
+                                if(_pOptions->unknownPrefix==UP_EP_BYTES)
+                                {
+                                    sFolderName=elf.getSignature(elf._getEntryPointOffset(),nUnknownCount);
+                                }
+                                else if(_pOptions->unknownPrefix==UP_OVERLAY_BYTES)
+                                {
+                                    if(elf.isOverlayPresent())
+                                    {
+                                        sFolderName=elf.getSignature(elf.getOverlayOffset(),nUnknownCount);
+                                    }
+                                }
+                                else if(_pOptions->unknownPrefix==UP_HEADER_BYTES)
+                                {
+                                    sFolderName=elf.getSignature(0,nUnknownCount);
+                                }
+                            }
+                            else if((sh.fileType==XBinary::FT_MACH32)||(sh.fileType==XBinary::FT_MACH64))
+                            {
+                                XMACH mach(&file);
+
+                                if(_pOptions->unknownPrefix==UP_EP_BYTES)
+                                {
+                                    sFolderName=mach.getSignature(mach._getEntryPointOffset(),nUnknownCount);
+                                }
+                                else if(_pOptions->unknownPrefix==UP_OVERLAY_BYTES)
+                                {
+                                    if(mach.isOverlayPresent())
+                                    {
+                                        sFolderName=mach.getSignature(mach.getOverlayOffset(),nUnknownCount);
+                                    }
+                                }
+                                else if(_pOptions->unknownPrefix==UP_HEADER_BYTES)
+                                {
+                                    sFolderName=mach.getSignature(0,nUnknownCount);
+                                }
+                            }
+                            else if(sh.fileType==XBinary::FT_MSDOS)
+                            {
+                                XMSDOS msdos(&file);
+
+                                if(_pOptions->unknownPrefix==UP_EP_BYTES)
+                                {
+                                    sFolderName=msdos.getSignature(msdos._getEntryPointOffset(),nUnknownCount);
+                                }
+                                else if(_pOptions->unknownPrefix==UP_OVERLAY_BYTES)
+                                {
+                                    if(msdos.isOverlayPresent())
+                                    {
+                                        sFolderName=msdos.getSignature(msdos.getOverlayOffset(),nUnknownCount);
+                                    }
+                                }
+                                else if(_pOptions->unknownPrefix==UP_HEADER_BYTES)
+                                {
+                                    sFolderName=msdos.getSignature(0,nUnknownCount);
+                                }
+                            }
+                            else
+                            {
+                                XBinary binary(&file);
+
+                                if(_pOptions->unknownPrefix==UP_EP_BYTES)
+                                {
+                                    sFolderName=binary.getSignature(binary._getEntryPointOffset(),nUnknownCount);
+                                }
+                                else if(_pOptions->unknownPrefix==UP_OVERLAY_BYTES)
+                                {
+                                    if(binary.isOverlayPresent())
+                                    {
+                                        sFolderName=binary.getSignature(binary.getOverlayOffset(),nUnknownCount);
+                                    }
+                                }
+                                else if(_pOptions->unknownPrefix==UP_HEADER_BYTES)
+                                {
+                                    sFolderName=binary.getSignature(0,nUnknownCount);
+                                }
+                            }
+
+                            file.close();
+                        }
+
+                        if(sFolderName!="")
+                        {
+                            sFileName+=QDir::separator()+sFolderName;
+                        }
+                    }
+
                     XBinary::createDirectory(sFileName);
 
-                    sFileName+=QDir::separator()+XBinary::getBaseFileName(scanResult.sFileName);
+                    sFileName+=QDir::separator()+_sBaseFileName;
 
                     if(XBinary::copyFile(scanResult.sFileName,sFileName))
                     {

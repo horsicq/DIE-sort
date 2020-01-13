@@ -1,6 +1,6 @@
 set VS_PATH="C:\Program Files (x86)\Microsoft Visual Studio 12.0"
 set SEVENZIP_PATH="C:\Program Files\7-Zip"
-set QT_PATH32="C:\Qt\Qt5.6.3\5.6.3\msvc2013"
+set QT_PATH32="C:\Qt5.6.3\5.6.3\msvc2013"
 
 set BUILD_NAME=diesort_win32_portable
 set SOURCE_PATH=%~dp0
@@ -29,9 +29,9 @@ cd ..
 
 cd winloader_source
 
-cl.exe /c winloader.cpp /D_USING_V110_SDK71_
+cl.exe /c winloader.cpp /D_USING_V110_SDK71_ /GS- /Oi-
 Rc.exe /v %RES_FILE%.rc
-link.exe winloader.obj %RES_FILE%.res user32.lib kernel32.lib shell32.lib /SUBSYSTEM:WINDOWS /SUBSYSTEM:WINDOWS,5.01 /ENTRY:entry /OUT:%SOURCE_PATH%\build\loader\%GUIEXE%
+link.exe winloader.obj %RES_FILE%.res user32.lib kernel32.lib shell32.lib /NODEFAULTLIB /SAFESEH:NO /SUBSYSTEM:WINDOWS,5.01 /ENTRY:entry /OUT:%SOURCE_PATH%\build\loader\%GUIEXE%
 del /s winloader.obj
 del /s %RES_FILE%.res
 
@@ -53,6 +53,8 @@ copy %QT_PATH%\plugins\sqldrivers\qsqlite.dll %SOURCE_PATH%\release\%BUILD_NAME%
 
 copy %VS_PATH%\VC\redist\x86\Microsoft.VC120.CRT\msvcp120.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
 copy %VS_PATH%\VC\redist\x86\Microsoft.VC120.CRT\msvcr120.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
+
+xcopy %SOURCE_PATH%\Detect-It-Easy\db %SOURCE_PATH%\release\%BUILD_NAME%\base\db /E /I
 
 cd %SOURCE_PATH%\release
 if exist %ZIP_NAME%.zip del %ZIP_NAME%.zip

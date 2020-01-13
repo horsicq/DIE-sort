@@ -89,8 +89,21 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     ui->comboBoxCopyType->addItem("Identified/Unknown");
     ui->comboBoxCopyType->addItem("Unknown");
 
+    ui->comboBoxFileFormat->addItem("Original");
+    ui->comboBoxFileFormat->addItem("MD5");
+    ui->comboBoxFileFormat->addItem("MD5+Original");
+
+    ui->comboBoxUnknownPrefix->addItem("NONE");
+    ui->comboBoxUnknownPrefix->addItem("EP Bytes");
+    ui->comboBoxUnknownPrefix->addItem("Header Bytes");
+    ui->comboBoxUnknownPrefix->addItem("Overlay Bytes");
+
     ui->comboBoxCopyFormat->setCurrentIndex(settings.value("CopyFormat",0).toInt());
     ui->comboBoxCopyType->setCurrentIndex(settings.value("CopyType",0).toInt());
+    ui->comboBoxFileFormat->setCurrentIndex(settings.value("FileFormat",0).toInt());
+    ui->comboBoxUnknownPrefix->setCurrentIndex(settings.value("UnknownPrefix",0).toInt());
+
+    ui->spinBoxUnknownCount->setValue(settings.value("UnknownCount",10).toInt());
 
     ui->lineEditDirectoryName->setText(settings.value("DirectoryName",QDir::currentPath()).toString());
     ui->lineEditSignatures->setText(settings.value("Signatures","$app/db").toString());
@@ -123,7 +136,10 @@ GuiMainWindow::~GuiMainWindow()
     settings.setValue("CopyCount",ui->spinBoxCopyCount->value());
     settings.setValue("CopyFormat",ui->comboBoxCopyFormat->currentIndex());
     settings.setValue("CopyType",ui->comboBoxCopyType->currentIndex());
+    settings.setValue("FileFormat",ui->comboBoxFileFormat->currentIndex());
     settings.setValue("RemoveCopied",ui->checkBoxRemoveCopied->isChecked());
+    settings.setValue("UnknownPrefix",ui->comboBoxUnknownPrefix->currentIndex());
+    settings.setValue("UnknownCount",ui->spinBoxUnknownCount->value());
 
     delete ui;
 }
@@ -226,6 +242,11 @@ void GuiMainWindow::_scan()
     options.copyType=(ScanProgress::CT)ui->comboBoxCopyType->currentIndex();
     options.bRemoveCopied=ui->checkBoxRemoveCopied->isChecked();
 
+    options.unknownPrefix=(ScanProgress::UP)ui->comboBoxUnknownPrefix->currentIndex();
+    options.nUnknownCount=ui->spinBoxUnknownCount->value();
+
+    options.fileFormat=(ScanProgress::FF)ui->comboBoxFileFormat->currentIndex();
+
     DialogScanProgress ds(this);
 
     ds.setData(ui->lineEditDirectoryName->text(),&options);
@@ -320,5 +341,17 @@ void GuiMainWindow::onTypeToggled(bool checked)
     if(!checked)
     {
         ui->checkBoxAllTypes->setChecked(false);
+    }
+}
+
+void GuiMainWindow::on_pushButtonSignatures_clicked()
+{
+    QString sInitDirectory=XBinary::convertPathName(ui->lineEditSignatures->text());
+
+    QString sDirectoryName=QFileDialog::getExistingDirectory(this,tr("Open directory..."),sInitDirectory,QFileDialog::ShowDirsOnly);
+
+    if(!sDirectoryName.isEmpty())
+    {
+        ui->lineEditSignatures->setText(sDirectoryName);
     }
 }

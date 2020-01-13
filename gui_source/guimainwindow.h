@@ -55,6 +55,7 @@ private slots:
 
     void onFileTypeToggled(bool checked);
     void onTypeToggled(bool checked);
+    void on_pushButtonSignatures_clicked();
 
 private:
     Ui::GuiMainWindow *ui;
