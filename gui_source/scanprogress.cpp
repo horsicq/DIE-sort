@@ -25,9 +25,11 @@ ScanProgress::ScanProgress(QObject *parent) : QObject(parent)
 {
     bIsStop=false;
     _pOptions=nullptr;
-    currentStats=STATS();
+    currentStats={};
     pElapsedTimer=nullptr;
     pSemaphore=nullptr;
+
+    connect(this,SIGNAL(stopAllThreads()),&dieScript,SLOT(stop()));
 }
 
 void ScanProgress::setData(QString sDirectoryName, ScanProgress::SCAN_OPTIONS *pOptions)
@@ -628,7 +630,7 @@ void ScanProgress::process()
 void ScanProgress::stop()
 {
     bIsStop=true;
-    dieScript.stop();
+    emit stopAllThreads();
 }
 
 ScanProgress::STATS ScanProgress::getCurrentStats()

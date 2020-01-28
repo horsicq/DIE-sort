@@ -121,6 +121,7 @@ public:
 
 signals:
     void completed(qint64 nElapsedTime);
+    void stopAllThreads();
 
 public slots:
     void process();
