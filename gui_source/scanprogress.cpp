@@ -28,8 +28,6 @@ ScanProgress::ScanProgress(QObject *parent) : QObject(parent)
     currentStats={};
     pElapsedTimer=nullptr;
     pSemaphore=nullptr;
-
-    connect(this,SIGNAL(stopAllThreads()),&dieScript,SLOT(stop()));
 }
 
 void ScanProgress::setData(QString sDirectoryName, ScanProgress::SCAN_OPTIONS *pOptions)
@@ -237,9 +235,11 @@ void ScanProgress::_processFile(QString sFileName)
     mutexStats.lock();
     currentStats.nCurrent++;
     currentStats.sStatus=sFileName;
+    currentStats.stFiles.insert(sFileName);
+    stScripts.insert(&dieScript);
     mutexStats.unlock();
 
-    if(currentStats.sStatus!="")
+    if(sFileName!="")
     {
         QString sTempFile;
 
@@ -249,9 +249,9 @@ void ScanProgress::_processFile(QString sFileName)
 
             XBinary::createDirectory(sFileName);
 
-            sTempFile+=QDir::separator()+XBinary::getBaseFileName(currentStats.sStatus);
+            sTempFile+=QDir::separator()+XBinary::getBaseFileName(sFileName);
 
-            XBinary::copyFile(currentStats.sStatus,sTempFile);
+            XBinary::copyFile(sFileName,sTempFile);
         }
 
         DiE_Script::SCAN_OPTIONS options={};
@@ -260,9 +260,9 @@ void ScanProgress::_processFile(QString sFileName)
         options.bShowVersion=_pOptions->bShowVersion;
         options.bShowOptions=_pOptions->bShowOptions;
 
-        setFileStat(currentStats.sStatus,"",QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+        setFileStat(sFileName,"",QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 
-        DiE_Script::SCAN_RESULT scanResult=dieScript.scanFile(currentStats.sStatus,&options);
+        DiE_Script::SCAN_RESULT scanResult=dieScript.scanFile(sFileName,&options);
 
         QString _sBaseFileName=XBinary::getBaseFileName(scanResult.sFileName);
 
@@ -319,15 +319,15 @@ void ScanProgress::_processFile(QString sFileName)
 
                             if(bCopy)
                             {
-                                QString sFileName=  _pOptions->sResultDirectory+QDir::separator()+
+                                QString _sFileName=  _pOptions->sResultDirectory+QDir::separator()+
                                                     createPath(_pOptions->copyFormat,ss.scanHeader)+QDir::separator()+
                                                     ss.sType+QDir::separator()+sResult;
 
-                                XBinary::createDirectory(sFileName);
+                                XBinary::createDirectory(_sFileName);
 
-                                sFileName+=QDir::separator()+_sBaseFileName;
+                                _sFileName+=QDir::separator()+_sBaseFileName;
 
-                                if(XBinary::copyFile(scanResult.sFileName,sFileName))
+                                if(XBinary::copyFile(scanResult.sFileName,_sFileName))
                                 {
                                     bGlobalCopy=true;
 
@@ -362,7 +362,7 @@ void ScanProgress::_processFile(QString sFileName)
 
                 if(bCopy)
                 {
-                    QString sFileName=  _pOptions->sResultDirectory+QDir::separator()+
+                    QString _sFileName=  _pOptions->sResultDirectory+QDir::separator()+
                                         createPath(_pOptions->copyFormat,sh)+QDir::separator()+
                                         "__UNKNOWN";
 
@@ -483,15 +483,15 @@ void ScanProgress::_processFile(QString sFileName)
 
                         if(sFolderName!="")
                         {
-                            sFileName+=QDir::separator()+sFolderName;
+                            _sFileName+=QDir::separator()+sFolderName;
                         }
                     }
 
-                    XBinary::createDirectory(sFileName);
+                    XBinary::createDirectory(_sFileName);
 
-                    sFileName+=QDir::separator()+_sBaseFileName;
+                    _sFileName+=QDir::separator()+_sBaseFileName;
 
-                    if(XBinary::copyFile(scanResult.sFileName,sFileName))
+                    if(XBinary::copyFile(scanResult.sFileName,_sFileName))
                     {
                         bGlobalCopy=true;
 
@@ -503,14 +503,14 @@ void ScanProgress::_processFile(QString sFileName)
 
         if(scanResult.listErrors.count())
         {
-            QString sFileName=_pOptions->sResultDirectory;
+            QString _sFileName=_pOptions->sResultDirectory;
 
-            XBinary::createDirectory(sFileName);
-            sFileName+=QDir::separator()+QString("__ERRORS");
-            XBinary::createDirectory(sFileName);
-            sFileName+=QDir::separator()+XBinary::getBaseFileName(scanResult.sFileName);
+            XBinary::createDirectory(_sFileName);
+            _sFileName+=QDir::separator()+QString("__ERRORS");
+            XBinary::createDirectory(_sFileName);
+            _sFileName+=QDir::separator()+XBinary::getBaseFileName(scanResult.sFileName);
 
-            XBinary::copyFile(scanResult.sFileName,sFileName);
+            XBinary::copyFile(scanResult.sFileName,_sFileName);
         }
 
         setFileStat(scanResult.sFileName,QString::number(scanResult.nScanTime),QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
@@ -525,6 +525,11 @@ void ScanProgress::_processFile(QString sFileName)
             XBinary::removeFile(scanResult.sFileName);
         }
     }
+
+    mutexStats.lock();
+    currentStats.stFiles.remove(sFileName);
+    stScripts.remove(&dieScript);
+    mutexStats.unlock();
 
     pSemaphore->release();
 }
@@ -630,7 +635,16 @@ void ScanProgress::process()
 void ScanProgress::stop()
 {
     bIsStop=true;
-    emit stopAllThreads();
+
+    mutexStats.lock();
+    QList<DiE_Script *> listScripts=stScripts.toList();
+
+    for(int i=0;i<listScripts.count();i++)
+    {
+        listScripts.at(i)->stop();
+    }
+
+    mutexStats.unlock();
 }
 
 ScanProgress::STATS ScanProgress::getCurrentStats()

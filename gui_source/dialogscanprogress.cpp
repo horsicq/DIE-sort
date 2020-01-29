@@ -108,6 +108,15 @@ void DialogScanProgress::timerSlot()
         ui->progressBarTotal->setValue((int)((stats.nCurrent*100)/stats.nTotal));
     }
 
+    ui->plainTextEditFiles->clear();
+
+    QList<QString> listFiles=stats.stFiles.toList();
+
+    for(int i=0;i<listFiles.count();i++)
+    {
+        ui->plainTextEditFiles->appendPlainText(listFiles.at(i));
+    }
+
     QDateTime dt;
     dt.setMSecsSinceEpoch(stats.nElapsed);
     QString sDateTime=dt.time().addSecs(-60*60).toString("hh:mm:ss");

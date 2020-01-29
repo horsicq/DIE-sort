@@ -97,6 +97,7 @@ public:
         qint64 nElapsed;
         QString sStatus;
         qint32 nNumberOfThreads;
+        QSet<QString> stFiles;
     };
 
     explicit ScanProgress(QObject *parent=nullptr);
@@ -121,7 +122,6 @@ public:
 
 signals:
     void completed(qint64 nElapsedTime);
-    void stopAllThreads();
 
 public slots:
     void process();
@@ -140,6 +140,7 @@ private:
     QMutex mutexStats;
     QSemaphore *pSemaphore;
     DiE_Script dieScript;
+    QSet<DiE_Script *> stScripts;
 };
 
 #endif // SCANPROGRESS_H
