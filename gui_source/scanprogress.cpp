@@ -257,6 +257,7 @@ void ScanProgress::_processFile(QString sFileName)
         DiE_Script::SCAN_OPTIONS options={};
 
         options.bDeepScan=_pOptions->bDeepScan;
+        options.bShowType=true;
         options.bShowVersion=_pOptions->bShowVersion;
         options.bShowOptions=_pOptions->bShowOptions;
 
