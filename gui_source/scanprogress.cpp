@@ -300,7 +300,7 @@ void ScanProgress::_processFile(QString sFileName)
 
                         if((_pOptions->copyType==CT_IDENT)||(_pOptions->copyType==CT_IDENT_UNK))
                         {
-                            QString sResult=ss.sString;
+                            QString sResult=ss.sResult;
 
                             sResult=XBinary::convertFileNameSymbols(sResult);
 
