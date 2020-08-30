@@ -81,9 +81,9 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     ui->checkBoxAllFileTypes->setChecked(true);
     ui->checkBoxAllTypes->setChecked(true);
 
-    ui->comboBoxCopyFormat->addItem("Type/FileType/Name");
-    ui->comboBoxCopyFormat->addItem("Arch/Type/FileType/Name");
-    ui->comboBoxCopyFormat->addItem("Type/Arch/FileType/Name");
+    ui->comboBoxCopyFormat->addItem("FileType/Type/Name");
+    ui->comboBoxCopyFormat->addItem("Arch/FileType/Type/Name");
+    ui->comboBoxCopyFormat->addItem("FileType/Arch/Type/Name");
 
     ui->comboBoxCopyType->addItem("Identified");
     ui->comboBoxCopyType->addItem("Identified/Unknown");

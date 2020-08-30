@@ -539,15 +539,15 @@ QString ScanProgress::createPath(ScanProgress::CF copyFormat, DiE_Script::SCAN_H
 {
     QString sResult;
 
-    if(copyFormat==ScanProgress::CF_TYPE_FT_NAME)
+    if(copyFormat==ScanProgress::CF_FT_TYPE_NAME)
     {
         sResult=XBinary::fileTypeIdToString(scanHeader.fileType);
     }
-    else if(copyFormat==ScanProgress::CF_TYPE_ARCH_FT_NAME)
+    else if(copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME)
     {
         sResult=XBinary::fileTypeIdToString(scanHeader.fileType)+QDir::separator()+scanHeader.sArch;
     }
-    else if(copyFormat==ScanProgress::CF_ARCH_TYPE_FT_NAME)
+    else if(copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME)
     {
         sResult=scanHeader.sArch+QDir::separator()+XBinary::fileTypeIdToString(scanHeader.fileType);
     }

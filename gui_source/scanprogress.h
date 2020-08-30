@@ -40,9 +40,9 @@ class ScanProgress : public QObject
 public:
     enum CF
     {
-        CF_TYPE_FT_NAME=0,
-        CF_ARCH_TYPE_FT_NAME,
-        CF_TYPE_ARCH_FT_NAME
+        CF_FT_TYPE_NAME=0,
+        CF_ARCH_FT_TYPE_NAME,
+        CF_FT_ARCH_TYPE_NAME
     };
 
     enum CT
