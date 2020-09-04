@@ -82,7 +82,7 @@ void ScanProgress::setFileStat(QString sFileName, QString sTimeCount, QString sD
     QSqlQuery query(_pOptions->dbSQLLite);
 
     query.exec(QString("INSERT OR REPLACE INTO files(FILENAME,TIMECOUNT,DATETIME) VALUES('%1','%2','%3')")
-               .arg(sFileName)
+               .arg(sFileName.replace("'","''"))
                .arg(sTimeCount)
                .arg(sDate));
 
@@ -151,7 +151,7 @@ QString ScanProgress::getCurrentFileNameAndLock()
     }
 
     query.exec(QString("INSERT OR REPLACE INTO files(FILENAME,TIMECOUNT,DATETIME) VALUES('%1','%2','%3')")
-               .arg(sResult)
+               .arg(sResult.replace("'","''"))
                .arg(0)
                .arg(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")));
 
