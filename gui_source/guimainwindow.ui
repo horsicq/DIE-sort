@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>901</width>
-    <height>652</height>
+    <width>908</width>
+    <height>688</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>GuiMainWindow</string>
+   <string notr="true">GuiMainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_5">
