@@ -2,6 +2,7 @@ QT       += core gui sql concurrent
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+
 TARGET = die-sort
 TEMPLATE = app
 
