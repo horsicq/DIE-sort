@@ -1,64 +1,37 @@
-set VS_PATH="C:\Program Files (x86)\Microsoft Visual Studio 12.0"
-set SEVENZIP_PATH="C:\Program Files\7-Zip"
-set QT_PATH32="C:\Qt5.6.3\5.6.3\msvc2013"
+set VSVARS_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat"
+set QMAKE_PATH="C:\Qt\5.15.2\msvc2019\bin\qmake.exe"
+set SEVENZIP_PATH="C:\Program Files\7-Zip\7z.exe"
 
-set BUILD_NAME=diesort_win32_portable
-set SOURCE_PATH=%~dp0
-mkdir %SOURCE_PATH%\build
-mkdir %SOURCE_PATH%\build\loader
-mkdir %SOURCE_PATH%\release
-set /p RELEASE_VERSION=<%SOURCE_PATH%\release_version.txt
+set X_SOURCE_PATH=%~dp0
+set X_BUILD_NAME=xapkdetector_win32_portable
+set /p X_RELEASE_VERSION=<%X_SOURCE_PATH%\release_version.txt
 
-set QT_PATH=%QT_PATH32%
-set QT_SPEC=win32-msvc2013
-call %VS_PATH%\VC\bin\vcvars32.bat
-set GUIEXE=die-sort.exe
-set ZIP_NAME=%BUILD_NAME%_%RELEASE_VERSION%
-set RES_FILE=rsrc
+call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %VSVARS_PATH%
+call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %QMAKE_PATH%
+call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %SEVENZIP_PATH%
 
-cd gui_source
-%QT_PATH%\bin\qmake.exe gui_source.pro -r -spec %QT_SPEC% "CONFIG+=release"
+IF NOT [%X_ERROR%] == [] goto exit
 
-nmake Makefile.Release clean
-nmake
-del Makefile
-del Makefile.Release
-del Makefile.Debug
+call %X_SOURCE_PATH%\build_tools\windows.cmd make_init
+call %X_SOURCE_PATH%\build_tools\windows.cmd make_build %X_SOURCE_PATH%\DIE_sort_source.pro
 
-cd ..
+call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %X_SOURCE_PATH%\build\release\die-sort.exe
 
-cd winloader_source
+IF NOT [%X_ERROR%] == [] goto exit
 
-cl.exe /c winloader.cpp /D_USING_V110_SDK71_ /GS- /Oi-
-Rc.exe /v %RES_FILE%.rc
-link.exe winloader.obj %RES_FILE%.res user32.lib kernel32.lib shell32.lib /NODEFAULTLIB /SAFESEH:NO /SUBSYSTEM:WINDOWS,5.01 /ENTRY:entry /OUT:%SOURCE_PATH%\build\loader\%GUIEXE%
-del /s winloader.obj
-del /s %RES_FILE%.res
+copy %X_SOURCE_PATH%\build\release\die-sort.exe %X_SOURCE_PATH%\release\%X_BUILD_NAME%\
+xcopy %X_SOURCE_PATH%\Detect-It-Easy\db %X_SOURCE_PATH%\release\%X_BUILD_NAME%\db /E /I
 
-cd ..
+call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Widgets
+call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Gui
+call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Core
+call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Widgets
+call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Sql
+call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_plugin platforms qwindows
+call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_plugin sqldrivers qsqlite
+call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_vc_redist
 
-mkdir %SOURCE_PATH%\release\%BUILD_NAME%
-mkdir %SOURCE_PATH%\release\%BUILD_NAME%\base
-mkdir %SOURCE_PATH%\release\%BUILD_NAME%\base\platforms
-mkdir %SOURCE_PATH%\release\%BUILD_NAME%\base\sqldrivers
+call %X_SOURCE_PATH%\build_tools\windows.cmd make_release
 
-copy %SOURCE_PATH%\build\loader\%GUIEXE% %SOURCE_PATH%\release\%BUILD_NAME%\
-copy %SOURCE_PATH%\build\release\%GUIEXE% %SOURCE_PATH%\release\%BUILD_NAME%\base\
-copy %QT_PATH%\bin\Qt5Widgets.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
-copy %QT_PATH%\bin\Qt5Script.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
-copy %QT_PATH%\bin\Qt5Gui.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
-copy %QT_PATH%\bin\Qt5Core.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
-copy %QT_PATH%\bin\Qt5Sql.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
-copy %QT_PATH%\plugins\platforms\qwindows.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\platforms\
-copy %QT_PATH%\plugins\sqldrivers\qsqlite.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\sqldrivers\
-
-copy %VS_PATH%\VC\redist\x86\Microsoft.VC120.CRT\msvcp120.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
-copy %VS_PATH%\VC\redist\x86\Microsoft.VC120.CRT\msvcr120.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
-
-xcopy %SOURCE_PATH%\Detect-It-Easy\db %SOURCE_PATH%\release\%BUILD_NAME%\base\db /E /I
-
-cd %SOURCE_PATH%\release
-if exist %ZIP_NAME%.zip del %ZIP_NAME%.zip
-%SEVENZIP_PATH%\7z.exe a %ZIP_NAME%.zip %BUILD_NAME%\*
-rmdir /s /q %SOURCE_PATH%\release\%BUILD_NAME%
-cd ..
+:exit
+call %X_SOURCE_PATH%\build_tools\windows.cmd make_clear
