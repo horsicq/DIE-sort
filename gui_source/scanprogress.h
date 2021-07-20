@@ -57,7 +57,9 @@ public:
         UP_NONE=0,
         UP_EP_BYTES,
         UP_HEADER_BYTES,
-        UP_OVERLAY_BYTES
+        UP_OVERLAY_BYTES,
+        UP_OPCODES,
+        UP_REL_OPCODES
     };
 
     enum FF
