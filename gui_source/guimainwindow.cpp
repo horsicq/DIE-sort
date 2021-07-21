@@ -98,6 +98,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     ui->comboBoxUnknownPrefix->addItem("Header Bytes");
     ui->comboBoxUnknownPrefix->addItem("Overlay Bytes");
     ui->comboBoxUnknownPrefix->addItem("Opcodes");
+    ui->comboBoxUnknownPrefix->addItem("Rel Opcodes");
 
     ui->comboBoxCopyFormat->setCurrentIndex(settings.value("CopyFormat",0).toInt());
     ui->comboBoxCopyType->setCurrentIndex(settings.value("CopyType",0).toInt());

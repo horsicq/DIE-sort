@@ -367,7 +367,7 @@ void ScanProgress::_processFile(QString sFileName)
                                         createPath(_pOptions->copyFormat,sh)+QDir::separator()+
                                         "__UNKNOWN";
 
-                    if((_pOptions->unknownPrefix==UP_EP_BYTES)||(_pOptions->unknownPrefix==UP_HEADER_BYTES)||(_pOptions->unknownPrefix==UP_OVERLAY_BYTES))
+                    if(_pOptions->unknownPrefix!=UP_NONE)
                     {
                         QString sFolderName;
                         qint32 nUnknownCount=_pOptions->nUnknownCount;
@@ -477,20 +477,21 @@ void ScanProgress::_processFile(QString sFileName)
                                 {
                                     sFolderName=binary.getSignature(0,nUnknownCount);
                                 }
-                                else if(_pOptions->unknownPrefix==UP_OPCODES)
-                                {
-                                    XBinary::_MEMORY_MAP memoryMap=XFormats::getMemoryMap(sh.fileType,&file);
-                                    qint64 nEntryPointAddress=XFormats::getEntryPointAddress(sh.fileType,&file);
+                            }
 
-                                    sFolderName=XCapstone::getSignature(&file,&memoryMap,nEntryPointAddress,XCapstone::ST_MASK,nUnknownCount);
-                                }
-                                else if(_pOptions->unknownPrefix==UP_OPCODES_REL)
-                                {
-                                    XBinary::_MEMORY_MAP memoryMap=XFormats::getMemoryMap(sh.fileType,&file);
-                                    qint64 nEntryPointAddress=XFormats::getEntryPointAddress(sh.fileType,&file);
+                            if(_pOptions->unknownPrefix==UP_OPCODES)
+                            {
+                                XBinary::_MEMORY_MAP memoryMap=XFormats::getMemoryMap(sh.fileType,&file);
+                                qint64 nEntryPointAddress=XFormats::getEntryPointAddress(sh.fileType,&file);
 
-                                    sFolderName=XCapstone::getSignature(&file,&memoryMap,nEntryPointAddress,XCapstone::ST_MASKREL,nUnknownCount);
-                                }
+                                sFolderName=XCapstone::getSignature(&file,&memoryMap,nEntryPointAddress,XCapstone::ST_MASK,nUnknownCount);
+                            }
+                            else if(_pOptions->unknownPrefix==UP_OPCODES_REL)
+                            {
+                                XBinary::_MEMORY_MAP memoryMap=XFormats::getMemoryMap(sh.fileType,&file);
+                                qint64 nEntryPointAddress=XFormats::getEntryPointAddress(sh.fileType,&file);
+
+                                sFolderName=XCapstone::getSignature(&file,&memoryMap,nEntryPointAddress,XCapstone::ST_MASKREL,nUnknownCount);
                             }
 
                             file.close();
