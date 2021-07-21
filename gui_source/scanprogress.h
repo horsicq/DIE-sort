@@ -32,6 +32,7 @@
 #include <QFutureWatcher>
 #include <QtConcurrent>
 #include <QSemaphore>
+#include "xcapstone.h"
 
 class ScanProgress : public QObject
 {
@@ -59,7 +60,7 @@ public:
         UP_HEADER_BYTES,
         UP_OVERLAY_BYTES,
         UP_OPCODES,
-        UP_REL_OPCODES
+        UP_OPCODES_REL
     };
 
     enum FF
