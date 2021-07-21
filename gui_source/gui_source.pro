@@ -27,6 +27,11 @@ FORMS += \
     include(../die_script/die_script.pri)
 }
 
+!contains(XCONFIG, xcapstone) {
+    XCONFIG += xcapstone
+    include(../XCapstone/xcapstone.pri)
+}
+
 include(../build.pri)
 
 win32 {
