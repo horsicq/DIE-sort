@@ -367,6 +367,8 @@ void ScanProgress::_processFile(QString sFileName)
                                         createPath(_pOptions->copyFormat,sh)+QDir::separator()+
                                         "__UNKNOWN";
 
+                    bool bIsOverlayPresent=false;
+
                     if(_pOptions->unknownPrefix!=UP_NONE)
                     {
                         QString sFolderName;
@@ -382,13 +384,15 @@ void ScanProgress::_processFile(QString sFileName)
                             {
                                 XPE pe(&file);
 
+                                bIsOverlayPresent=pe.isOverlayPresent();
+
                                 if(_pOptions->unknownPrefix==UP_EP_BYTES)
                                 {
                                     sFolderName=pe.getSignature(pe._getEntryPointOffset(),nUnknownCount);
                                 }
                                 else if(_pOptions->unknownPrefix==UP_OVERLAY_BYTES)
                                 {
-                                    if(pe.isOverlayPresent())
+                                    if(bIsOverlayPresent)
                                     {
                                         sFolderName=pe.getSignature(pe.getOverlayOffset(),nUnknownCount);
                                     }
@@ -402,13 +406,15 @@ void ScanProgress::_processFile(QString sFileName)
                             {
                                 XELF elf(&file);
 
+                                bIsOverlayPresent=elf.isOverlayPresent();
+
                                 if(_pOptions->unknownPrefix==UP_EP_BYTES)
                                 {
                                     sFolderName=elf.getSignature(elf._getEntryPointOffset(),nUnknownCount);
                                 }
                                 else if(_pOptions->unknownPrefix==UP_OVERLAY_BYTES)
                                 {
-                                    if(elf.isOverlayPresent())
+                                    if(bIsOverlayPresent)
                                     {
                                         sFolderName=elf.getSignature(elf.getOverlayOffset(),nUnknownCount);
                                     }
@@ -422,13 +428,15 @@ void ScanProgress::_processFile(QString sFileName)
                             {
                                 XMACH mach(&file);
 
+                                bIsOverlayPresent=mach.isOverlayPresent();
+
                                 if(_pOptions->unknownPrefix==UP_EP_BYTES)
                                 {
                                     sFolderName=mach.getSignature(mach._getEntryPointOffset(),nUnknownCount);
                                 }
                                 else if(_pOptions->unknownPrefix==UP_OVERLAY_BYTES)
                                 {
-                                    if(mach.isOverlayPresent())
+                                    if(bIsOverlayPresent)
                                     {
                                         sFolderName=mach.getSignature(mach.getOverlayOffset(),nUnknownCount);
                                     }
@@ -442,13 +450,15 @@ void ScanProgress::_processFile(QString sFileName)
                             {
                                 XMSDOS msdos(&file);
 
+                                bIsOverlayPresent=msdos.isOverlayPresent();
+
                                 if(_pOptions->unknownPrefix==UP_EP_BYTES)
                                 {
                                     sFolderName=msdos.getSignature(msdos._getEntryPointOffset(),nUnknownCount);
                                 }
                                 else if(_pOptions->unknownPrefix==UP_OVERLAY_BYTES)
                                 {
-                                    if(msdos.isOverlayPresent())
+                                    if(bIsOverlayPresent)
                                     {
                                         sFolderName=msdos.getSignature(msdos.getOverlayOffset(),nUnknownCount);
                                     }
@@ -462,13 +472,15 @@ void ScanProgress::_processFile(QString sFileName)
                             {
                                 XBinary binary(&file);
 
+                                bIsOverlayPresent=binary.isOverlayPresent();
+
                                 if(_pOptions->unknownPrefix==UP_EP_BYTES)
                                 {
                                     sFolderName=binary.getSignature(binary._getEntryPointOffset(),nUnknownCount);
                                 }
                                 else if(_pOptions->unknownPrefix==UP_OVERLAY_BYTES)
                                 {
-                                    if(binary.isOverlayPresent())
+                                    if(bIsOverlayPresent)
                                     {
                                         sFolderName=binary.getSignature(binary.getOverlayOffset(),nUnknownCount);
                                     }
@@ -507,11 +519,46 @@ void ScanProgress::_processFile(QString sFileName)
 
                     _sFileName+=QDir::separator()+_sBaseFileName;
 
-                    if(XBinary::copyFile(scanResult.sFileName,_sFileName))
-                    {
-                        bGlobalCopy=true;
+                    bool bCopyEnable=true;
 
-                        setFileCount(nCRC,nCurrentCount+1);
+                    if(_pOptions->overlay==OVERLAY_PRESENT)
+                    {
+                        if(bCopyEnable)
+                        {
+                            bCopyEnable=(bIsOverlayPresent);
+                        }
+                    }
+                    else if(_pOptions->overlay==OVERLAY_NOTPRESENT)
+                    {
+                        if(bCopyEnable)
+                        {
+                            bCopyEnable=(!bIsOverlayPresent);
+                        }
+                    }
+
+                    if(_pOptions->entropy==ENTROPY_MORETHAN)
+                    {
+                        if(bCopyEnable)
+                        {
+                            bCopyEnable=(XBinary::getEntropy(scanResult.sFileName)>=_pOptions->dEntropyValue);
+                        }
+                    }
+                    else if(_pOptions->entropy==ENTROPY_LESSTHAN)
+                    {
+                        if(bCopyEnable)
+                        {
+                            bCopyEnable=(XBinary::getEntropy(scanResult.sFileName)<=_pOptions->dEntropyValue);
+                        }
+                    }
+
+                    if(bCopyEnable)
+                    {
+                        if(XBinary::copyFile(scanResult.sFileName,_sFileName))
+                        {
+                            bGlobalCopy=true;
+
+                            setFileCount(nCRC,nCurrentCount+1);
+                        }
                     }
                 }
             }

@@ -57,6 +57,8 @@ private slots:
     void onTypeToggled(bool checked);
     void on_pushButtonSignatures_clicked();
 
+    void on_doubleSpinBoxEntropy_valueChanged(double arg1);
+
 private:
     Ui::GuiMainWindow *ui;
 

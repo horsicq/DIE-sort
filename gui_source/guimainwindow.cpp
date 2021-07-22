@@ -100,12 +100,23 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     ui->comboBoxUnknownPrefix->addItem("Opcodes");
     ui->comboBoxUnknownPrefix->addItem("Rel Opcodes");
 
+    ui->comboBoxOverlay->addItem("");
+    ui->comboBoxOverlay->addItem("Present");
+    ui->comboBoxOverlay->addItem("Not present");
+
+    ui->comboBoxEntropy->addItem("");
+    ui->comboBoxEntropy->addItem("More than");
+    ui->comboBoxEntropy->addItem("Less than");
+
     ui->comboBoxCopyFormat->setCurrentIndex(settings.value("CopyFormat",0).toInt());
     ui->comboBoxCopyType->setCurrentIndex(settings.value("CopyType",0).toInt());
     ui->comboBoxFileFormat->setCurrentIndex(settings.value("FileFormat",0).toInt());
     ui->comboBoxUnknownPrefix->setCurrentIndex(settings.value("UnknownPrefix",0).toInt());
+    ui->comboBoxOverlay->setCurrentIndex(settings.value("Overlay",0).toInt());
+    ui->comboBoxEntropy->setCurrentIndex(settings.value("Entropy",0).toInt());
 
     ui->spinBoxUnknownCount->setValue(settings.value("UnknownCount",10).toInt());
+    ui->doubleSpinBoxEntropy->setValue(settings.value("EntropyValue",6.5).toDouble());
 
     ui->lineEditDirectoryName->setText(settings.value("DirectoryName",QDir::currentPath()).toString());
     ui->lineEditSignatures->setText(settings.value("Signatures","$app/db").toString());
@@ -142,6 +153,10 @@ GuiMainWindow::~GuiMainWindow()
     settings.setValue("RemoveCopied",ui->checkBoxRemoveCopied->isChecked());
     settings.setValue("UnknownPrefix",ui->comboBoxUnknownPrefix->currentIndex());
     settings.setValue("UnknownCount",ui->spinBoxUnknownCount->value());
+
+    settings.setValue("Overlay",ui->comboBoxOverlay->currentIndex());
+    settings.setValue("Entropy",ui->comboBoxEntropy->currentIndex());
+    settings.setValue("EntropyValue",ui->doubleSpinBoxEntropy->value());
 
     delete ui;
 }
@@ -248,6 +263,9 @@ void GuiMainWindow::_scan()
     options.nUnknownCount=ui->spinBoxUnknownCount->value();
 
     options.fileFormat=(ScanProgress::FF)ui->comboBoxFileFormat->currentIndex();
+    options.overlay=(ScanProgress::OVERLAY)ui->comboBoxOverlay->currentIndex();
+    options.entropy=(ScanProgress::ENTROPY)ui->comboBoxEntropy->currentIndex();
+    options.dEntropyValue=ui->doubleSpinBoxEntropy->value();
 
     DialogScanProgress ds(this);
 
@@ -356,4 +374,11 @@ void GuiMainWindow::on_pushButtonSignatures_clicked()
     {
         ui->lineEditSignatures->setText(sDirectoryName);
     }
+}
+
+void GuiMainWindow::on_doubleSpinBoxEntropy_valueChanged(double arg1)
+{
+    double dEntropy=ui->doubleSpinBoxEntropy->value();
+    double dProcent=(dEntropy/8)*100;
+    ui->lineEditEntropy->setText(QString::number(dProcent));
 }

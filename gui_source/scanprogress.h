@@ -70,6 +70,20 @@ public:
         FF_MD5_ORIGINAL
     };
 
+    enum OVERLAY
+    {
+        OVERLAY_NONE=0,
+        OVERLAY_PRESENT,
+        OVERLAY_NOTPRESENT
+    };
+
+    enum ENTROPY
+    {
+        ENTROPY_NONE=0,
+        ENTROPY_MORETHAN,
+        ENTROPY_LESSTHAN
+    };
+
     struct SCAN_OPTIONS
     {
         bool bDeepScan;
@@ -89,6 +103,9 @@ public:
         CT copyType;
         UP unknownPrefix;
         FF fileFormat;
+        OVERLAY overlay;
+        ENTROPY entropy;
+        double dEntropyValue;
         qint64 nUnknownCount;
         bool bRemoveCopied;
     };
