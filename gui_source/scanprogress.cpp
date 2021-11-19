@@ -265,7 +265,7 @@ void ScanProgress::_processFile(QString sFileName)
 
         DiE_Script::SCAN_RESULT scanResult=dieScript.scanFile(sFileName,&options);
 
-        QString _sBaseFileName=XBinary::getBaseFileName(scanResult.sFileName);
+        QString _sBaseFileName=QFileInfo(scanResult.sFileName).completeBaseName();
 
         if((_pOptions->fileFormat==FF_MD5)||(_pOptions->fileFormat==FF_MD5_ORIGINAL))
         {
