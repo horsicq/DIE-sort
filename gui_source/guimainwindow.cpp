@@ -39,6 +39,9 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     connect(ui->checkBoxText,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxCOM,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxMSDOS,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxNE,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxLE,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxLX,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxPE32,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxPE64,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxELF32,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
@@ -206,6 +209,9 @@ void GuiMainWindow::_scan()
     if(ui->checkBoxText->isChecked())               options.stFileTypes.insert(XBinary::FT_TEXT);
     if(ui->checkBoxCOM->isChecked())                options.stFileTypes.insert(XBinary::FT_COM);
     if(ui->checkBoxMSDOS->isChecked())              options.stFileTypes.insert(XBinary::FT_MSDOS);
+    if(ui->checkBoxNE->isChecked())                 options.stFileTypes.insert(XBinary::FT_NE);
+    if(ui->checkBoxLE->isChecked())                 options.stFileTypes.insert(XBinary::FT_LE);
+    if(ui->checkBoxLX->isChecked())                 options.stFileTypes.insert(XBinary::FT_LX);
     if(ui->checkBoxPE32->isChecked())               options.stFileTypes.insert(XBinary::FT_PE32);
     if(ui->checkBoxPE64->isChecked())               options.stFileTypes.insert(XBinary::FT_PE64);
     if(ui->checkBoxELF32->isChecked())              options.stFileTypes.insert(XBinary::FT_ELF32);
@@ -286,6 +292,9 @@ void GuiMainWindow::on_checkBoxAllFileTypes_toggled(bool checked)
     ui->checkBoxText->setChecked(checked);
     ui->checkBoxCOM->setChecked(checked);
     ui->checkBoxMSDOS->setChecked(checked);
+    ui->checkBoxNE->setChecked(checked);
+    ui->checkBoxLE->setChecked(checked);
+    ui->checkBoxLX->setChecked(checked);
     ui->checkBoxPE32->setChecked(checked);
     ui->checkBoxPE64->setChecked(checked);
     ui->checkBoxELF32->setChecked(checked);

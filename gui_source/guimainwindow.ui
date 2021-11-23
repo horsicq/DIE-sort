@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>908</width>
-    <height>688</height>
+    <width>943</width>
+    <height>773</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -223,6 +223,27 @@
           <widget class="QCheckBox" name="checkBoxMSDOS">
            <property name="text">
             <string>MSDOS</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBoxNE">
+           <property name="text">
+            <string>NE</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBoxLE">
+           <property name="text">
+            <string>LE</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBoxLX">
+           <property name="text">
+            <string>LX</string>
            </property>
           </widget>
          </item>
