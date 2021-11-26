@@ -206,13 +206,6 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBoxText">
-           <property name="text">
-            <string>Text</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QCheckBox" name="checkBoxCOM">
            <property name="text">
             <string>COM</string>

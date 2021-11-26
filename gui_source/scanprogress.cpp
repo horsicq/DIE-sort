@@ -265,15 +265,19 @@ void ScanProgress::_processFile(QString sFileName)
 
         DiE_Script::SCAN_RESULT scanResult=dieScript.scanFile(sFileName,&options);
 
+        QString sEPBytes;
         QString sEP;
         QString sEPREL;
 
-        if(     (_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EP)||
-                (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EP)||
-                (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EP)||
-                (_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPREL)||
-                (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPREL)||
-                (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPREL))
+        if(     (_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPBYTES)||
+                (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPBYTES)||
+                (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPBYTES)||
+                (_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIG)||
+                (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIG)||
+                (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPSIG)||
+                (_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIGREL)||
+                (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIGREL)||
+                (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPSIGREL))
         {
             QFile _file;
             _file.setFileName(sFileName);
@@ -282,7 +286,9 @@ void ScanProgress::_processFile(QString sFileName)
             {
                 XBinary::_MEMORY_MAP memoryMap=XFormats::getMemoryMap(scanResult.scanHeader.fileType,&_file);
                 qint64 nEPAddress=XFormats::getEntryPointAddress(scanResult.scanHeader.fileType,&_file);
+                qint64 nEPOffset=XFormats::getEntryPointOffset(scanResult.scanHeader.fileType,&_file);
 
+                sEPBytes=XBinary::getSignature(&_file,nEPOffset,20);
                 sEP=XCapstone::getSignature(&_file,&memoryMap,nEPAddress,XCapstone::ST_MASK,10).replace(".","_");
                 sEPREL=XCapstone::getSignature(&_file,&memoryMap,nEPAddress,XCapstone::ST_MASKREL,10).replace(".","_");
 
@@ -349,15 +355,21 @@ void ScanProgress::_processFile(QString sFileName)
                                                     createPath(_pOptions->copyFormat,ss.scanHeader)+QDir::separator()+
                                                     ss.sType+QDir::separator()+sResult;
 
-                                if(     (_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EP)||
-                                        (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EP)||
-                                        (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EP))
+                                if(     (_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPBYTES)||
+                                        (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPBYTES)||
+                                        (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPBYTES))
+                                {
+                                    _sFileName+=QDir::separator()+sEPBytes;
+                                }
+                                else if(     (_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIG)||
+                                        (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIG)||
+                                        (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPSIG))
                                 {
                                     _sFileName+=QDir::separator()+sEP;
                                 }
-                                else if((_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPREL)||
-                                        (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPREL)||
-                                        (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPREL))
+                                else if((_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIGREL)||
+                                        (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIGREL)||
+                                        (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPSIGREL))
                                 {
                                     _sFileName+=QDir::separator()+sEPREL;
                                 }
@@ -405,15 +417,21 @@ void ScanProgress::_processFile(QString sFileName)
                                         createPath(_pOptions->copyFormat,sh)+QDir::separator()+
                                         "__UNKNOWN";
 
-                    if(     (_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EP)||
-                            (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EP)||
-                            (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EP))
+                    if(     (_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPBYTES)||
+                            (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPBYTES)||
+                            (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPBYTES))
+                    {
+                        _sFileName+=QDir::separator()+sEPBytes;
+                    }
+                    else if((_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIG)||
+                            (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIG)||
+                            (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPSIG))
                     {
                         _sFileName+=QDir::separator()+sEP;
                     }
-                    else if((_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPREL)||
-                            (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPREL)||
-                            (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPREL))
+                    else if((_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIGREL)||
+                            (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIGREL)||
+                            (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPSIGREL))
                     {
                         _sFileName+=QDir::separator()+sEPREL;
                     }
@@ -653,20 +671,20 @@ QString ScanProgress::createPath(ScanProgress::CF copyFormat, DiE_Script::SCAN_H
     QString sResult;
 
     if(     (copyFormat==ScanProgress::CF_FT_TYPE_NAME)||
-            (copyFormat==ScanProgress::CF_FT_TYPE_NAME_EP)||
-            (copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPREL))
+            (copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPSIG)||
+            (copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPSIGREL))
     {
         sResult=XBinary::fileTypeIdToString(scanHeader.fileType);
     }
     else if((copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME)||
-            (copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EP)||
-            (copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPREL))
+            (copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIG)||
+            (copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIGREL))
     {
         sResult=XBinary::fileTypeIdToString(scanHeader.fileType)+QDir::separator()+scanHeader.sArch;
     }
     else if((copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME)||
-            (copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EP)||
-            (copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPREL))
+            (copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIG)||
+            (copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIGREL))
     {
         sResult=scanHeader.sArch+QDir::separator()+XBinary::fileTypeIdToString(scanHeader.fileType);
     }

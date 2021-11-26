@@ -36,7 +36,6 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     QSettings settings(sSettingsFile,QSettings::IniFormat);
 
     connect(ui->checkBoxBinary,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
-    connect(ui->checkBoxText,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxCOM,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxMSDOS,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxNE,SIGNAL(toggled(bool)),this,SLOT(onFileTypeToggled(bool)));
@@ -87,12 +86,15 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     ui->comboBoxCopyFormat->addItem("FileType/Type/Name");
     ui->comboBoxCopyFormat->addItem("Arch/FileType/Type/Name");
     ui->comboBoxCopyFormat->addItem("FileType/Arch/Type/Name");
-    ui->comboBoxCopyFormat->addItem("FileType/Type/Name/EP");
-    ui->comboBoxCopyFormat->addItem("Arch/FileType/Type/Name/EP");
-    ui->comboBoxCopyFormat->addItem("FileType/Arch/Type/Name/EP");
-    ui->comboBoxCopyFormat->addItem("FileType/Type/Name/EPREL");
-    ui->comboBoxCopyFormat->addItem("Arch/FileType/Type/Name/EPREL");
-    ui->comboBoxCopyFormat->addItem("FileType/Arch/Type/Name/EPREL");
+    ui->comboBoxCopyFormat->addItem("FileType/Type/Name/EP bytes");
+    ui->comboBoxCopyFormat->addItem("Arch/FileType/Type/Name/EP bytes");
+    ui->comboBoxCopyFormat->addItem("FileType/Arch/Type/Name/EP bytes");
+    ui->comboBoxCopyFormat->addItem("FileType/Type/Name/EP signature");
+    ui->comboBoxCopyFormat->addItem("Arch/FileType/Type/Name/EP signature");
+    ui->comboBoxCopyFormat->addItem("FileType/Arch/Type/Name/EP signature");
+    ui->comboBoxCopyFormat->addItem("FileType/Type/Name/EP signature(rel)");
+    ui->comboBoxCopyFormat->addItem("Arch/FileType/Type/Name/EP signature(rel)");
+    ui->comboBoxCopyFormat->addItem("FileType/Arch/Type/Name/EP signature(rel)");
 
     ui->comboBoxCopyType->addItem("Identified");
     ui->comboBoxCopyType->addItem("Identified/Unknown");
@@ -212,7 +214,6 @@ void GuiMainWindow::_scan()
     options.stFileTypes.clear();
 
     if(ui->checkBoxBinary->isChecked())             options.stFileTypes.insert(XBinary::FT_BINARY);
-    if(ui->checkBoxText->isChecked())               options.stFileTypes.insert(XBinary::FT_TEXT);
     if(ui->checkBoxCOM->isChecked())                options.stFileTypes.insert(XBinary::FT_COM);
     if(ui->checkBoxMSDOS->isChecked())              options.stFileTypes.insert(XBinary::FT_MSDOS);
     if(ui->checkBoxNE->isChecked())                 options.stFileTypes.insert(XBinary::FT_NE);
@@ -295,7 +296,6 @@ void GuiMainWindow::_scan()
 void GuiMainWindow::on_checkBoxAllFileTypes_toggled(bool checked)
 {
     ui->checkBoxBinary->setChecked(checked);
-    ui->checkBoxText->setChecked(checked);
     ui->checkBoxCOM->setChecked(checked);
     ui->checkBoxMSDOS->setChecked(checked);
     ui->checkBoxNE->setChecked(checked);
