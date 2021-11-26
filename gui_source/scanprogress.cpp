@@ -265,6 +265,31 @@ void ScanProgress::_processFile(QString sFileName)
 
         DiE_Script::SCAN_RESULT scanResult=dieScript.scanFile(sFileName,&options);
 
+        QString sEP;
+        QString sEPREL;
+
+        if(     (_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EP)||
+                (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EP)||
+                (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EP)||
+                (_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPREL)||
+                (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPREL)||
+                (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPREL))
+        {
+            QFile _file;
+            _file.setFileName(sFileName);
+
+            if(_file.open(QIODevice::ReadOnly))
+            {
+                XBinary::_MEMORY_MAP memoryMap=XFormats::getMemoryMap(scanResult.scanHeader.fileType,&_file);
+                qint64 nEPAddress=XFormats::getEntryPointAddress(scanResult.scanHeader.fileType,&_file);
+
+                sEP=XCapstone::getSignature(&_file,&memoryMap,nEPAddress,XCapstone::ST_MASK,10).replace(".","_");
+                sEPREL=XCapstone::getSignature(&_file,&memoryMap,nEPAddress,XCapstone::ST_MASKREL,10).replace(".","_");
+
+                _file.close();
+            }
+        }
+
         QString _sBaseFileName=QFileInfo(scanResult.sFileName).completeBaseName();
 
         if((_pOptions->fileFormat==FF_MD5)||(_pOptions->fileFormat==FF_MD5_ORIGINAL))
@@ -324,6 +349,19 @@ void ScanProgress::_processFile(QString sFileName)
                                                     createPath(_pOptions->copyFormat,ss.scanHeader)+QDir::separator()+
                                                     ss.sType+QDir::separator()+sResult;
 
+                                if(     (_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EP)||
+                                        (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EP)||
+                                        (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EP))
+                                {
+                                    _sFileName+=QDir::separator()+sEP;
+                                }
+                                else if((_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPREL)||
+                                        (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPREL)||
+                                        (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPREL))
+                                {
+                                    _sFileName+=QDir::separator()+sEPREL;
+                                }
+
                                 XBinary::createDirectory(_sFileName);
 
                                 _sFileName+=QDir::separator()+_sBaseFileName;
@@ -366,6 +404,19 @@ void ScanProgress::_processFile(QString sFileName)
                     QString _sFileName=  _pOptions->sResultDirectory+QDir::separator()+
                                         createPath(_pOptions->copyFormat,sh)+QDir::separator()+
                                         "__UNKNOWN";
+
+                    if(     (_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EP)||
+                            (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EP)||
+                            (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EP))
+                    {
+                        _sFileName+=QDir::separator()+sEP;
+                    }
+                    else if((_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPREL)||
+                            (_pOptions->copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPREL)||
+                            (_pOptions->copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPREL))
+                    {
+                        _sFileName+=QDir::separator()+sEPREL;
+                    }
 
                     bool bIsOverlayPresent=false;
 
@@ -601,18 +652,33 @@ QString ScanProgress::createPath(ScanProgress::CF copyFormat, DiE_Script::SCAN_H
 {
     QString sResult;
 
-    if(copyFormat==ScanProgress::CF_FT_TYPE_NAME)
+    if(     (copyFormat==ScanProgress::CF_FT_TYPE_NAME)||
+            (copyFormat==ScanProgress::CF_FT_TYPE_NAME_EP)||
+            (copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPREL))
     {
         sResult=XBinary::fileTypeIdToString(scanHeader.fileType);
     }
-    else if(copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME)
+    else if((copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME)||
+            (copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EP)||
+            (copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPREL))
     {
         sResult=XBinary::fileTypeIdToString(scanHeader.fileType)+QDir::separator()+scanHeader.sArch;
     }
-    else if(copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME)
+    else if((copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME)||
+            (copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EP)||
+            (copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPREL))
     {
         sResult=scanHeader.sArch+QDir::separator()+XBinary::fileTypeIdToString(scanHeader.fileType);
     }
+
+    // TODO
+
+//    CF_FT_TYPE_NAME_EP,
+//    CF_ARCH_FT_TYPE_NAME_EP,
+//    CF_FT_ARCH_TYPE_NAME_EP,
+//    CF_FT_TYPE_NAME_EPREL,
+//    CF_ARCH_FT_TYPE_NAME_EPREL,
+//    CF_FT_ARCH_TYPE_NAME_EPREL
 
     return sResult;
 }

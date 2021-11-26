@@ -43,7 +43,13 @@ public:
     {
         CF_FT_TYPE_NAME=0,
         CF_ARCH_FT_TYPE_NAME,
-        CF_FT_ARCH_TYPE_NAME
+        CF_FT_ARCH_TYPE_NAME,
+        CF_FT_TYPE_NAME_EP,
+        CF_ARCH_FT_TYPE_NAME_EP,
+        CF_FT_ARCH_TYPE_NAME_EP,
+        CF_FT_TYPE_NAME_EPREL,
+        CF_ARCH_FT_TYPE_NAME_EPREL,
+        CF_FT_ARCH_TYPE_NAME_EPREL
     };
 
     enum CT

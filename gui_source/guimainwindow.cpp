@@ -87,6 +87,12 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     ui->comboBoxCopyFormat->addItem("FileType/Type/Name");
     ui->comboBoxCopyFormat->addItem("Arch/FileType/Type/Name");
     ui->comboBoxCopyFormat->addItem("FileType/Arch/Type/Name");
+    ui->comboBoxCopyFormat->addItem("FileType/Type/Name/EP");
+    ui->comboBoxCopyFormat->addItem("Arch/FileType/Type/Name/EP");
+    ui->comboBoxCopyFormat->addItem("FileType/Arch/Type/Name/EP");
+    ui->comboBoxCopyFormat->addItem("FileType/Type/Name/EPREL");
+    ui->comboBoxCopyFormat->addItem("Arch/FileType/Type/Name/EPREL");
+    ui->comboBoxCopyFormat->addItem("FileType/Arch/Type/Name/EPREL");
 
     ui->comboBoxCopyType->addItem("Identified");
     ui->comboBoxCopyType->addItem("Identified/Unknown");
