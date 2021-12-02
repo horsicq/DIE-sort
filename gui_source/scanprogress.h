@@ -117,6 +117,7 @@ public:
         double dEntropyValue;
         qint64 nUnknownCount;
         bool bRemoveCopied;
+        bool bCopyTheFirstOnly;
     };
 
     struct STATS

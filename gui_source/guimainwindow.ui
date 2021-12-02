@@ -106,7 +106,6 @@
           <widget class="QPushButton" name="pushButtonOpenDirectory">
            <property name="font">
             <font>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -119,7 +118,6 @@
           <widget class="QPushButton" name="pushButtonScan">
            <property name="font">
             <font>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -705,6 +703,13 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBoxCopyTheFirstOnly">
+        <property name="text">
+         <string>CheckBox</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="checkBoxRemoveCopied">

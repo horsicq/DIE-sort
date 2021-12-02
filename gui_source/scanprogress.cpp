@@ -319,6 +319,11 @@ void ScanProgress::_processFile(QString sFileName)
 
         if(nCount)
         {
+            if(_pOptions->bCopyTheFirstOnly)
+            {
+                nCount=1;
+            }
+
             for(int i=0;i<nCount;i++)
             {
                 DiE_Script::SCAN_STRUCT ss=scanResult.listRecords.at(i);

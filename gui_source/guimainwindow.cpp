@@ -136,6 +136,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     ui->spinBoxCopyCount->setValue(settings.value("CopyCount",0).toInt());
 
     ui->checkBoxRemoveCopied->setChecked(settings.value("RemoveCopied",false).toBool());
+    ui->checkBoxCopyTheFirstOnly->setChecked(settings.value("CopyTheFirstOnly",false).toBool());
 
     options.bContinue=settings.value("Continue",false).toBool();
     options.bDebug=settings.value("Debug",false).toBool();
@@ -162,6 +163,8 @@ GuiMainWindow::~GuiMainWindow()
     settings.setValue("CopyType",ui->comboBoxCopyType->currentIndex());
     settings.setValue("FileFormat",ui->comboBoxFileFormat->currentIndex());
     settings.setValue("RemoveCopied",ui->checkBoxRemoveCopied->isChecked());
+    settings.setValue("CopyTheFirstOnly",ui->checkBoxCopyTheFirstOnly->isChecked());
+
     settings.setValue("UnknownPrefix",ui->comboBoxUnknownPrefix->currentIndex());
     settings.setValue("UnknownCount",ui->spinBoxUnknownCount->value());
 
@@ -271,6 +274,7 @@ void GuiMainWindow::_scan()
     options.copyFormat=(ScanProgress::CF)ui->comboBoxCopyFormat->currentIndex();
     options.copyType=(ScanProgress::CT)ui->comboBoxCopyType->currentIndex();
     options.bRemoveCopied=ui->checkBoxRemoveCopied->isChecked();
+    options.bCopyTheFirstOnly=ui->checkBoxCopyTheFirstOnly->isChecked();
 
     options.unknownPrefix=(ScanProgress::UP)ui->comboBoxUnknownPrefix->currentIndex();
     options.nUnknownCount=ui->spinBoxUnknownCount->value();
