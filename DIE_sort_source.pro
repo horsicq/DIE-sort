@@ -1,4 +1,4 @@
 TEMPLATE      = subdirs
 
-SUBDIRS        += build_libs
+SUBDIRS        += build_libs # libs
 SUBDIRS        += gui_source
