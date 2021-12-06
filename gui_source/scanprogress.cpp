@@ -284,9 +284,9 @@ void ScanProgress::_processFile(QString sFileName)
 
             if(_file.open(QIODevice::ReadOnly))
             {
-                XBinary::_MEMORY_MAP memoryMap=XFormats::getMemoryMap(scanResult.scanHeader.fileType,&_file);
-                qint64 nEPAddress=XFormats::getEntryPointAddress(scanResult.scanHeader.fileType,&_file);
-                qint64 nEPOffset=XFormats::getEntryPointOffset(scanResult.scanHeader.fileType,&_file);
+                XBinary::_MEMORY_MAP memoryMap=XFormats::getMemoryMap(scanResult.id.fileType,&_file);
+                qint64 nEPAddress=XFormats::getEntryPointAddress(scanResult.id.fileType,&_file);
+                qint64 nEPOffset=XFormats::getEntryPointOffset(scanResult.id.fileType,&_file);
 
                 sEPBytes=XBinary::getSignature(&_file,nEPOffset,20);
                 sEP=XCapstone::getSignature(&_file,&memoryMap,nEPAddress,XCapstone::ST_MASK,10).replace(".","_");
@@ -328,7 +328,7 @@ void ScanProgress::_processFile(QString sFileName)
             {
                 DiE_Script::SCAN_STRUCT ss=scanResult.listRecords.at(i);
 
-                if(_pOptions->stFileTypes.contains(ss.scanHeader.fileType))
+                if(_pOptions->stFileTypes.contains(ss.id.fileType))
                 {
                     if((_pOptions->stTypes.contains(ss.sType))||(_pOptions->bAllTypes))
                     {
@@ -340,7 +340,7 @@ void ScanProgress::_processFile(QString sFileName)
 
                             sResult=XBinary::convertFileNameSymbols(sResult);
 
-                            quint32 nCRC=XBinary::getStringCustomCRC32(XBinary::fileTypeIdToString(ss.scanHeader.fileType)+ss.scanHeader.sArch+ss.sType+sResult);
+                            quint32 nCRC=XBinary::getStringCustomCRC32(XBinary::fileTypeIdToString(ss.id.fileType)+ss.id.sArch+ss.sType+sResult);
 
                             bool bCopy=true;
 
@@ -357,7 +357,7 @@ void ScanProgress::_processFile(QString sFileName)
                             if(bCopy)
                             {
                                 QString _sFileName=  _pOptions->sResultDirectory+QDir::separator()+
-                                                    createPath(_pOptions->copyFormat,ss.scanHeader)+QDir::separator()+
+                                                    createPath(_pOptions->copyFormat,ss.id)+QDir::separator()+
                                                     ss.sType+QDir::separator()+sResult;
 
                                 if(     (_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPBYTES)||
@@ -398,11 +398,11 @@ void ScanProgress::_processFile(QString sFileName)
 
         if((!bIdentified)&&((_pOptions->copyType==CT_IDENT_UNK)||(_pOptions->copyType==CT_UNK)))
         {
-            if(_pOptions->stFileTypes.contains(scanResult.scanHeader.fileType))
+            if(_pOptions->stFileTypes.contains(scanResult.id.fileType))
             {
-                DiE_Script::SCAN_HEADER sh=scanResult.scanHeader;
+                XBinary::SCANID id=scanResult.id;
 
-                quint32 nCRC=XBinary::getStringCustomCRC32(XBinary::fileTypeIdToString(sh.fileType)+sh.sArch+"__UNKNOWN");
+                quint32 nCRC=XBinary::getStringCustomCRC32(XBinary::fileTypeIdToString(id.fileType)+id.sArch+"__UNKNOWN");
 
                 bool bCopy=true;
 
@@ -419,7 +419,7 @@ void ScanProgress::_processFile(QString sFileName)
                 if(bCopy)
                 {
                     QString _sFileName=  _pOptions->sResultDirectory+QDir::separator()+
-                                        createPath(_pOptions->copyFormat,sh)+QDir::separator()+
+                                        createPath(_pOptions->copyFormat,id)+QDir::separator()+
                                         "__UNKNOWN";
 
                     if(     (_pOptions->copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPBYTES)||
@@ -454,7 +454,7 @@ void ScanProgress::_processFile(QString sFileName)
 
                         if(file.open(QIODevice::ReadOnly))
                         {
-                            if((sh.fileType==XBinary::FT_PE32)||(sh.fileType==XBinary::FT_PE64))
+                            if((id.fileType==XBinary::FT_PE32)||(id.fileType==XBinary::FT_PE64))
                             {
                                 XPE pe(&file);
 
@@ -476,7 +476,7 @@ void ScanProgress::_processFile(QString sFileName)
                                     sFolderName=pe.getSignature(0,nUnknownCount);
                                 }
                             }
-                            else if((sh.fileType==XBinary::FT_ELF32)||(sh.fileType==XBinary::FT_ELF64))
+                            else if((id.fileType==XBinary::FT_ELF32)||(id.fileType==XBinary::FT_ELF64))
                             {
                                 XELF elf(&file);
 
@@ -498,7 +498,7 @@ void ScanProgress::_processFile(QString sFileName)
                                     sFolderName=elf.getSignature(0,nUnknownCount);
                                 }
                             }
-                            else if((sh.fileType==XBinary::FT_MACHO32)||(sh.fileType==XBinary::FT_MACHO64))
+                            else if((id.fileType==XBinary::FT_MACHO32)||(id.fileType==XBinary::FT_MACHO64))
                             {
                                 XMACH mach(&file);
 
@@ -520,7 +520,51 @@ void ScanProgress::_processFile(QString sFileName)
                                     sFolderName=mach.getSignature(0,nUnknownCount);
                                 }
                             }
-                            else if(sh.fileType==XBinary::FT_MSDOS)
+                            else if((id.fileType==XBinary::FT_LE)||(id.fileType==XBinary::FT_LX))
+                            {
+                                XLE le(&file);
+
+                                bIsOverlayPresent=le.isOverlayPresent();
+
+                                if(_pOptions->unknownPrefix==UP_EP_BYTES)
+                                {
+                                    sFolderName=le.getSignature(le._getEntryPointOffset(),nUnknownCount);
+                                }
+                                else if(_pOptions->unknownPrefix==UP_OVERLAY_BYTES)
+                                {
+                                    if(bIsOverlayPresent)
+                                    {
+                                        sFolderName=le.getSignature(le.getOverlayOffset(),nUnknownCount);
+                                    }
+                                }
+                                else if(_pOptions->unknownPrefix==UP_HEADER_BYTES)
+                                {
+                                    sFolderName=le.getSignature(0,nUnknownCount);
+                                }
+                            }
+                            else if(id.fileType==XBinary::FT_NE)
+                            {
+                                XNE ne(&file);
+
+                                bIsOverlayPresent=ne.isOverlayPresent();
+
+                                if(_pOptions->unknownPrefix==UP_EP_BYTES)
+                                {
+                                    sFolderName=ne.getSignature(ne._getEntryPointOffset(),nUnknownCount);
+                                }
+                                else if(_pOptions->unknownPrefix==UP_OVERLAY_BYTES)
+                                {
+                                    if(bIsOverlayPresent)
+                                    {
+                                        sFolderName=ne.getSignature(ne.getOverlayOffset(),nUnknownCount);
+                                    }
+                                }
+                                else if(_pOptions->unknownPrefix==UP_HEADER_BYTES)
+                                {
+                                    sFolderName=ne.getSignature(0,nUnknownCount);
+                                }
+                            }
+                            else if(id.fileType==XBinary::FT_MSDOS)
                             {
                                 XMSDOS msdos(&file);
 
@@ -567,15 +611,15 @@ void ScanProgress::_processFile(QString sFileName)
 
                             if(_pOptions->unknownPrefix==UP_OPCODES)
                             {
-                                XBinary::_MEMORY_MAP memoryMap=XFormats::getMemoryMap(sh.fileType,&file);
-                                qint64 nEntryPointAddress=XFormats::getEntryPointAddress(sh.fileType,&file);
+                                XBinary::_MEMORY_MAP memoryMap=XFormats::getMemoryMap(id.fileType,&file);
+                                qint64 nEntryPointAddress=XFormats::getEntryPointAddress(id.fileType,&file);
 
                                 sFolderName=XCapstone::getSignature(&file,&memoryMap,nEntryPointAddress,XCapstone::ST_MASK,nUnknownCount);
                             }
                             else if(_pOptions->unknownPrefix==UP_OPCODES_REL)
                             {
-                                XBinary::_MEMORY_MAP memoryMap=XFormats::getMemoryMap(sh.fileType,&file);
-                                qint64 nEntryPointAddress=XFormats::getEntryPointAddress(sh.fileType,&file);
+                                XBinary::_MEMORY_MAP memoryMap=XFormats::getMemoryMap(id.fileType,&file);
+                                qint64 nEntryPointAddress=XFormats::getEntryPointAddress(id.fileType,&file);
 
                                 sFolderName=XCapstone::getSignature(&file,&memoryMap,nEntryPointAddress,XCapstone::ST_MASKREL,nUnknownCount);
                             }
@@ -671,7 +715,7 @@ void ScanProgress::_processFile(QString sFileName)
     pSemaphore->release();
 }
 
-QString ScanProgress::createPath(ScanProgress::CF copyFormat, DiE_Script::SCAN_HEADER scanHeader)
+QString ScanProgress::createPath(ScanProgress::CF copyFormat,XBinary::SCANID scanID)
 {
     QString sResult;
 
@@ -679,19 +723,19 @@ QString ScanProgress::createPath(ScanProgress::CF copyFormat, DiE_Script::SCAN_H
             (copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPSIG)||
             (copyFormat==ScanProgress::CF_FT_TYPE_NAME_EPSIGREL))
     {
-        sResult=XBinary::fileTypeIdToString(scanHeader.fileType);
+        sResult=XBinary::fileTypeIdToString(scanID.fileType);
     }
     else if((copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME)||
             (copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIG)||
             (copyFormat==ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIGREL))
     {
-        sResult=XBinary::fileTypeIdToString(scanHeader.fileType)+QDir::separator()+scanHeader.sArch;
+        sResult=XBinary::fileTypeIdToString(scanID.fileType)+QDir::separator()+scanID.sArch;
     }
     else if((copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME)||
             (copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIG)||
             (copyFormat==ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIGREL))
     {
-        sResult=scanHeader.sArch+QDir::separator()+XBinary::fileTypeIdToString(scanHeader.fileType);
+        sResult=scanID.sArch+QDir::separator()+XBinary::fileTypeIdToString(scanID.fileType);
     }
 
     // TODO
@@ -708,7 +752,7 @@ QString ScanProgress::createPath(ScanProgress::CF copyFormat, DiE_Script::SCAN_H
 
 void ScanProgress::process()
 {
-    pSemaphore=new QSemaphore(N_MAXNUMBEROFTHREADS);
+    pSemaphore=new QSemaphore(_pOptions->nThreads);
     pElapsedTimer=new QElapsedTimer;
     pElapsedTimer->start();
 
@@ -752,7 +796,7 @@ void ScanProgress::process()
         while(true)
         {
             int nAvailable=pSemaphore->available();
-            currentStats.nNumberOfThreads=N_MAXNUMBEROFTHREADS-nAvailable;
+            currentStats.nNumberOfThreads=(_pOptions->nThreads)-nAvailable;
             if(nAvailable)
             {
                 break;
@@ -765,9 +809,9 @@ void ScanProgress::process()
     while(true)
     {
         int nAvailable=pSemaphore->available();
-        currentStats.nNumberOfThreads=N_MAXNUMBEROFTHREADS-nAvailable;
+        currentStats.nNumberOfThreads=(_pOptions->nThreads)-nAvailable;
 
-        if(nAvailable==N_MAXNUMBEROFTHREADS)
+        if(nAvailable==(_pOptions->nThreads))
         {
             break;
         }

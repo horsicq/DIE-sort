@@ -96,6 +96,43 @@
              </property>
             </spacer>
            </item>
+           <item>
+            <widget class="QGroupBox" name="groupBoxThreads">
+             <property name="title">
+              <string>Threads</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_15">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QSpinBox" name="spinBoxThreads">
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>8</number>
+                </property>
+                <property name="value">
+                 <number>4</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
           </layout>
          </item>
         </layout>
@@ -591,7 +628,7 @@
             <number>1000000</number>
            </property>
            <property name="value">
-            <number>50</number>
+            <number>0</number>
            </property>
           </widget>
          </item>

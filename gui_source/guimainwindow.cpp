@@ -138,6 +138,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     ui->checkBoxRemoveCopied->setChecked(settings.value("RemoveCopied",false).toBool());
     ui->checkBoxCopyTheFirstOnly->setChecked(settings.value("CopyTheFirstOnly",false).toBool());
 
+    ui->spinBoxThreads->setValue(settings.value("Threads",4).toInt());
+
     options.bContinue=settings.value("Continue",false).toBool();
     options.bDebug=settings.value("Debug",false).toBool();
 
@@ -171,6 +173,7 @@ GuiMainWindow::~GuiMainWindow()
     settings.setValue("Overlay",ui->comboBoxOverlay->currentIndex());
     settings.setValue("Entropy",ui->comboBoxEntropy->currentIndex());
     settings.setValue("EntropyValue",ui->doubleSpinBoxEntropy->value());
+    settings.setValue("Threads",ui->spinBoxThreads->value());
 
     delete ui;
 }
@@ -283,6 +286,7 @@ void GuiMainWindow::_scan()
     options.overlay=(ScanProgress::OVERLAY)ui->comboBoxOverlay->currentIndex();
     options.entropy=(ScanProgress::ENTROPY)ui->comboBoxEntropy->currentIndex();
     options.dEntropyValue=ui->doubleSpinBoxEntropy->value();
+    options.nThreads=ui->spinBoxThreads->value();
 
     DialogScanProgress ds(this);
 

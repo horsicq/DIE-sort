@@ -118,6 +118,7 @@ public:
         qint64 nUnknownCount;
         bool bRemoveCopied;
         bool bCopyTheFirstOnly;
+        qint32 nThreads;
     };
 
     struct STATS
@@ -148,7 +149,7 @@ public:
 
     void _processFile(QString sFileName);
 
-    static QString createPath(CF copyFormat,DiE_Script::SCAN_HEADER scanHeader);
+    static QString createPath(CF copyFormat,XBinary::SCANID scanID);
 
 signals:
     void completed(qint64 nElapsedTime);
@@ -160,11 +161,11 @@ public slots:
     static bool createDatabase(QSqlDatabase *pDb,QString sDatabaseName);
 
 private:
-#ifdef QT_DEBUG
-    const int N_MAXNUMBEROFTHREADS=1;
-#else
-    const int N_MAXNUMBEROFTHREADS=8;
-#endif
+//#ifdef QT_DEBUG
+//    const int N_MAXNUMBEROFTHREADS=8;
+//#else
+//    const int N_MAXNUMBEROFTHREADS=8;
+//#endif
     QString _sDirectoryName;
     SCAN_OPTIONS *_pOptions;
     bool bIsStop;
