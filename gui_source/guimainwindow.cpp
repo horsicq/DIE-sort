@@ -95,6 +95,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     ui->comboBoxCopyFormat->addItem("FileType/Type/Name/EP signature(rel)");
     ui->comboBoxCopyFormat->addItem("Arch/FileType/Type/Name/EP signature(rel)");
     ui->comboBoxCopyFormat->addItem("FileType/Arch/Type/Name/EP signature(rel)");
+    ui->comboBoxCopyFormat->addItem("FileType/Arch/Type/Name/Import");
 
     ui->comboBoxCopyType->addItem("Identified");
     ui->comboBoxCopyType->addItem("Identified/Unknown");
