@@ -64,6 +64,16 @@
             </widget>
            </item>
            <item>
+            <widget class="QCheckBox" name="checkBoxHeuristicScan">
+             <property name="text">
+              <string>Heuristic Scan</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QCheckBox" name="checkBoxShowVersion">
              <property name="text">
               <string>Show version</string>

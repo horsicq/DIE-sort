@@ -1,39 +1,38 @@
-// copyright (c) 2019-2021 hors<horsicq@gmail.com>
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-//
+/* Copyright (c) 2019-2022 hors<horsicq@gmail.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 
 #include "scanprogress.h"
 
 ScanProgress::ScanProgress(QObject *parent) : QObject(parent)
 {
-    bIsStop=false;
     _pOptions=nullptr;
-    currentStats={};
-    pElapsedTimer=nullptr;
     pSemaphore=nullptr;
+    g_pPdStruct=nullptr;
 }
 
-void ScanProgress::setData(QString sDirectoryName, ScanProgress::SCAN_OPTIONS *pOptions)
+void ScanProgress::setData(QString sDirectoryName, ScanProgress::SCAN_OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct)
 {
     this->_sDirectoryName=sDirectoryName;
     this->_pOptions=pOptions;
+    this->g_pPdStruct=pPdStruct;
 }
 
 quint32 ScanProgress::getFileCount(quint32 nCRC)
@@ -184,13 +183,13 @@ qint64 ScanProgress::getNumberOfFile()
 
 void ScanProgress::findFiles(QString sDirectoryName)
 {
-    if(!bIsStop)
+    if(!(g_pPdStruct->bIsStop))
     {
         QFileInfo fi(sDirectoryName);
 
         if(fi.isFile())
         {
-            currentStats.nTotal++;
+            g_pPdStruct->pdRecordOpt.nTotal++;
             setFileStat(fi.absoluteFilePath(),"","");
         }
         else if(fi.isDir()&&(_pOptions->bSubdirectories))
@@ -198,10 +197,10 @@ void ScanProgress::findFiles(QString sDirectoryName)
             QDir dir(sDirectoryName);
 
             QFileInfoList eil=dir.entryInfoList();
-            
+
             int nCount=eil.count();
 
-            for(int i=0; (i<nCount)&&(!bIsStop); i++)
+            for(int i=0; (i<nCount)&&(!(g_pPdStruct->bIsStop)); i++)
             {
                 QString sFN=eil.at(i).fileName();
 
@@ -232,13 +231,6 @@ void ScanProgress::_processFile(QString sFileName)
 {
     pSemaphore->acquire();
 
-    mutexStats.lock();
-    currentStats.nCurrent++;
-    currentStats.sStatus=sFileName;
-    currentStats.stFiles.insert(sFileName);
-    stScripts.insert(&dieScript);
-    mutexStats.unlock();
-
     if(sFileName!="")
     {
         QString sTempFile;
@@ -256,7 +248,8 @@ void ScanProgress::_processFile(QString sFileName)
 
         DiE_Script::SCAN_OPTIONS options={};
 
-        options.bDeepScan=_pOptions->bDeepScan;
+        options.bIsDeepScan=_pOptions->bIsDeepScan;
+        options.bIsHeuristicScan=_pOptions->bIsHeuristicScan;
         options.bShowType=true;
         options.bShowVersion=_pOptions->bShowVersion;
         options.bShowOptions=_pOptions->bShowOptions;
@@ -758,11 +751,6 @@ void ScanProgress::_processFile(QString sFileName)
         }
     }
 
-    mutexStats.lock();
-    currentStats.stFiles.remove(sFileName);
-    stScripts.remove(&dieScript);
-    mutexStats.unlock();
-
     pSemaphore->release();
 }
 
@@ -805,8 +793,6 @@ QString ScanProgress::createPath(ScanProgress::CF copyFormat,XBinary::SCANID sca
 void ScanProgress::process()
 {
     pSemaphore=new QSemaphore(_pOptions->nThreads);
-    pElapsedTimer=new QElapsedTimer;
-    pElapsedTimer->start();
 
     if(!(_pOptions->bContinue))
     {
@@ -876,33 +862,6 @@ void ScanProgress::process()
     emit completed(pElapsedTimer->elapsed());
     delete pElapsedTimer;
     pElapsedTimer=nullptr;
-
-    bIsStop=false;
-}
-
-void ScanProgress::stop()
-{
-    bIsStop=true;
-
-    mutexStats.lock();
-    QList<DiE_Script *> listScripts=stScripts.toList();
-
-    for(int i=0;i<listScripts.count();i++)
-    {
-        listScripts.at(i)->stop();
-    }
-
-    mutexStats.unlock();
-}
-
-ScanProgress::STATS ScanProgress::getCurrentStats()
-{
-    if(pElapsedTimer)
-    {
-        currentStats.nElapsed=pElapsedTimer->elapsed();
-    }
-
-    return currentStats;
 }
 
 bool ScanProgress::createDatabase(QSqlDatabase *pDb, QString sDatabaseName)

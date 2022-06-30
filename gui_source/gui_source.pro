@@ -32,6 +32,11 @@ FORMS += \
     include(../XCapstone/xcapstone.pri)
 }
 
+!contains(XCONFIG, xdialogprocess) {
+    XCONFIG += xdialogprocess
+    include(../FormatDialogs/xdialogprocess.pri)
+}
+
 include(../build.pri)
 
 win32 {
