@@ -189,7 +189,7 @@ void ScanProgress::findFiles(QString sDirectoryName)
 
         if(fi.isFile())
         {
-            g_pPdStruct->pdRecordOpt.nTotal++;
+            g_pPdStruct->pdRecordObj.nTotal++;
             setFileStat(fi.absoluteFilePath(),"","");
         }
         else if(fi.isDir()&&(_pOptions->bSubdirectories))
@@ -792,18 +792,20 @@ QString ScanProgress::createPath(ScanProgress::CF copyFormat,XBinary::SCANID sca
 
 void ScanProgress::process()
 {
+    QElapsedTimer scanTimer;
+    scanTimer.start();
+
     pSemaphore=new QSemaphore(_pOptions->nThreads);
 
     if(!(_pOptions->bContinue))
     {
         createTables();
     }
-    currentStats.nTotal=0;
-    currentStats.nCurrent=0;
+    g_pPdStruct->pdRecordObj.bIsValid=true;
+    g_pPdStruct->pdRecordObj.nTotal=0;
+    g_pPdStruct->pdRecordObj.nCurrent=0;
 
-    bIsStop=false;
-
-    currentStats.sStatus=tr("Directory scan");
+    g_pPdStruct->sStatus=tr("Directory scan");
 
     if(!(_pOptions->bContinue))
     {
@@ -814,15 +816,16 @@ void ScanProgress::process()
         endTransaction();
     }
 
-    currentStats.nTotal=getNumberOfFile();
+    g_pPdStruct->pdRecordObj.nTotal=getNumberOfFile();
 
     dieScript.loadDatabase(_pOptions->sSignatures);
 
-    while(!bIsStop)
+    while(!(g_pPdStruct->bIsStop))
     {
         QString sFileName=getCurrentFileNameAndLock();
+        g_pPdStruct->pdRecordObj.sStatus=sFileName;
 
-        if(currentStats.sStatus=="")
+        if(sFileName=="")
         {
             break;
         }
@@ -834,7 +837,7 @@ void ScanProgress::process()
         while(true)
         {
             int nAvailable=pSemaphore->available();
-            currentStats.nNumberOfThreads=(_pOptions->nThreads)-nAvailable;
+//            currentStats.nNumberOfThreads=(_pOptions->nThreads)-nAvailable;
             if(nAvailable)
             {
                 break;
@@ -842,12 +845,14 @@ void ScanProgress::process()
 
             QThread::msleep(500);
         }
+
+        g_pPdStruct->pdRecordObj.nCurrent++;
     }
 
     while(true)
     {
         int nAvailable=pSemaphore->available();
-        currentStats.nNumberOfThreads=(_pOptions->nThreads)-nAvailable;
+//        currentStats.nNumberOfThreads=(_pOptions->nThreads)-nAvailable;
 
         if(nAvailable==(_pOptions->nThreads))
         {
@@ -859,9 +864,14 @@ void ScanProgress::process()
 
     delete pSemaphore;
 
-    emit completed(pElapsedTimer->elapsed());
-    delete pElapsedTimer;
-    pElapsedTimer=nullptr;
+    if(!(g_pPdStruct->bIsStop))
+    {
+        g_pPdStruct->pdRecordObj.bSuccess=true;
+    }
+
+    g_pPdStruct->pdRecordObj.bFinished=true;
+
+    emit completed(scanTimer.elapsed());
 }
 
 bool ScanProgress::createDatabase(QSqlDatabase *pDb, QString sDatabaseName)
