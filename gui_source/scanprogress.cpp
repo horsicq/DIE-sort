@@ -189,7 +189,7 @@ void ScanProgress::findFiles(QString sDirectoryName)
 
         if(fi.isFile())
         {
-            g_pPdStruct->pdRecordObj.nTotal++;
+            g_pPdStruct->pdRecordFiles.nTotal++;
             setFileStat(fi.absoluteFilePath(),"","");
         }
         else if(fi.isDir()&&(_pOptions->bSubdirectories))
@@ -801,9 +801,9 @@ void ScanProgress::process()
     {
         createTables();
     }
-    g_pPdStruct->pdRecordObj.bIsValid=true;
-    g_pPdStruct->pdRecordObj.nTotal=0;
-    g_pPdStruct->pdRecordObj.nCurrent=0;
+    g_pPdStruct->pdRecordFiles.bIsValid=true;
+    g_pPdStruct->pdRecordFiles.nTotal=0;
+    g_pPdStruct->pdRecordFiles.nCurrent=0;
 
     g_pPdStruct->sStatus=tr("Directory scan");
 
@@ -816,14 +816,14 @@ void ScanProgress::process()
         endTransaction();
     }
 
-    g_pPdStruct->pdRecordObj.nTotal=getNumberOfFile();
+    g_pPdStruct->pdRecordFiles.nTotal=getNumberOfFile();
 
     dieScript.loadDatabase(_pOptions->sSignatures);
 
     while(!(g_pPdStruct->bIsStop))
     {
         QString sFileName=getCurrentFileNameAndLock();
-        g_pPdStruct->pdRecordObj.sStatus=sFileName;
+        g_pPdStruct->pdRecordFiles.sStatus=sFileName;
 
         if(sFileName=="")
         {
@@ -846,7 +846,7 @@ void ScanProgress::process()
             QThread::msleep(500);
         }
 
-        g_pPdStruct->pdRecordObj.nCurrent++;
+        g_pPdStruct->pdRecordFiles.nCurrent++;
     }
 
     while(true)
@@ -866,10 +866,10 @@ void ScanProgress::process()
 
     if(!(g_pPdStruct->bIsStop))
     {
-        g_pPdStruct->pdRecordObj.bSuccess=true;
+        g_pPdStruct->pdRecordFiles.bSuccess=true;
     }
 
-    g_pPdStruct->pdRecordObj.bFinished=true;
+    g_pPdStruct->pdRecordFiles.bFinished=true;
 
     emit completed(scanTimer.elapsed());
 }
