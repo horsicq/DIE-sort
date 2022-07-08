@@ -22,3 +22,6 @@
 [submodule "XCapstone"]
 	path = XCapstone
 	url = https://github.com/horsicq/XCapstone
+[submodule "FormatDialogs"]
+	path = FormatDialogs
+	url = https://github.com/horsicq/FormatDialogs
