@@ -133,7 +133,7 @@ public:
         QSet<QString> stFiles;
     };
 
-    explicit ScanProgress(QObject *parent=nullptr);
+    explicit ScanProgress(QObject *pParent=nullptr);
 
     void setData(QString sDirectoryName,ScanProgress::SCAN_OPTIONS *pOptions,XBinary::PDSTRUCT *pPdStruct);
 

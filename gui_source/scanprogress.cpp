@@ -21,7 +21,7 @@
 
 #include "scanprogress.h"
 
-ScanProgress::ScanProgress(QObject *parent) : QObject(parent)
+ScanProgress::ScanProgress(QObject *pParent) : QObject(pParent)
 {
     _pOptions=nullptr;
     pSemaphore=nullptr;
@@ -52,8 +52,8 @@ quint32 ScanProgress::getFileCount(quint32 nCRC)
 
     if(query.lastError().text().trimmed()!="")
     {
-        qDebug(query.lastQuery().toLatin1().data());
-        qDebug(query.lastError().text().toLatin1().data());
+        qDebug("%s", query.lastQuery().toLatin1().data());
+        qDebug("%s", query.lastError().text().toLatin1().data());
     }
 
     return nResult;
@@ -246,7 +246,7 @@ void ScanProgress::_processFile(QString sFileName)
             XBinary::copyFile(sFileName,sTempFile);
         }
 
-        DiE_Script::SCAN_OPTIONS options={};
+        DiE_Script::OPTIONS options={};
 
         options.bIsDeepScan=_pOptions->bIsDeepScan;
         options.bIsHeuristicScan=_pOptions->bIsHeuristicScan;
