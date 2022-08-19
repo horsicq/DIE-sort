@@ -52,8 +52,8 @@ quint32 ScanProgress::getFileCount(quint32 nCRC)
 
     if(query.lastError().text().trimmed()!="")
     {
-        qDebug("%s", query.lastQuery().toLatin1().data());
-        qDebug("%s", query.lastError().text().toLatin1().data());
+        qDebug("%s",query.lastQuery().toLatin1().data());
+        qDebug("%s",query.lastError().text().toLatin1().data());
     }
 
     return nResult;
@@ -69,8 +69,8 @@ void ScanProgress::setFileCount(quint32 nCRC, quint32 nCount)
 
     if(query.lastError().text().trimmed()!="")
     {
-        qDebug(query.lastQuery().toLatin1().data());
-        qDebug(query.lastError().text().toLatin1().data());
+        qDebug("%s",query.lastQuery().toLatin1().data());
+        qDebug("%s",query.lastError().text().toLatin1().data());
     }
 }
 
@@ -89,8 +89,8 @@ void ScanProgress::setFileStat(QString sFileName, QString sTimeCount, QString sD
 
     if(query.lastError().text().trimmed()!="")
     {
-        qDebug(query.lastQuery().toLatin1().data());
-        qDebug(query.lastError().text().toLatin1().data());
+        qDebug("%s",query.lastQuery().toLatin1().data());
+        qDebug("%s",query.lastError().text().toLatin1().data());
     }
 }
 
@@ -121,8 +121,8 @@ QString ScanProgress::getCurrentFileName()
 
     if(query.lastError().text().trimmed()!="")
     {
-        qDebug(query.lastQuery().toLatin1().data());
-        qDebug(query.lastError().text().toLatin1().data());
+        qDebug("%s",query.lastQuery().toLatin1().data());
+        qDebug("%s",query.lastError().text().toLatin1().data());
     }
 
     return sResult;
@@ -145,8 +145,8 @@ QString ScanProgress::getCurrentFileNameAndLock()
 
     if(query.lastError().text().trimmed()!="")
     {
-        qDebug(query.lastQuery().toLatin1().data());
-        qDebug(query.lastError().text().toLatin1().data());
+        qDebug("%s",query.lastQuery().toLatin1().data());
+        qDebug("%s",query.lastError().text().toLatin1().data());
     }
 
     query.exec(QString("INSERT OR REPLACE INTO files(FILENAME,TIMECOUNT,DATETIME) VALUES('%1','%2','%3')")
@@ -156,8 +156,8 @@ QString ScanProgress::getCurrentFileNameAndLock()
 
     if(query.lastError().text().trimmed()!="")
     {
-        qDebug(query.lastQuery().toLatin1().data());
-        qDebug(query.lastError().text().toLatin1().data());
+        qDebug("%s",query.lastQuery().toLatin1().data());
+        qDebug("%s",query.lastError().text().toLatin1().data());
     }
 
     return sResult;
