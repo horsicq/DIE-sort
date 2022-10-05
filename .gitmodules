@@ -25,3 +25,9 @@
 [submodule "FormatDialogs"]
 	path = FormatDialogs
 	url = https://github.com/horsicq/FormatDialogs
+[submodule "XUpdate"]
+	path = XUpdate
+	url = https://github.com/horsicq/XUpdate
+[submodule "XGithub"]
+	path = XGithub
+	url = https://github.com/horsicq/XGithub
