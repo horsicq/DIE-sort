@@ -754,7 +754,7 @@
       <item>
        <widget class="QCheckBox" name="checkBoxCopyTheFirstOnly">
         <property name="text">
-         <string>CheckBox</string>
+         <string>Copy the first only</string>
         </property>
        </widget>
       </item>
