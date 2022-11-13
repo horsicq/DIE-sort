@@ -20,13 +20,12 @@
  */
 
 #include "dialogscanprogress.h"
+
 #include "ui_dialogscanprogress.h"
 
-DialogScanProgress::DialogScanProgress(QWidget *pParent) :
-    XDialogProcess(pParent)
-{
-    pScan=new ScanProgress;
-    pThread=new QThread;
+DialogScanProgress::DialogScanProgress(QWidget *pParent) : XDialogProcess(pParent) {
+    pScan = new ScanProgress;
+    pThread = new QThread;
 
     pScan->moveToThread(pThread);
 
@@ -34,8 +33,7 @@ DialogScanProgress::DialogScanProgress(QWidget *pParent) :
     connect(pScan, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
 }
 
-DialogScanProgress::~DialogScanProgress()
-{
+DialogScanProgress::~DialogScanProgress() {
     stop();
 
     pThread->quit();
@@ -45,8 +43,7 @@ DialogScanProgress::~DialogScanProgress()
     delete pScan;
 }
 
-void DialogScanProgress::setData(QString sDirectoryName, ScanProgress::SCAN_OPTIONS *pOptions)
-{
-    pScan->setData(sDirectoryName,pOptions,getPdStruct());
+void DialogScanProgress::setData(QString sDirectoryName, ScanProgress::SCAN_OPTIONS *pOptions) {
+    pScan->setData(sDirectoryName, pOptions, getPdStruct());
     pThread->start();
 }

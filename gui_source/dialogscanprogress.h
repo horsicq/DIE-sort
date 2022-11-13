@@ -22,26 +22,26 @@
 #ifndef DIALOGSCANPROGRESS_H
 #define DIALOGSCANPROGRESS_H
 
-#include <QDialog>
-#include <QTimer>
-#include <QThread>
 #include <QDateTime>
+#include <QDialog>
+#include <QThread>
+#include <QTimer>
+
 #include "scanprogress.h"
 #include "xdialogprocess.h"
 
-class DialogScanProgress : public XDialogProcess
-{
+class DialogScanProgress : public XDialogProcess {
     Q_OBJECT
 
 public:
-    explicit DialogScanProgress(QWidget *pParent=0);
+    explicit DialogScanProgress(QWidget *pParent = 0);
     ~DialogScanProgress();
 
-    void setData(QString sDirectoryName,ScanProgress::SCAN_OPTIONS *pOptions);
+    void setData(QString sDirectoryName, ScanProgress::SCAN_OPTIONS *pOptions);
 
 private:
     ScanProgress *pScan;
     QThread *pThread;
 };
 
-#endif // DIALOGSCANPROGRESS_H
+#endif  // DIALOGSCANPROGRESS_H

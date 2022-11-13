@@ -22,26 +22,25 @@
 #ifndef SCANPROGRESS_H
 #define SCANPROGRESS_H
 
+#include <QFutureWatcher>
+#include <QMutex>
+#include <QMutexLocker>
 #include <QObject>
+#include <QSemaphore>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
-#include "die_script.h"
-#include <QMutex>
-#include <QMutexLocker>
-#include <QFutureWatcher>
 #include <QtConcurrent>
-#include <QSemaphore>
+
+#include "die_script.h"
 #include "xcapstone.h"
 
-class ScanProgress : public QObject
-{
+class ScanProgress : public QObject {
     Q_OBJECT
 
 public:
-    enum CF
-    {
-        CF_FT_TYPE_NAME=0,
+    enum CF {
+        CF_FT_TYPE_NAME = 0,
         CF_ARCH_FT_TYPE_NAME,
         CF_FT_ARCH_TYPE_NAME,
         CF_FT_TYPE_NAME_EPBYTES,
@@ -56,16 +55,14 @@ public:
         CF_FT_ARCH_TYPE_NAME_IMPORT,
     };
 
-    enum CT
-    {
-        CT_IDENT=0,
+    enum CT {
+        CT_IDENT = 0,
         CT_IDENT_UNK,
         CT_UNK
     };
 
-    enum UP
-    {
-        UP_NONE=0,
+    enum UP {
+        UP_NONE = 0,
         UP_EP_BYTES,
         UP_HEADER_BYTES,
         UP_OVERLAY_BYTES,
@@ -73,29 +70,25 @@ public:
         UP_OPCODES_REL
     };
 
-    enum FF
-    {
-        FF_ORIGINAL=0,
+    enum FF {
+        FF_ORIGINAL = 0,
         FF_MD5,
         FF_MD5_ORIGINAL
     };
 
-    enum OVERLAY
-    {
-        OVERLAY_NONE=0,
+    enum OVERLAY {
+        OVERLAY_NONE = 0,
         OVERLAY_PRESENT,
         OVERLAY_NOTPRESENT
     };
 
-    enum ENTROPY
-    {
-        ENTROPY_NONE=0,
+    enum ENTROPY {
+        ENTROPY_NONE = 0,
         ENTROPY_MORETHAN,
         ENTROPY_LESSTHAN
     };
 
-    struct SCAN_OPTIONS
-    {
+    struct SCAN_OPTIONS {
         bool bIsDeepScan;
         bool bIsHeuristicScan;
         bool bSubdirectories;
@@ -123,8 +116,7 @@ public:
         qint32 nThreads;
     };
 
-    struct STATS
-    {
+    struct STATS {
         qint32 nTotal;
         qint32 nCurrent;
         qint64 nElapsed;
@@ -133,12 +125,12 @@ public:
         QSet<QString> stFiles;
     };
 
-    explicit ScanProgress(QObject *pParent=nullptr);
+    explicit ScanProgress(QObject *pParent = nullptr);
 
-    void setData(QString sDirectoryName,ScanProgress::SCAN_OPTIONS *pOptions,XBinary::PDSTRUCT *pPdStruct);
+    void setData(QString sDirectoryName, ScanProgress::SCAN_OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct);
 
     quint32 getFileCount(quint32 nCRC);
-    void setFileCount(quint32 nCRC,quint32 nCount);
+    void setFileCount(quint32 nCRC, quint32 nCount);
     void setFileStat(QString sFileName, QString sTimeCount, QString sDate);
     void createTables();
     QString getCurrentFileName();
@@ -151,21 +143,21 @@ public:
 
     void _processFile(QString sFileName);
 
-    static QString createPath(CF copyFormat,XBinary::SCANID scanID);
+    static QString createPath(CF copyFormat, XBinary::SCANID scanID);
 
 signals:
     void completed(qint64 nElapsedTime);
 
 public slots:
     void process();
-    static bool createDatabase(QSqlDatabase *pDb,QString sDatabaseName);
+    static bool createDatabase(QSqlDatabase *pDb, QString sDatabaseName);
 
 private:
-//#ifdef QT_DEBUG
-//    const int N_MAXNUMBEROFTHREADS=8;
-//#else
-//    const int N_MAXNUMBEROFTHREADS=8;
-//#endif
+    //#ifdef QT_DEBUG
+    //    const int N_MAXNUMBEROFTHREADS=8;
+    //#else
+    //    const int N_MAXNUMBEROFTHREADS=8;
+    //#endif
     QString _sDirectoryName;
     SCAN_OPTIONS *_pOptions;
     QMutex mutexDB;
@@ -174,4 +166,4 @@ private:
     XBinary::PDSTRUCT *g_pPdStruct;
 };
 
-#endif // SCANPROGRESS_H
+#endif  // SCANPROGRESS_H
