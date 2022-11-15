@@ -23,7 +23,8 @@
 
 #include "ui_guimainwindow.h"
 
-GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::GuiMainWindow) {
+GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::GuiMainWindow)
+{
     ui->setupUi(this);
 
     setWindowTitle(QString("%1 v%2").arg(X_APPLICATIONNAME).arg(X_APPLICATIONVERSION));
@@ -150,7 +151,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     }
 }
 
-GuiMainWindow::~GuiMainWindow() {
+GuiMainWindow::~GuiMainWindow()
+{
     QString sSettingsFile = QApplication::applicationDirPath() + QDir::separator() + QString("%1.ini").arg(X_APPLICATIONNAME);
     QSettings settings(sSettingsFile, QSettings::IniFormat);
 
@@ -175,11 +177,13 @@ GuiMainWindow::~GuiMainWindow() {
     delete ui;
 }
 
-void GuiMainWindow::on_pushButtonExit_clicked() {
+void GuiMainWindow::on_pushButtonExit_clicked()
+{
     this->close();
 }
 
-void GuiMainWindow::on_pushButtonOpenDirectory_clicked() {
+void GuiMainWindow::on_pushButtonOpenDirectory_clicked()
+{
     QString sInitDirectory = ui->lineEditDirectoryName->text();
 
     QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Open directory..."), sInitDirectory, QFileDialog::ShowDirsOnly);
@@ -189,7 +193,8 @@ void GuiMainWindow::on_pushButtonOpenDirectory_clicked() {
     }
 }
 
-void GuiMainWindow::on_pushButtonOut_clicked() {
+void GuiMainWindow::on_pushButtonOut_clicked()
+{
     QString sInitDirectory = ui->lineEditOut->text();
 
     QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Open directory..."), sInitDirectory, QFileDialog::ShowDirsOnly);
@@ -199,11 +204,13 @@ void GuiMainWindow::on_pushButtonOut_clicked() {
     }
 }
 
-void GuiMainWindow::on_pushButtonScan_clicked() {
+void GuiMainWindow::on_pushButtonScan_clicked()
+{
     _scan();
 }
 
-void GuiMainWindow::_scan() {
+void GuiMainWindow::_scan()
+{
     options.nCopyCount = ui->spinBoxCopyCount->value();
     options.sResultDirectory = ui->lineEditOut->text();
 
@@ -292,7 +299,8 @@ void GuiMainWindow::_scan() {
     //    ds.exec();
 }
 
-void GuiMainWindow::on_checkBoxAllFileTypes_toggled(bool checked) {
+void GuiMainWindow::on_checkBoxAllFileTypes_toggled(bool checked)
+{
     ui->checkBoxBinary->setChecked(checked);
     ui->checkBoxCOM->setChecked(checked);
     ui->checkBoxMSDOS->setChecked(checked);
@@ -317,7 +325,8 @@ void GuiMainWindow::on_checkBoxAllFileTypes_toggled(bool checked) {
 //    }
 //}
 
-void GuiMainWindow::on_checkBoxAllTypes_toggled(bool checked) {
+void GuiMainWindow::on_checkBoxAllTypes_toggled(bool checked)
+{
     ui->checkBox_archive->setChecked(checked);
     ui->checkBox_audio->setChecked(checked);
     ui->checkBox_boot->setChecked(checked);
@@ -351,11 +360,13 @@ void GuiMainWindow::on_checkBoxAllTypes_toggled(bool checked) {
     ui->checkBox_type->setChecked(checked);
 }
 
-void GuiMainWindow::on_pushButtonInfo_clicked() {
+void GuiMainWindow::on_pushButtonInfo_clicked()
+{
     QMessageBox::information(this, tr("Info"), tr("Bugreports: horsicq@gmail.com"));
 }
 
-void GuiMainWindow::onFileTypeToggled(bool checked) {
+void GuiMainWindow::onFileTypeToggled(bool checked)
+{
     QSignalBlocker blocker(ui->checkBoxAllFileTypes);
 
     if (!checked) {
@@ -363,7 +374,8 @@ void GuiMainWindow::onFileTypeToggled(bool checked) {
     }
 }
 
-void GuiMainWindow::onTypeToggled(bool checked) {
+void GuiMainWindow::onTypeToggled(bool checked)
+{
     QSignalBlocker blocker(ui->checkBoxAllTypes);
 
     if (!checked) {
@@ -371,7 +383,8 @@ void GuiMainWindow::onTypeToggled(bool checked) {
     }
 }
 
-void GuiMainWindow::on_pushButtonSignatures_clicked() {
+void GuiMainWindow::on_pushButtonSignatures_clicked()
+{
     QString sInitDirectory = XBinary::convertPathName(ui->lineEditSignatures->text());
 
     QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Open directory..."), sInitDirectory, QFileDialog::ShowDirsOnly);
@@ -381,7 +394,8 @@ void GuiMainWindow::on_pushButtonSignatures_clicked() {
     }
 }
 
-void GuiMainWindow::on_doubleSpinBoxEntropy_valueChanged(double arg1) {
+void GuiMainWindow::on_doubleSpinBoxEntropy_valueChanged(double arg1)
+{
     double dEntropy = ui->doubleSpinBoxEntropy->value();
     double dProcent = (dEntropy / 8) * 100;
     ui->lineEditEntropy->setText(QString::number(dProcent));

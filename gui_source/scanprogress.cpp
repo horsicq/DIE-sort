@@ -21,19 +21,22 @@
 
 #include "scanprogress.h"
 
-ScanProgress::ScanProgress(QObject *pParent) : QObject(pParent) {
+ScanProgress::ScanProgress(QObject *pParent) : QObject(pParent)
+{
     _pOptions = nullptr;
     pSemaphore = nullptr;
     g_pPdStruct = nullptr;
 }
 
-void ScanProgress::setData(QString sDirectoryName, ScanProgress::SCAN_OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct) {
+void ScanProgress::setData(QString sDirectoryName, ScanProgress::SCAN_OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct)
+{
     this->_sDirectoryName = sDirectoryName;
     this->_pOptions = pOptions;
     this->g_pPdStruct = pPdStruct;
 }
 
-quint32 ScanProgress::getFileCount(quint32 nCRC) {
+quint32 ScanProgress::getFileCount(quint32 nCRC)
+{
     QMutexLocker locker(&mutexDB);
 
     quint32 nResult = 0;
@@ -54,7 +57,8 @@ quint32 ScanProgress::getFileCount(quint32 nCRC) {
     return nResult;
 }
 
-void ScanProgress::setFileCount(quint32 nCRC, quint32 nCount) {
+void ScanProgress::setFileCount(quint32 nCRC, quint32 nCount)
+{
     QMutexLocker locker(&mutexDB);
 
     QSqlQuery query(_pOptions->dbSQLLite);
@@ -67,7 +71,8 @@ void ScanProgress::setFileCount(quint32 nCRC, quint32 nCount) {
     }
 }
 
-void ScanProgress::setFileStat(QString sFileName, QString sTimeCount, QString sDate) {
+void ScanProgress::setFileStat(QString sFileName, QString sTimeCount, QString sDate)
+{
     QMutexLocker locker(&mutexDB);
 
     QSqlQuery query(_pOptions->dbSQLLite);
@@ -82,7 +87,8 @@ void ScanProgress::setFileStat(QString sFileName, QString sTimeCount, QString sD
     }
 }
 
-void ScanProgress::createTables() {
+void ScanProgress::createTables()
+{
     QSqlQuery query(_pOptions->dbSQLLite);
 
     query.exec("DROP TABLE if exists records");
@@ -91,7 +97,8 @@ void ScanProgress::createTables() {
     query.exec("CREATE TABLE if not exists files(FILENAME text,TIMECOUNT text,DATETIME text,PRIMARY KEY(FILENAME))");
 }
 
-QString ScanProgress::getCurrentFileName() {
+QString ScanProgress::getCurrentFileName()
+{
     QMutexLocker locker(&mutexDB);
 
     QString sResult;
@@ -112,7 +119,8 @@ QString ScanProgress::getCurrentFileName() {
     return sResult;
 }
 
-QString ScanProgress::getCurrentFileNameAndLock() {
+QString ScanProgress::getCurrentFileNameAndLock()
+{
     QMutexLocker locker(&mutexDB);
 
     QString sResult;
@@ -143,7 +151,8 @@ QString ScanProgress::getCurrentFileNameAndLock() {
     return sResult;
 }
 
-qint64 ScanProgress::getNumberOfFile() {
+qint64 ScanProgress::getNumberOfFile()
+{
     QMutexLocker locker(&mutexDB);
 
     qint64 nResult = 0;
@@ -159,7 +168,8 @@ qint64 ScanProgress::getNumberOfFile() {
     return nResult;
 }
 
-void ScanProgress::findFiles(QString sDirectoryName) {
+void ScanProgress::findFiles(QString sDirectoryName)
+{
     if (!(g_pPdStruct->bIsStop)) {
         QFileInfo fi(sDirectoryName);
 
@@ -184,19 +194,22 @@ void ScanProgress::findFiles(QString sDirectoryName) {
     }
 }
 
-void ScanProgress::startTransaction() {
+void ScanProgress::startTransaction()
+{
     QSqlQuery query(_pOptions->dbSQLLite);
 
     query.exec("BEGIN TRANSACTION");
 }
 
-void ScanProgress::endTransaction() {
+void ScanProgress::endTransaction()
+{
     QSqlQuery query(_pOptions->dbSQLLite);
 
     query.exec("COMMIT");
 }
 
-void ScanProgress::_processFile(QString sFileName) {
+void ScanProgress::_processFile(QString sFileName)
+{
     pSemaphore->acquire();
 
     if (sFileName != "") {
@@ -589,7 +602,8 @@ void ScanProgress::_processFile(QString sFileName) {
     pSemaphore->release();
 }
 
-QString ScanProgress::createPath(ScanProgress::CF copyFormat, XBinary::SCANID scanID) {
+QString ScanProgress::createPath(ScanProgress::CF copyFormat, XBinary::SCANID scanID)
+{
     QString sResult;
 
     if ((copyFormat == ScanProgress::CF_FT_TYPE_NAME) || (copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIG) || (copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIGREL)) {
@@ -614,7 +628,8 @@ QString ScanProgress::createPath(ScanProgress::CF copyFormat, XBinary::SCANID sc
     return sResult;
 }
 
-void ScanProgress::process() {
+void ScanProgress::process()
+{
     QElapsedTimer scanTimer;
     scanTimer.start();
 
@@ -684,7 +699,8 @@ void ScanProgress::process() {
     emit completed(scanTimer.elapsed());
 }
 
-bool ScanProgress::createDatabase(QSqlDatabase *pDb, QString sDatabaseName) {
+bool ScanProgress::createDatabase(QSqlDatabase *pDb, QString sDatabaseName)
+{
     bool bResult = false;
 
     *pDb = QSqlDatabase::addDatabase("QSQLITE", "sqllite");
