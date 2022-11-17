@@ -21,7 +21,8 @@
 
 #include "scanprogress.h"
 
-ScanProgress::ScanProgress(QObject *pParent) : QObject(pParent)
+ScanProgress::ScanProgress(QObject *pParent)
+    : QObject(pParent)
 {
     _pOptions = nullptr;
     pSemaphore = nullptr;
