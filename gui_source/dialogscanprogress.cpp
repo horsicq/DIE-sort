@@ -23,8 +23,7 @@
 
 #include "ui_dialogscanprogress.h"
 
-DialogScanProgress::DialogScanProgress(QWidget *pParent)
-    : XDialogProcess(pParent)
+DialogScanProgress::DialogScanProgress(QWidget *pParent) : XDialogProcess(pParent)
 {
     pScan = new ScanProgress;
     pThread = new QThread;
