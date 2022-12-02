@@ -138,7 +138,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     ui->checkBoxRemoveCopied->setChecked(settings.value("RemoveCopied", false).toBool());
     ui->checkBoxCopyTheFirstOnly->setChecked(settings.value("CopyTheFirstOnly", false).toBool());
 
-    ui->spinBoxThreads->setValue(settings.value("Threads", 4).toInt());
+    ui->spinBoxThreads->setValue(settings.value("Threads", 1).toInt());
 
     options.bContinue = settings.value("Continue", false).toBool();
     options.bDebug = settings.value("Debug", false).toBool();
