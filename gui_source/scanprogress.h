@@ -153,11 +153,11 @@ public slots:
     static bool createDatabase(QSqlDatabase *pDb, QString sDatabaseName);
 
 private:
-    //#ifdef QT_DEBUG
-    //    const int N_MAXNUMBEROFTHREADS=8;
-    //#else
-    //    const int N_MAXNUMBEROFTHREADS=8;
-    //#endif
+    // #ifdef QT_DEBUG
+    //     const int N_MAXNUMBEROFTHREADS=8;
+    // #else
+    //     const int N_MAXNUMBEROFTHREADS=8;
+    // #endif
     QString _sDirectoryName;
     SCAN_OPTIONS *_pOptions;
     QMutex mutexDB;
