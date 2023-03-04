@@ -78,6 +78,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     connect(ui->checkBox_source, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
     connect(ui->checkBox_system, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
     connect(ui->checkBox_type, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_operation_system, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
 
     ui->checkBoxAllFileTypes->setChecked(true);
     ui->checkBoxAllTypes->setChecked(true);
@@ -264,6 +265,7 @@ void GuiMainWindow::_scan()
     if (ui->checkBox_source->isChecked()) options.stTypes.insert("source");
     if (ui->checkBox_system->isChecked()) options.stTypes.insert("system");
     if (ui->checkBox_type->isChecked()) options.stTypes.insert("type");
+    if (ui->checkBox_operation_system->isChecked()) options.stTypes.insert("operation system");
 
     options.bIsDeepScan = ui->checkBoxDeepScan->isChecked();
     options.bIsHeuristicScan = ui->checkBoxHeuristicScan->isChecked();
@@ -358,6 +360,7 @@ void GuiMainWindow::on_checkBoxAllTypes_toggled(bool checked)
     ui->checkBox_source->setChecked(checked);
     ui->checkBox_system->setChecked(checked);
     ui->checkBox_type->setChecked(checked);
+    ui->checkBox_operation_system->setChecked(checked);
 }
 
 void GuiMainWindow::on_pushButtonInfo_clicked()
