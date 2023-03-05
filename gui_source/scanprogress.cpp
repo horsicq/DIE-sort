@@ -321,7 +321,7 @@ void ScanProgress::_processFile(QString sFileName)
                         }
                     }
 
-                    if ((_pOptions->stTypes.contains(ss.sType)) || (_pOptions->bAllTypes)) {
+                    if ((_pOptions->stTypes.contains(ss.sType.toLower())) || (_pOptions->bAllTypes)) {
                         bIdentified = true;
 
                         if ((_pOptions->copyType == CT_IDENT) || (_pOptions->copyType == CT_IDENT_UNK)) {
