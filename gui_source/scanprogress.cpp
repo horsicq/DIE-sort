@@ -228,6 +228,8 @@ void ScanProgress::_processFile(QString sFileName)
         DiE_Script::OPTIONS options = {};
 
         options.bIsDeepScan = _pOptions->bIsDeepScan;
+        options.bIsVerbose = _pOptions->bIsVerbose;
+        options.bIsRecursiveScan = _pOptions->bIsRecursive;
         options.bIsHeuristicScan = _pOptions->bIsHeuristicScan;
         options.bShowType = true;
         options.bShowVersion = _pOptions->bShowVersion;

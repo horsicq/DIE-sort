@@ -89,8 +89,10 @@ public:
     };
 
     struct SCAN_OPTIONS {
+        bool bIsRecursive;
         bool bIsDeepScan;
         bool bIsHeuristicScan;
+        bool bIsVerbose;
         bool bSubdirectories;
         bool bShowVersion;
         bool bShowOptions;

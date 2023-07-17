@@ -267,7 +267,9 @@ void GuiMainWindow::_scan()
     if (ui->checkBox_type->isChecked()) options.stTypes.insert("type");
     if (ui->checkBox_operation_system->isChecked()) options.stTypes.insert("operation system");
 
+    options.bIsRecursive = ui->checkBoxRecursive->isChecked();
     options.bIsDeepScan = ui->checkBoxDeepScan->isChecked();
+    options.bIsVerbose = ui->checkBoxVerbose->isChecked();
     options.bIsHeuristicScan = ui->checkBoxHeuristicScan->isChecked();
     options.bShowVersion = ui->checkBoxShowVersion->isChecked();
     options.bShowOptions = ui->checkBoxShowOptions->isChecked();
