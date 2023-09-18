@@ -269,7 +269,7 @@ void ScanProgress::_processFile(QString sFileName)
             }
 
             for (int i = 0; i < nCount; i++) {
-                DiE_Script::SCAN_STRUCT ss = scanResult.listRecords.at(i);
+                DiE_ScriptEngine::SCAN_STRUCT ss = scanResult.listRecords.at(i);
 
                 if (_pOptions->stFileTypes.contains(ss.id.fileType)) {
                     _id = ss.id;
