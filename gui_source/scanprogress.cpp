@@ -210,7 +210,9 @@ void ScanProgress::endTransaction()
 
 void ScanProgress::_processFile(QString sFileName)
 {
-    pSemaphore->acquire();
+    if (_pOptions->nThreads > 1) {
+        pSemaphore->acquire();
+    }
 
     if (sFileName != "") {
         QString sTempFile;
@@ -237,12 +239,12 @@ void ScanProgress::_processFile(QString sFileName)
 
         setFileStat(sFileName, "", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 
-        DiE_Script::SCAN_RESULT scanResult = dieScript.scanFile(sFileName, &options);
+        DiE_Script::SCAN_RESULT scanResult = dieScript.scanFile(sFileName, &options, g_pPdStruct);
 
         QString _sBaseFileName = QFileInfo(scanResult.sFileName).fileName();
 
         if ((_pOptions->fileFormat == FF_MD5) || (_pOptions->fileFormat == FF_MD5_ORIGINAL)) {
-            QString sMD5 = XBinary::getHash(XBinary::HASH_MD5, scanResult.sFileName);
+            QString sMD5 = XBinary::getHash(XBinary::HASH_MD5, scanResult.sFileName, g_pPdStruct);
 
             if (_pOptions->fileFormat == FF_MD5) {
                 _sBaseFileName = sMD5;
@@ -604,7 +606,9 @@ void ScanProgress::_processFile(QString sFileName)
         }
     }
 
-    pSemaphore->release();
+    if (_pOptions->nThreads > 1) {
+        pSemaphore->release();
+    }
 }
 
 QString ScanProgress::createPath(ScanProgress::CF copyFormat, XBinary::SCANID scanID)
@@ -638,7 +642,9 @@ void ScanProgress::process()
     QElapsedTimer scanTimer;
     scanTimer.start();
 
-    pSemaphore = new QSemaphore(_pOptions->nThreads);
+    if (_pOptions->nThreads > 1) {
+        pSemaphore = new QSemaphore(_pOptions->nThreads);
+    }
 
     if (!(_pOptions->bContinue)) {
         createTables();
@@ -667,18 +673,22 @@ void ScanProgress::process()
             break;
         }
 
-        QFuture<void> future = QtConcurrent::run(this, &ScanProgress::_processFile, sFileName);
+        if (_pOptions->nThreads > 1) {
+            QFuture<void> future = QtConcurrent::run(this, &ScanProgress::_processFile, sFileName);
 
-        QThread::msleep(50);
+            QThread::msleep(50);
 
-        while (true) {
-            int nAvailable = pSemaphore->available();
-            //            currentStats.nNumberOfThreads=(_pOptions->nThreads)-nAvailable;
-            if (nAvailable) {
-                break;
+            while (true) {
+                int nAvailable = pSemaphore->available();
+                //            currentStats.nNumberOfThreads=(_pOptions->nThreads)-nAvailable;
+                if (nAvailable) {
+                    break;
+                }
+
+                QThread::msleep(500);
             }
-
-            QThread::msleep(500);
+        } else {
+            _processFile(sFileName);
         }
 
         _nCurrent++;
@@ -686,18 +696,20 @@ void ScanProgress::process()
         XBinary::setPdStructCurrent(g_pPdStruct, _nFreeIndex, _nCurrent);
     }
 
-    while (true) {
-        int nAvailable = pSemaphore->available();
-        //        currentStats.nNumberOfThreads=(_pOptions->nThreads)-nAvailable;
+    if (_pOptions->nThreads > 1) {
+        while (true) {
+            int nAvailable = pSemaphore->available();
+            //        currentStats.nNumberOfThreads=(_pOptions->nThreads)-nAvailable;
 
-        if (nAvailable == (_pOptions->nThreads)) {
-            break;
+            if (nAvailable == (_pOptions->nThreads)) {
+                break;
+            }
+
+            QThread::msleep(1000);
         }
 
-        QThread::msleep(1000);
+        delete pSemaphore;
     }
-
-    delete pSemaphore;
 
     XBinary::setPdStructFinished(g_pPdStruct, _nFreeIndex);
 
