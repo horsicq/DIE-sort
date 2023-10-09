@@ -59,6 +59,8 @@ private slots:
 
     void on_doubleSpinBoxEntropy_valueChanged(double arg1);
 
+    void on_pushButtonSignaturesCustom_clicked();
+
 private:
     Ui::GuiMainWindow *ui;
 

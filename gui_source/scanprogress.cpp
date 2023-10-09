@@ -661,7 +661,8 @@ void ScanProgress::process()
     qint32 _nFreeIndex = XBinary::getFreeIndex(g_pPdStruct);
     XBinary::setPdStructInit(g_pPdStruct, _nFreeIndex, getNumberOfFile());
 
-    dieScript.loadDatabase(_pOptions->sSignatures);
+    dieScript.loadDatabase(_pOptions->sSignatures, true);
+    dieScript.loadDatabase(_pOptions->sSignaturesCustom, false);
 
     qint32 _nCurrent = 0;
 

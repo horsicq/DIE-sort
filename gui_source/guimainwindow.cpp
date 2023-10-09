@@ -132,6 +132,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 
     ui->lineEditDirectoryName->setText(settings.value("DirectoryName", QDir::currentPath()).toString());
     ui->lineEditSignatures->setText(settings.value("Signatures", "$app/db").toString());
+    ui->lineEditSignaturesCustom->setText(settings.value("SignaturesCustom", "$app/db").toString());
     ui->lineEditOut->setText(settings.value("ResultName", QDir::currentPath()).toString());
 
     ui->spinBoxCopyCount->setValue(settings.value("CopyCount", 0).toInt());
@@ -160,6 +161,7 @@ GuiMainWindow::~GuiMainWindow()
     settings.setValue("DirectoryName", ui->lineEditDirectoryName->text());
     settings.setValue("ResultName", ui->lineEditOut->text());
     settings.setValue("Signatures", ui->lineEditSignatures->text());
+    settings.setValue("SignaturesCustom", ui->lineEditSignaturesCustom->text());
     settings.setValue("CopyCount", ui->spinBoxCopyCount->value());
     settings.setValue("CopyFormat", ui->comboBoxCopyFormat->currentIndex());
     settings.setValue("CopyType", ui->comboBoxCopyType->currentIndex());
@@ -275,6 +277,7 @@ void GuiMainWindow::_scan()
     options.bShowOptions = ui->checkBoxShowOptions->isChecked();
     options.bSubdirectories = ui->checkBoxScanSubdirectories->isChecked();
     options.sSignatures = ui->lineEditSignatures->text();
+    options.sSignaturesCustom = ui->lineEditSignaturesCustom->text();
 
     options.copyFormat = (ScanProgress::CF)ui->comboBoxCopyFormat->currentIndex();
     options.copyType = (ScanProgress::CT)ui->comboBoxCopyType->currentIndex();
@@ -405,3 +408,15 @@ void GuiMainWindow::on_doubleSpinBoxEntropy_valueChanged(double arg1)
     double dProcent = (dEntropy / 8) * 100;
     ui->lineEditEntropy->setText(QString::number(dProcent));
 }
+
+void GuiMainWindow::on_pushButtonSignaturesCustom_clicked()
+{
+    QString sInitDirectory = XBinary::convertPathName(ui->lineEditSignaturesCustom->text());
+
+    QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Open directory..."), sInitDirectory, QFileDialog::ShowDirsOnly);
+
+    if (!sDirectoryName.isEmpty()) {
+        ui->lineEditSignaturesCustom->setText(sDirectoryName);
+    }
+}
+

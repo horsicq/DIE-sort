@@ -102,6 +102,7 @@ public:
         qint32 nCopyCount;
         QString sResultDirectory;
         QString sSignatures;
+        QString sSignaturesCustom;
         QSqlDatabase dbSQLLite;
         bool bContinue;
         bool bDebug;

@@ -234,6 +234,41 @@
      </widget>
     </item>
     <item>
+     <widget class="QGroupBox" name="groupBoxSignaturesCustom">
+      <property name="title">
+       <string>Custom Signatures</string>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_13">
+       <property name="leftMargin">
+        <number>1</number>
+       </property>
+       <property name="topMargin">
+        <number>1</number>
+       </property>
+       <property name="rightMargin">
+        <number>1</number>
+       </property>
+       <property name="bottomMargin">
+        <number>1</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_14">
+         <item>
+          <widget class="QLineEdit" name="lineEditSignaturesCustom"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButtonSignaturesCustom">
+           <property name="text">
+            <string>...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
      <layout class="QHBoxLayout" name="horizontalLayout_6">
       <item>
        <widget class="QGroupBox" name="groupBoxFileTypes">
