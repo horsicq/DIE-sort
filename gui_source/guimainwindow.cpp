@@ -419,4 +419,3 @@ void GuiMainWindow::on_pushButtonSignaturesCustom_clicked()
         ui->lineEditSignaturesCustom->setText(sDirectoryName);
     }
 }
-
