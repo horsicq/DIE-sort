@@ -27,7 +27,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 {
     ui->setupUi(this);
 
-    setWindowTitle(QString("%1 v%2").arg(X_APPLICATIONNAME).arg(X_APPLICATIONVERSION));
+    setWindowTitle(QString("%1 v%2").arg(X_APPLICATIONNAME, X_APPLICATIONVERSION));
 
     options = {0};
 
@@ -132,7 +132,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 
     ui->lineEditDirectoryName->setText(settings.value("DirectoryName", QDir::currentPath()).toString());
     ui->lineEditSignatures->setText(settings.value("Signatures", "$app/db").toString());
-    ui->lineEditSignaturesCustom->setText(settings.value("SignaturesCustom", "$app/db").toString());
+    ui->lineEditSignaturesCustom->setText(settings.value("SignaturesCustom", "$app/db_custom").toString());
     ui->lineEditOut->setText(settings.value("ResultName", QDir::currentPath()).toString());
 
     ui->spinBoxCopyCount->setValue(settings.value("CopyCount", 0).toInt());
