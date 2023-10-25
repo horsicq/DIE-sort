@@ -46,3 +46,6 @@ win32 {
 macx {
     ICON = ../icons/main.icns
 }
+
+DISTFILES += \
+    ../build_win32.bat

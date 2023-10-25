@@ -21,6 +21,7 @@ IF NOT [%X_ERROR%] == [] goto exit
 
 copy %X_SOURCE_PATH%\build\release\die-sort.exe %X_SOURCE_PATH%\release\%X_BUILD_NAME%\
 xcopy %X_SOURCE_PATH%\Detect-It-Easy\db %X_SOURCE_PATH%\release\%X_BUILD_NAME%\db /E /I
+xcopy %X_SOURCE_PATH%\Detect-It-Easy\db_custom %X_SOURCE_PATH%\release\%X_BUILD_NAME%\db_custom /E /I
 
 call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Widgets
 call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Gui
