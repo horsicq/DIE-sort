@@ -103,9 +103,8 @@ public:
         QString sResultDirectory;
         QString sSignatures;
         QString sSignaturesCustom;
-//        QSqlDatabase dbSQLLite;
-        QList<QString> listFiles;
-//        bool bContinue;
+        QSqlDatabase dbSQLLite;
+        bool bContinue;
         bool bDebug;
         CF copyFormat;
         CT copyType;
@@ -133,17 +132,17 @@ public:
 
     void setData(QString sDirectoryName, ScanProgress::SCAN_OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct);
 
-//    quint32 getFileCount(quint32 nCRC);
-//    void setFileCount(quint32 nCRC, quint32 nCount);
-//    void setFileStat(QString sFileName, QString sTimeCount, QString sDate);
-//    void createTables();
-//    QString getCurrentFileName();
-//    QString getCurrentFileNameAndLock();
-//    qint64 getNumberOfFile();
+    quint32 getFileCount(quint32 nCRC);
+    void setFileCount(quint32 nCRC, quint32 nCount);
+    void setFileStat(QString sFileName, QString sTimeCount, QString sDate);
+    void createTables();
+    QString getCurrentFileName();
+    QString getCurrentFileNameAndLock();
+    qint64 getNumberOfFile();
     void findFiles(QString sDirectoryName);
 
-//    void startTransaction();
-//    void endTransaction();
+    void startTransaction();
+    void endTransaction();
 
     void _processFile(QString sFileName);
 
