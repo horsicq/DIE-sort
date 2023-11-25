@@ -142,15 +142,15 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 
     ui->spinBoxThreads->setValue(settings.value("Threads", 1).toInt());
 
-//    options.bContinue = settings.value("Continue", false).toBool();
+    options.bContinue = settings.value("Continue", false).toBool();
     options.bDebug = settings.value("Debug", false).toBool();
 
-//    QString sDatabaseName = settings.value("DatabaseName", ":memory:").toString();
+    QString sDatabaseName = settings.value("DatabaseName", ":memory:").toString();
 
-//    if (!ScanProgress::createDatabase(&options.dbSQLLite, sDatabaseName)) {
-//        QMessageBox::critical(this, tr("Error"), tr("Cannot open SQLITE database"));
-//        exit(1);
-//    }
+    if (!ScanProgress::createDatabase(&options.dbSQLLite, sDatabaseName)) {
+        QMessageBox::critical(this, tr("Error"), tr("Cannot open SQLITE database"));
+        exit(1);
+    }
 }
 
 GuiMainWindow::~GuiMainWindow()
