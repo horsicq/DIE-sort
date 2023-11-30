@@ -145,6 +145,10 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     options.bContinue = settings.value("Continue", false).toBool();
     options.bDebug = settings.value("Debug", false).toBool();
 
+#ifdef QT_DEBUG
+    options.bDebug = true;
+#endif
+
     QString sDatabaseName = settings.value("DatabaseName", ":memory:").toString();
 
     if (!ScanProgress::createDatabase(&options.dbSQLLite, sDatabaseName)) {

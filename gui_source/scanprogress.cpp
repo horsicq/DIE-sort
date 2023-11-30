@@ -222,9 +222,9 @@ void ScanProgress::_processFile(QString sFileName)
         if (_pOptions->bDebug) {
             sTempFile = _pOptions->sResultDirectory;
 
-            XBinary::createDirectory(sFileName);
+            XBinary::createDirectory(sTempFile);
 
-            sTempFile += QDir::separator() + XBinary::getBaseFileName(sFileName);
+            sTempFile += QDir::separator() + QFileInfo(sFileName).fileName();
 
             XBinary::copyFile(sFileName, sTempFile);
         }
@@ -586,13 +586,14 @@ void ScanProgress::_processFile(QString sFileName)
             }
         }
 
-        if (scanResult.listErrors.count()) {
+        if (scanResult.listErrors.count()) { 
             QString _sFileName = _pOptions->sResultDirectory;
-
+            _sFileName = XBinary::convertFileName(_sFileName);
             XBinary::createDirectory(_sFileName);
             _sFileName += QDir::separator() + QString("__ERRORS");
+            _sFileName = XBinary::convertFileName(_sFileName);
             XBinary::createDirectory(_sFileName);
-            _sFileName += QDir::separator() + XBinary::getBaseFileName(scanResult.sFileName);
+            _sFileName += QDir::separator() + QFileInfo(sFileName).fileName();
 
             XBinary::copyFile(scanResult.sFileName, _sFileName);
         }
