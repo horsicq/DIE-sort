@@ -586,7 +586,7 @@ void ScanProgress::_processFile(QString sFileName)
             }
         }
 
-        if (scanResult.listErrors.count()) { 
+        if (scanResult.listErrors.count()) {
             QString _sFileName = _pOptions->sResultDirectory;
             _sFileName = XBinary::convertFileName(_sFileName);
             XBinary::createDirectory(_sFileName);
