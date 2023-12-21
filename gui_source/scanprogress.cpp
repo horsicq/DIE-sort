@@ -287,7 +287,7 @@ void ScanProgress::_processFile(QString sFileName)
                         _file.setFileName(sFileName);
 
                         if (_file.open(QIODevice::ReadOnly)) {
-                            XBinary::_MEMORY_MAP memoryMap = XFormats::getMemoryMap(ss.id.fileType, &_file);
+                            XBinary::_MEMORY_MAP memoryMap = XFormats::getMemoryMap(ss.id.fileType, XBinary::MAPMODE_UNKNOWN, &_file);
                             qint64 nEPAddress = XFormats::getEntryPointAddress(ss.id.fileType, &_file);
                             qint64 nEPOffset = XFormats::getEntryPointOffset(ss.id.fileType, &_file);
 
@@ -530,12 +530,12 @@ void ScanProgress::_processFile(QString sFileName)
                             }
 
                             if (_pOptions->unknownPrefix == UP_OPCODES) {
-                                XBinary::_MEMORY_MAP memoryMap = XFormats::getMemoryMap(_id.fileType, &file);
+                                XBinary::_MEMORY_MAP memoryMap = XFormats::getMemoryMap(_id.fileType, XBinary::MAPMODE_UNKNOWN, &file);
                                 qint64 nEntryPointAddress = XFormats::getEntryPointAddress(_id.fileType, &file);
 
                                 sFolderName = XCapstone::getSignature(&file, &memoryMap, nEntryPointAddress, XCapstone::ST_MASK, nUnknownCount);
                             } else if (_pOptions->unknownPrefix == UP_OPCODES_REL) {
-                                XBinary::_MEMORY_MAP memoryMap = XFormats::getMemoryMap(_id.fileType, &file);
+                                XBinary::_MEMORY_MAP memoryMap = XFormats::getMemoryMap(_id.fileType, XBinary::MAPMODE_UNKNOWN, &file);
                                 qint64 nEntryPointAddress = XFormats::getEntryPointAddress(_id.fileType, &file);
 
                                 sFolderName = XCapstone::getSignature(&file, &memoryMap, nEntryPointAddress, XCapstone::ST_MASKREL, nUnknownCount);
