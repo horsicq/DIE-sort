@@ -31,7 +31,12 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 
     options = {0};
 
-    QString sSettingsFile = QApplication::applicationDirPath() + QDir::separator() + QString("%1.ini").arg(X_APPLICATIONNAME);
+    QString sSettingsFile = QApplication::applicationDirPath() + QDir::separator();
+#ifdef Q_OS_LINUX
+    sSettingsFile += QString("Linux.");
+#endif
+    sSettingsFile += QString("%1.ini").arg(X_APPLICATIONNAME);
+
     QSettings settings(sSettingsFile, QSettings::IniFormat);
 
     connect(ui->checkBoxBinary, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
@@ -159,7 +164,11 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 
 GuiMainWindow::~GuiMainWindow()
 {
-    QString sSettingsFile = QApplication::applicationDirPath() + QDir::separator() + QString("%1.ini").arg(X_APPLICATIONNAME);
+    QString sSettingsFile = QApplication::applicationDirPath() + QDir::separator();
+#ifdef Q_OS_LINUX
+    sSettingsFile += QString("Linux.");
+#endif
+    sSettingsFile += QString("%1.ini").arg(X_APPLICATIONNAME);
     QSettings settings(sSettingsFile, QSettings::IniFormat);
 
     settings.setValue("DirectoryName", ui->lineEditDirectoryName->text());
