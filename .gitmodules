@@ -31,3 +31,9 @@
 [submodule "XGithub"]
 	path = XGithub
 	url = https://github.com/horsicq/XGithub
+[submodule "XDEX"]
+	path = XDEX
+	url = https://github.com/horsicq/XDEX
+[submodule "XPDF"]
+	path = XPDF
+	url = https://github.com/horsicq/XPDF
