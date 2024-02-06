@@ -6,6 +6,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = die-sort
 TEMPLATE = app
 
+XCONFIG += use_archive
+
 SOURCES += \
         guimainwindow.cpp \
         main_gui.cpp \
