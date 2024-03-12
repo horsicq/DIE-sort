@@ -287,6 +287,8 @@ void GuiMainWindow::_scan()
     if (ui->checkBox_system->isChecked()) options.stTypes.insert("system");
     if (ui->checkBox_type->isChecked()) options.stTypes.insert("type");
     if (ui->checkBox_operation_system->isChecked()) options.stTypes.insert("operation system");
+    if (ui->checkBox_cryptor->isChecked()) options.stTypes.insert("cryptor");
+    if (ui->checkBox_crypter->isChecked()) options.stTypes.insert("crypter");
 
     options.bIsRecursive = ui->checkBoxRecursive->isChecked();
     options.bIsDeepScan = ui->checkBoxDeepScan->isChecked();
@@ -388,6 +390,8 @@ void GuiMainWindow::on_checkBoxAllTypes_toggled(bool checked)
     ui->checkBox_system->setChecked(checked);
     ui->checkBox_type->setChecked(checked);
     ui->checkBox_operation_system->setChecked(checked);
+    ui->checkBox_crypter->setChecked(checked);
+    ui->checkBox_cryptor->setChecked(checked);
 }
 
 void GuiMainWindow::on_pushButtonInfo_clicked()
