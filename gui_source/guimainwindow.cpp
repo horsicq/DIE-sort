@@ -54,6 +54,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     connect(ui->checkBoxZIP, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxJAR, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxAPK, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxMACHOFAT, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxNPM, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
 
     connect(ui->checkBox_archive, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
     connect(ui->checkBox_audio, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
@@ -250,6 +252,8 @@ void GuiMainWindow::_scan()
     if (ui->checkBoxZIP->isChecked()) options.stFileTypes.insert(XBinary::FT_ZIP);
     if (ui->checkBoxJAR->isChecked()) options.stFileTypes.insert(XBinary::FT_JAR);
     if (ui->checkBoxAPK->isChecked()) options.stFileTypes.insert(XBinary::FT_APK);
+    if (ui->checkBoxMACHOFAT->isChecked()) options.stFileTypes.insert(XBinary::FT_MACHOFAT);
+    if (ui->checkBoxNPM->isChecked()) options.stFileTypes.insert(XBinary::FT_NPM);
 
     options.stTypes.clear();
 
@@ -344,6 +348,8 @@ void GuiMainWindow::on_checkBoxAllFileTypes_toggled(bool checked)
     ui->checkBoxZIP->setChecked(checked);
     ui->checkBoxJAR->setChecked(checked);
     ui->checkBoxAPK->setChecked(checked);
+    ui->checkBoxMACHOFAT->setChecked(checked);
+    ui->checkBoxNPM->setChecked(checked);
 }
 
 // void GuiMainWindow::on_checkBoxBinary_toggled(bool checked)
