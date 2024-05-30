@@ -37,3 +37,6 @@
 [submodule "XPDF"]
 	path = XPDF
 	url = https://github.com/horsicq/XPDF
+[submodule "XExtractor"]
+	path = XExtractor
+	url = https://github.com/horsicq/XExtractor
