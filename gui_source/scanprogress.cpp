@@ -238,6 +238,7 @@ void ScanProgress::_processFile(QString sFileName)
         options.bShowType = true;
         options.bShowVersion = _pOptions->bShowVersion;
         options.bShowOptions = _pOptions->bShowOptions;
+        options.nBufferSize = 2 * 1024 * 1024;
 
         setFileStat(sFileName, "", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 
