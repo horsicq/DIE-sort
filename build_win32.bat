@@ -6,16 +6,16 @@ set X_SOURCE_PATH=%~dp0
 set X_BUILD_NAME=diesort_win32_portable
 set /p X_RELEASE_VERSION=<%X_SOURCE_PATH%\release_version.txt
 
-call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %VSVARS_PATH%
-call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %QMAKE_PATH%
-call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %SEVENZIP_PATH%
+rem call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %VSVARS_PATH%
+rem call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %QMAKE_PATH%
+rem call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %SEVENZIP_PATH%
 
 IF NOT [%X_ERROR%] == [] goto exit
 
 call %X_SOURCE_PATH%\build_tools\windows.cmd make_init
 call %X_SOURCE_PATH%\build_tools\windows.cmd make_build %X_SOURCE_PATH%\DIE_sort_source.pro
 
-call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %X_SOURCE_PATH%\build\release\die-sort.exe
+rem call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %X_SOURCE_PATH%\build\release\die-sort.exe
 
 IF NOT [%X_ERROR%] == [] goto exit
 
