@@ -276,7 +276,7 @@ void ScanProgress::_processFile(QString sFileName)
             for (int i = 0; i < nCount; i++) {
                 XBinary::SCANSTRUCT ss = scanResult.listRecords.at(i);
 
-                if (_pOptions->stFileTypes.contains(ss.id.fileType)) {
+                if (_pOptions->stFileTypes.contains(ss.id.fileType) && (ss.sName != "")) {
                     _id = ss.id;
 
                     if ((_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPBYTES) || (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPBYTES) ||
