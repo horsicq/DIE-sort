@@ -40,3 +40,6 @@
 [submodule "XExtractor"]
 	path = XExtractor
 	url = https://github.com/horsicq/XExtractor
+[submodule "XScanEngine"]
+	path = XScanEngine
+	url = https://github.com/horsicq/XScanEngine
