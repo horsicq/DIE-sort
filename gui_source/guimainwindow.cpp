@@ -142,6 +142,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 
     ui->lineEditDirectoryName->setText(settings.value("DirectoryName", QDir::currentPath()).toString());
     ui->lineEditSignatures->setText(settings.value("Signatures", "$app/db").toString());
+    ui->lineEditSignaturesExtra->setText(settings.value("SignaturesExtra", "$app/db_extra").toString());
     ui->lineEditSignaturesCustom->setText(settings.value("SignaturesCustom", "$app/db_custom").toString());
     ui->lineEditOut->setText(settings.value("ResultName", QDir::currentPath()).toString());
 
@@ -179,6 +180,7 @@ GuiMainWindow::~GuiMainWindow()
     settings.setValue("DirectoryName", ui->lineEditDirectoryName->text());
     settings.setValue("ResultName", ui->lineEditOut->text());
     settings.setValue("Signatures", ui->lineEditSignatures->text());
+    settings.setValue("SignaturesExtra", ui->lineEditSignaturesExtra->text());
     settings.setValue("SignaturesCustom", ui->lineEditSignaturesCustom->text());
     settings.setValue("CopyCount", ui->spinBoxCopyCount->value());
     settings.setValue("CopyFormat", ui->comboBoxCopyFormat->currentIndex());
@@ -299,15 +301,17 @@ void GuiMainWindow::_scan()
     options.bIsVerbose = ui->checkBoxVerbose->isChecked();
     options.bIsHeuristicScan = ui->checkBoxHeuristicScan->isChecked();
     options.bShowVersion = ui->checkBoxShowVersion->isChecked();
-    options.bShowOptions = ui->checkBoxShowOptions->isChecked();
+    options.bShowInfo = ui->checkBoxShowInfo->isChecked();
     options.bSubdirectories = ui->checkBoxScanSubdirectories->isChecked();
     options.sSignatures = ui->lineEditSignatures->text();
+    options.sSignaturesExtra = ui->lineEditSignaturesExtra->text();
     options.sSignaturesCustom = ui->lineEditSignaturesCustom->text();
 
     options.copyFormat = (ScanProgress::CF)ui->comboBoxCopyFormat->currentIndex();
     options.copyType = (ScanProgress::CT)ui->comboBoxCopyType->currentIndex();
     options.bRemoveCopied = ui->checkBoxRemoveCopied->isChecked();
     options.bCopyTheFirstOnly = ui->checkBoxCopyTheFirstOnly->isChecked();
+    options.bValidOnly = ui->checkBoxValidOnly->isChecked();
 
     options.unknownPrefix = (ScanProgress::UP)ui->comboBoxUnknownPrefix->currentIndex();
     options.nUnknownCount = ui->spinBoxUnknownCount->value();
@@ -451,3 +455,15 @@ void GuiMainWindow::on_pushButtonSignaturesCustom_clicked()
         ui->lineEditSignaturesCustom->setText(sDirectoryName);
     }
 }
+
+void GuiMainWindow::on_pushButtonSignaturesExtra_clicked()
+{
+    QString sInitDirectory = XBinary::convertPathName(ui->lineEditSignaturesExtra->text());
+
+    QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Open directory..."), sInitDirectory, QFileDialog::ShowDirsOnly);
+
+    if (!sDirectoryName.isEmpty()) {
+        ui->lineEditSignaturesExtra->setText(sDirectoryName);
+    }
+}
+

@@ -95,13 +95,14 @@ public:
         bool bIsVerbose;
         bool bSubdirectories;
         bool bShowVersion;
-        bool bShowOptions;
+        bool bShowInfo;
         QSet<XBinary::FT> stFileTypes;
         bool bAllTypes;
         QSet<QString> stTypes;
         qint32 nCopyCount;
         QString sResultDirectory;
         QString sSignatures;
+        QString sSignaturesExtra;
         QString sSignaturesCustom;
         QSqlDatabase dbSQLLite;
         bool bContinue;
@@ -116,6 +117,7 @@ public:
         qint64 nUnknownCount;
         bool bRemoveCopied;
         bool bCopyTheFirstOnly;
+        bool bValidOnly;
         qint32 nThreads;
     };
 
@@ -146,7 +148,7 @@ public:
 
     void _processFile(QString sFileName);
 
-    static QString createPath(CF copyFormat, XBinary::SCANID scanID);
+    static QString createPath(CF copyFormat, XScanEngine::SCANID scanID);
 
 signals:
     void completed(qint64 nElapsedTime);
