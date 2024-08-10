@@ -217,7 +217,6 @@ void ScanProgress::_processFile(QString sFileName)
     }
 
     if (sFileName != "") {
-
         QSet<XBinary::FT> fileTypes = XFormats::getFileTypes(sFileName, true, g_pPdStruct);
 
         XBinary::FT ftPref = XBinary::_getPrefFileType(&fileTypes);
@@ -287,10 +286,10 @@ void ScanProgress::_processFile(QString sFileName)
                     if (_pOptions->stFileTypes.contains(ss.id.fileType) && (ss.sName != "")) {
                         _id = ss.id;
 
-                        if ((_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPBYTES) || (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPBYTES) ||
-                            (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPBYTES) || (_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIG) ||
-                            (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIG) || (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIG) ||
-                            (_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIGREL) ||
+                        if ((_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPBYTES) ||
+                            (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPBYTES) || (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPBYTES) ||
+                            (_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIG) || (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIG) ||
+                            (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIG) || (_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIGREL) ||
                             (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIGREL) || (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIGREL)) {
                             QFile _file;
                             _file.setFileName(sFileName);
@@ -411,11 +410,12 @@ void ScanProgress::_processFile(QString sFileName)
                     if (bCopy) {
                         QString _sFileName = _pOptions->sResultDirectory + QDir::separator() + createPath(_pOptions->copyFormat, _id) + QDir::separator() + "__UNKNOWN";
 
-                        if ((_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPBYTES) || (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPBYTES) ||
-                            (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPBYTES)) {
+                        if ((_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPBYTES) ||
+                            (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPBYTES) || (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPBYTES)) {
                             _sFileName += QDir::separator() + sEPBytes;
                         } else if ((_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIG) ||
-                                   (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIG) || (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIG)) {
+                                   (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIG) ||
+                                   (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIG)) {
                             _sFileName += QDir::separator() + sEP;
                         } else if ((_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIGREL) ||
                                    (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIGREL) ||

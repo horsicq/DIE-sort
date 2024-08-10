@@ -466,4 +466,3 @@ void GuiMainWindow::on_pushButtonSignaturesExtra_clicked()
         ui->lineEditSignaturesExtra->setText(sDirectoryName);
     }
 }
-
