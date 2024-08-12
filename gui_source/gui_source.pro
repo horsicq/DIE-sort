@@ -9,20 +9,19 @@ TEMPLATE = app
 XCONFIG += use_archive
 
 SOURCES += \
+        dialogscanprogress.cpp \
         guimainwindow.cpp \
         main_gui.cpp \
-        dialogscanprogress.cpp \
         scanprogress.cpp
 
 HEADERS += \
+        dialogscanprogress.h \
         guimainwindow.h \
         ../global.h \
-        dialogscanprogress.h \
         scanprogress.h
 
 FORMS += \
-        guimainwindow.ui \
-        dialogscanprogress.ui
+        guimainwindow.ui
 
 !contains(XCONFIG, die_script) {
     XCONFIG += die_script

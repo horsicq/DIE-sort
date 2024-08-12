@@ -26,6 +26,7 @@ ScanProgress::ScanProgress(QObject *pParent) : QObject(pParent)
     _pOptions = nullptr;
     pSemaphore = nullptr;
     g_pPdStruct = nullptr;
+    g_nFreeIndex = 0;
 }
 
 void ScanProgress::setData(QString sDirectoryName, ScanProgress::SCAN_OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct)
@@ -171,6 +172,8 @@ qint64 ScanProgress::getNumberOfFile()
 void ScanProgress::findFiles(QString sDirectoryName)
 {
     if (!(g_pPdStruct->bIsStop)) {
+        XBinary::setPdStructStatus(g_pPdStruct, g_nFreeIndex, sDirectoryName);
+
         QFileInfo fi(sDirectoryName);
 
         if (fi.isFile()) {
@@ -182,6 +185,8 @@ void ScanProgress::findFiles(QString sDirectoryName)
             QFileInfoList eil = dir.entryInfoList();
 
             int nCount = eil.count();
+
+            XBinary::setPdStructCurrent(g_pPdStruct, g_nFreeIndex, nCount);
 
             for (int i = 0; (i < nCount) && (!(g_pPdStruct->bIsStop)); i++) {
                 QString sFN = eil.at(i).fileName();
@@ -210,8 +215,6 @@ void ScanProgress::endTransaction()
 
 void ScanProgress::_processFile(QString sFileName)
 {
-    XBinary::PDSTRUCT pdStruct = {};
-
     if (_pOptions->nThreads > 1) {
         pSemaphore->acquire();
     }
@@ -221,7 +224,80 @@ void ScanProgress::_processFile(QString sFileName)
 
         XBinary::FT ftPref = XBinary::_getPrefFileType(&fileTypes);
 
-        if (_pOptions->stFileTypes.contains(ftPref)) {
+        bool bProcess = _pOptions->stFileTypes.contains(ftPref);
+        bool bIsOverlayPresent = false;
+        bool bIsValid = false;
+
+        if (bProcess) {
+            QFile file;
+
+            file.setFileName(sFileName);
+
+            if (file.open(QIODevice::ReadOnly)) {
+                if ((ftPref == XBinary::FT_PE32) || (ftPref == XBinary::FT_PE64)) {
+                    XPE pe(&file);
+
+                    bIsOverlayPresent = pe.isOverlayPresent();
+                    bIsValid = pe.checkFileFormat(XPE::CFF_ENTRYPOINT, nullptr, g_pPdStruct);
+                } else if ((ftPref == XBinary::FT_ELF32) || (ftPref == XBinary::FT_ELF64)) {
+                    XELF elf(&file);
+
+                    bIsOverlayPresent = elf.isOverlayPresent();
+                    bIsValid = elf.checkFileFormat(0, nullptr, g_pPdStruct);
+                } else if ((ftPref == XBinary::FT_MACHO32) || (ftPref == XBinary::FT_MACHO64)) {
+                    XMACH mach(&file);
+
+                    bIsOverlayPresent = mach.isOverlayPresent();
+                    bIsValid = mach.checkFileFormat(0, nullptr, g_pPdStruct);
+                } else if ((ftPref == XBinary::FT_LE) || (ftPref == XBinary::FT_LX)) {
+                    XLE le(&file);
+
+                    bIsOverlayPresent = le.isOverlayPresent();
+                    bIsValid = le.checkFileFormat(0, nullptr, g_pPdStruct);
+                } else if (ftPref == XBinary::FT_NE) {
+                    XNE ne(&file);
+
+                    bIsOverlayPresent = ne.isOverlayPresent();
+                    bIsValid = ne.checkFileFormat(0, nullptr, g_pPdStruct);
+                } else if (ftPref == XBinary::FT_MSDOS) {
+                    XMSDOS msdos(&file);
+
+                    bIsOverlayPresent = msdos.isOverlayPresent();
+                    bIsValid = msdos.checkFileFormat(0, nullptr, g_pPdStruct);
+                } else {
+                    XBinary binary(&file);
+
+                    bIsOverlayPresent = binary.isOverlayPresent();
+                    bIsValid = binary.checkFileFormat(0, nullptr, g_pPdStruct);
+                }
+            }
+        }
+
+        if (bProcess && (_pOptions->bValidOnly)) {
+            bProcess = bIsValid;
+        }
+
+        if (_pOptions->overlay == OVERLAY_PRESENT) {
+            if (bProcess) {
+                bProcess = (bIsOverlayPresent);
+            }
+        } else if (_pOptions->overlay == OVERLAY_NOTPRESENT) {
+            if (bProcess) {
+                bProcess = (!bIsOverlayPresent);
+            }
+        }
+
+        if (_pOptions->entropy == ENTROPY_MORETHAN) {
+            if (bProcess) {
+                bProcess = (XBinary::getEntropy(sFileName) >= _pOptions->dEntropyValue);
+            }
+        } else if (_pOptions->entropy == ENTROPY_LESSTHAN) {
+            if (bProcess) {
+                bProcess = (XBinary::getEntropy(sFileName) <= _pOptions->dEntropyValue);
+            }
+        }
+
+        if (bProcess) {
             QString sTempFile;
 
             if (_pOptions->bDebug) {
@@ -244,17 +320,18 @@ void ScanProgress::_processFile(QString sFileName)
             scanOptions.bShowVersion = _pOptions->bShowVersion;
             scanOptions.bShowInfo = _pOptions->bShowInfo;
             scanOptions.nBufferSize = 8 * 1024 * 1024;
-            scanOptions.bUseExtraDatabase = true;
-            scanOptions.bUseCustomDatabase = true;
+            scanOptions.bUseExtraDatabase = _pOptions->bSignaturesExtraUse;
+            scanOptions.bUseCustomDatabase = _pOptions->bSignaturesCustomUse;
+            // scanOptions.bShowUnknown = false;
 
             setFileStat(sFileName, "", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 
-            DiE_Script::SCAN_RESULT scanResult = dieScript.scanFile(sFileName, &scanOptions, &pdStruct);
+            DiE_Script::SCAN_RESULT scanResult = dieScript.scanFile(sFileName, &scanOptions, g_pPdStruct);
 
             QString _sBaseFileName = QFileInfo(scanResult.sFileName).fileName();
 
             if ((_pOptions->fileFormat == FF_MD5) || (_pOptions->fileFormat == FF_MD5_ORIGINAL)) {
-                QString sMD5 = XBinary::getHash(XBinary::HASH_MD5, scanResult.sFileName, &pdStruct);
+                QString sMD5 = XBinary::getHash(XBinary::HASH_MD5, scanResult.sFileName, g_pPdStruct);
 
                 if (_pOptions->fileFormat == FF_MD5) {
                     _sBaseFileName = sMD5;
@@ -282,10 +359,9 @@ void ScanProgress::_processFile(QString sFileName)
 
                 for (int i = 0; (i < nCount) && (!(g_pPdStruct->bIsStop)); i++) {
                     XScanEngine::SCANSTRUCT ss = scanResult.listRecords.at(i);
+                    _id = ss.id;
 
-                    if (_pOptions->stFileTypes.contains(ss.id.fileType) && (ss.sName != "")) {
-                        _id = ss.id;
-
+                    if (_pOptions->stFileTypes.contains(ss.id.fileType) && (ss.sName != "") && (!ss.bIsUnknown)) {
                         if ((_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPBYTES) ||
                             (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPBYTES) || (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPBYTES) ||
                             (_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIG) || (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIG) ||
@@ -295,7 +371,7 @@ void ScanProgress::_processFile(QString sFileName)
                             _file.setFileName(sFileName);
 
                             if (_file.open(QIODevice::ReadOnly)) {
-                                XBinary::_MEMORY_MAP memoryMap = XFormats::getMemoryMap(ss.id.fileType, XBinary::MAPMODE_UNKNOWN, &_file);
+                                XBinary::_MEMORY_MAP memoryMap = XFormats::getMemoryMap(ss.id.fileType, XBinary::MAPMODE_UNKNOWN, &_file, g_pPdStruct);
                                 qint64 nEPAddress = XFormats::getEntryPointAddress(ss.id.fileType, &_file);
                                 qint64 nEPOffset = XFormats::getEntryPointOffset(ss.id.fileType, &_file);
 
@@ -335,7 +411,7 @@ void ScanProgress::_processFile(QString sFileName)
                             }
                         }
 
-                        if ((_pOptions->stTypes.contains(ss.sType.toLower())) || (_pOptions->bAllTypes)) {
+                        if (((_pOptions->stTypes.contains(ss.sType.toLower())) || (_pOptions->bAllTypes)) && (!ss.bIsUnknown)) {
                             bIdentified = true;
 
                             if ((_pOptions->copyType == CT_IDENT) || (_pOptions->copyType == CT_IDENT_UNK)) {
@@ -427,8 +503,6 @@ void ScanProgress::_processFile(QString sFileName)
                             }
                         }
 
-                        bool bIsOverlayPresent = false;
-
                         if (_pOptions->unknownPrefix != UP_NONE) {
                             QString sFolderName;
                             qint32 nUnknownCount = _pOptions->nUnknownCount;
@@ -440,8 +514,6 @@ void ScanProgress::_processFile(QString sFileName)
                             if (file.open(QIODevice::ReadOnly)) {
                                 if ((_id.fileType == XBinary::FT_PE32) || (_id.fileType == XBinary::FT_PE64)) {
                                     XPE pe(&file);
-
-                                    bIsOverlayPresent = pe.isOverlayPresent();
 
                                     if (_pOptions->unknownPrefix == UP_EP_BYTES) {
                                         sFolderName = pe.getSignature(pe._getEntryPointOffset(), nUnknownCount);
@@ -455,8 +527,6 @@ void ScanProgress::_processFile(QString sFileName)
                                 } else if ((_id.fileType == XBinary::FT_ELF32) || (_id.fileType == XBinary::FT_ELF64)) {
                                     XELF elf(&file);
 
-                                    bIsOverlayPresent = elf.isOverlayPresent();
-
                                     if (_pOptions->unknownPrefix == UP_EP_BYTES) {
                                         sFolderName = elf.getSignature(elf._getEntryPointOffset(), nUnknownCount);
                                     } else if (_pOptions->unknownPrefix == UP_OVERLAY_BYTES) {
@@ -468,8 +538,6 @@ void ScanProgress::_processFile(QString sFileName)
                                     }
                                 } else if ((_id.fileType == XBinary::FT_MACHO32) || (_id.fileType == XBinary::FT_MACHO64)) {
                                     XMACH mach(&file);
-
-                                    bIsOverlayPresent = mach.isOverlayPresent();
 
                                     if (_pOptions->unknownPrefix == UP_EP_BYTES) {
                                         sFolderName = mach.getSignature(mach._getEntryPointOffset(), nUnknownCount);
@@ -483,8 +551,6 @@ void ScanProgress::_processFile(QString sFileName)
                                 } else if ((_id.fileType == XBinary::FT_LE) || (_id.fileType == XBinary::FT_LX)) {
                                     XLE le(&file);
 
-                                    bIsOverlayPresent = le.isOverlayPresent();
-
                                     if (_pOptions->unknownPrefix == UP_EP_BYTES) {
                                         sFolderName = le.getSignature(le._getEntryPointOffset(), nUnknownCount);
                                     } else if (_pOptions->unknownPrefix == UP_OVERLAY_BYTES) {
@@ -496,8 +562,6 @@ void ScanProgress::_processFile(QString sFileName)
                                     }
                                 } else if (_id.fileType == XBinary::FT_NE) {
                                     XNE ne(&file);
-
-                                    bIsOverlayPresent = ne.isOverlayPresent();
 
                                     if (_pOptions->unknownPrefix == UP_EP_BYTES) {
                                         sFolderName = ne.getSignature(ne._getEntryPointOffset(), nUnknownCount);
@@ -511,8 +575,6 @@ void ScanProgress::_processFile(QString sFileName)
                                 } else if (_id.fileType == XBinary::FT_MSDOS) {
                                     XMSDOS msdos(&file);
 
-                                    bIsOverlayPresent = msdos.isOverlayPresent();
-
                                     if (_pOptions->unknownPrefix == UP_EP_BYTES) {
                                         sFolderName = msdos.getSignature(msdos._getEntryPointOffset(), nUnknownCount);
                                     } else if (_pOptions->unknownPrefix == UP_OVERLAY_BYTES) {
@@ -524,8 +586,6 @@ void ScanProgress::_processFile(QString sFileName)
                                     }
                                 } else {
                                     XBinary binary(&file);
-
-                                    bIsOverlayPresent = binary.isOverlayPresent();
 
                                     if (_pOptions->unknownPrefix == UP_EP_BYTES) {
                                         sFolderName = binary.getSignature(binary._getEntryPointOffset(), nUnknownCount);
@@ -553,6 +613,8 @@ void ScanProgress::_processFile(QString sFileName)
                                 file.close();
                             }
 
+                            sFolderName = sFolderName.replace(".", "_");
+
                             if (sFolderName != "") {
                                 _sFileName += QDir::separator() + sFolderName;
                             }
@@ -562,34 +624,14 @@ void ScanProgress::_processFile(QString sFileName)
 
                         _sFileName += QDir::separator() + _sBaseFileName;
 
-                        bool bCopyEnable = true;
+                        if (XBinary::copyFile(scanResult.sFileName, _sFileName)) {
+                            bGlobalCopy = true;
 
-                        if (_pOptions->overlay == OVERLAY_PRESENT) {
-                            if (bCopyEnable) {
-                                bCopyEnable = (bIsOverlayPresent);
-                            }
-                        } else if (_pOptions->overlay == OVERLAY_NOTPRESENT) {
-                            if (bCopyEnable) {
-                                bCopyEnable = (!bIsOverlayPresent);
-                            }
-                        }
-
-                        if (_pOptions->entropy == ENTROPY_MORETHAN) {
-                            if (bCopyEnable) {
-                                bCopyEnable = (XBinary::getEntropy(scanResult.sFileName) >= _pOptions->dEntropyValue);
-                            }
-                        } else if (_pOptions->entropy == ENTROPY_LESSTHAN) {
-                            if (bCopyEnable) {
-                                bCopyEnable = (XBinary::getEntropy(scanResult.sFileName) <= _pOptions->dEntropyValue);
-                            }
-                        }
-
-                        if (bCopyEnable) {
-                            if (XBinary::copyFile(scanResult.sFileName, _sFileName)) {
-                                bGlobalCopy = true;
-
-                                setFileCount(nCRC, nCurrentCount + 1);
-                            }
+                            setFileCount(nCRC, nCurrentCount + 1);
+                        } else {
+#ifdef QT_DEBUG
+                            qDebug("%s", _sFileName.toUtf8().data());
+#endif
                         }
                     }
                 }
@@ -666,7 +708,12 @@ void ScanProgress::process()
     if (!(_pOptions->bContinue)) {
         startTransaction();
 
+        g_nFreeIndex = XBinary::getFreeIndex(g_pPdStruct);
+        XBinary::setPdStructInit(g_pPdStruct, g_nFreeIndex, 0);
+
         findFiles(_sDirectoryName);
+
+        XBinary::setPdStructFinished(g_pPdStruct, g_nFreeIndex);
 
         endTransaction();
     }

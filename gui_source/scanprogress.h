@@ -104,6 +104,8 @@ public:
         QString sSignatures;
         QString sSignaturesExtra;
         QString sSignaturesCustom;
+        bool bSignaturesExtraUse;
+        bool bSignaturesCustomUse;
         QSqlDatabase dbSQLLite;
         bool bContinue;
         bool bDebug;
@@ -168,6 +170,7 @@ private:
     QMutex mutexDB;
     QSemaphore *pSemaphore;
     DiE_Script dieScript;
+    qint32 g_nFreeIndex;
     XBinary::PDSTRUCT *g_pPdStruct;
 };
 

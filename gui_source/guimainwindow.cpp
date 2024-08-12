@@ -144,6 +144,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     ui->lineEditSignatures->setText(settings.value("Signatures", "$app/db").toString());
     ui->lineEditSignaturesExtra->setText(settings.value("SignaturesExtra", "$app/db_extra").toString());
     ui->lineEditSignaturesCustom->setText(settings.value("SignaturesCustom", "$app/db_custom").toString());
+    ui->groupBoxSignaturesExtra->setChecked(settings.value("SignaturesExtraEnable", true).toBool());
+    ui->groupBoxSignaturesCustom->setChecked(settings.value("SignaturesCustomEnable", true).toBool());
     ui->lineEditOut->setText(settings.value("ResultName", QDir::currentPath()).toString());
 
     ui->spinBoxCopyCount->setValue(settings.value("CopyCount", 0).toInt());
@@ -151,7 +153,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     ui->checkBoxRemoveCopied->setChecked(settings.value("RemoveCopied", false).toBool());
     ui->checkBoxCopyTheFirstOnly->setChecked(settings.value("CopyTheFirstOnly", false).toBool());
 
-    ui->spinBoxThreads->setValue(settings.value("Threads", 1).toInt());
+    // ui->spinBoxThreads->setValue(settings.value("Threads", 1).toInt());
 
     options.bContinue = settings.value("Continue", false).toBool();
     options.bDebug = settings.value("Debug", false).toBool();
@@ -182,6 +184,8 @@ GuiMainWindow::~GuiMainWindow()
     settings.setValue("Signatures", ui->lineEditSignatures->text());
     settings.setValue("SignaturesExtra", ui->lineEditSignaturesExtra->text());
     settings.setValue("SignaturesCustom", ui->lineEditSignaturesCustom->text());
+    settings.setValue("SignaturesExtraEnable", ui->groupBoxSignaturesExtra->isChecked());
+    settings.setValue("SignaturesCustomEnable", ui->groupBoxSignaturesCustom->isChecked());
     settings.setValue("CopyCount", ui->spinBoxCopyCount->value());
     settings.setValue("CopyFormat", ui->comboBoxCopyFormat->currentIndex());
     settings.setValue("CopyType", ui->comboBoxCopyType->currentIndex());
@@ -195,7 +199,7 @@ GuiMainWindow::~GuiMainWindow()
     settings.setValue("Overlay", ui->comboBoxOverlay->currentIndex());
     settings.setValue("Entropy", ui->comboBoxEntropy->currentIndex());
     settings.setValue("EntropyValue", ui->doubleSpinBoxEntropy->value());
-    settings.setValue("Threads", ui->spinBoxThreads->value());
+    // settings.setValue("Threads", ui->spinBoxThreads->value());
 
     delete ui;
 }
@@ -306,6 +310,8 @@ void GuiMainWindow::_scan()
     options.sSignatures = ui->lineEditSignatures->text();
     options.sSignaturesExtra = ui->lineEditSignaturesExtra->text();
     options.sSignaturesCustom = ui->lineEditSignaturesCustom->text();
+    options.bSignaturesExtraUse = ui->groupBoxSignaturesExtra->isChecked();
+    options.bSignaturesCustomUse = ui->groupBoxSignaturesCustom->isChecked();
 
     options.copyFormat = (ScanProgress::CF)ui->comboBoxCopyFormat->currentIndex();
     options.copyType = (ScanProgress::CT)ui->comboBoxCopyType->currentIndex();
@@ -320,7 +326,8 @@ void GuiMainWindow::_scan()
     options.overlay = (ScanProgress::OVERLAY)ui->comboBoxOverlay->currentIndex();
     options.entropy = (ScanProgress::ENTROPY)ui->comboBoxEntropy->currentIndex();
     options.dEntropyValue = ui->doubleSpinBoxEntropy->value();
-    options.nThreads = ui->spinBoxThreads->value();
+    // options.nThreads = ui->spinBoxThreads->value();
+    options.nThreads = 1;
 
     DialogScanProgress ds(this);
 
