@@ -61,6 +61,9 @@ private slots:
     void on_pushButtonSignaturesCustom_clicked();
     void on_pushButtonSignaturesExtra_clicked();
 
+    void loadSettings();
+    void saveSettings();
+
 private:
     Ui::GuiMainWindow *ui;
 

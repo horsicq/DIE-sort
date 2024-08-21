@@ -67,13 +67,17 @@ public:
         UP_HEADER_BYTES,
         UP_OVERLAY_BYTES,
         UP_OPCODES,
-        UP_OPCODES_REL
+        UP_OPCODES_REL,
     };
 
     enum FF {
         FF_ORIGINAL = 0,
         FF_MD5,
-        FF_MD5_ORIGINAL
+        FF_MD5_ORIGINAL,
+        FF_ENTROPY,
+        FF_ENTROPY_ORIGINAL,
+        FF_ENTROPYPROCENT,
+        FF_ENTROPYPROCENT_ORIGINAL,
     };
 
     enum OVERLAY {
@@ -93,6 +97,7 @@ public:
         bool bIsDeepScan;
         bool bIsHeuristicScan;
         bool bIsVerbose;
+        bool bIsAggressive;
         bool bSubdirectories;
         bool bShowVersion;
         bool bShowInfo;

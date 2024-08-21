@@ -316,6 +316,7 @@ void ScanProgress::_processFile(QString sFileName)
             scanOptions.bIsVerbose = _pOptions->bIsVerbose;
             scanOptions.bIsRecursiveScan = _pOptions->bIsRecursive;
             scanOptions.bIsHeuristicScan = _pOptions->bIsHeuristicScan;
+            scanOptions.bIsAggressiveScan = _pOptions->bIsAggressive;
             scanOptions.bShowType = true;
             scanOptions.bShowVersion = _pOptions->bShowVersion;
             scanOptions.bShowInfo = _pOptions->bShowInfo;
@@ -336,7 +337,25 @@ void ScanProgress::_processFile(QString sFileName)
                 if (_pOptions->fileFormat == FF_MD5) {
                     _sBaseFileName = sMD5;
                 } else if (_pOptions->fileFormat == FF_MD5_ORIGINAL) {
-                    _sBaseFileName = sMD5 + _sBaseFileName;
+                    _sBaseFileName = sMD5 + "_" + _sBaseFileName;
+                }
+            } else if ((_pOptions->fileFormat == FF_ENTROPY) || (_pOptions->fileFormat == FF_ENTROPY_ORIGINAL)) {
+                QString sEntropy = QString::number(XBinary::getEntropy(scanResult.sFileName, g_pPdStruct), 'f', 2);
+
+                if (_pOptions->fileFormat == FF_ENTROPY) {
+                    _sBaseFileName = sEntropy;
+                } else if (_pOptions->fileFormat == FF_ENTROPY_ORIGINAL) {
+                    _sBaseFileName = sEntropy + "_" + _sBaseFileName;
+                }
+            } else if ((_pOptions->fileFormat == FF_ENTROPYPROCENT) || (_pOptions->fileFormat == FF_ENTROPYPROCENT_ORIGINAL)) {
+                double dEntropy = XBinary::getEntropy(scanResult.sFileName, g_pPdStruct);
+                dEntropy = (dEntropy * 100.0)/8.0;
+                QString sEntropy = QString::number(dEntropy, 'f', 0);
+
+                if (_pOptions->fileFormat == FF_ENTROPYPROCENT) {
+                    _sBaseFileName = sEntropy;
+                } else if (_pOptions->fileFormat == FF_ENTROPYPROCENT_ORIGINAL) {
+                    _sBaseFileName = sEntropy + "_" + _sBaseFileName;
                 }
             }
 
@@ -353,13 +372,15 @@ void ScanProgress::_processFile(QString sFileName)
             XScanEngine::SCANID _id = {};
 
             if (nCount) {
+                _id = scanResult.listRecords.at(0).id;
+
                 if (_pOptions->bCopyTheFirstOnly) {
                     nCount = 1;
                 }
 
                 for (int i = 0; (i < nCount) && (!(g_pPdStruct->bIsStop)); i++) {
                     XScanEngine::SCANSTRUCT ss = scanResult.listRecords.at(i);
-                    _id = ss.id;
+
 
                     if (_pOptions->stFileTypes.contains(ss.id.fileType) && (ss.sName != "") && (!ss.bIsUnknown)) {
                         if ((_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPBYTES) ||

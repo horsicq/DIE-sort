@@ -31,14 +31,6 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 
     options = {0};
 
-    QString sSettingsFile = QApplication::applicationDirPath() + QDir::separator();
-#ifdef Q_OS_LINUX
-    sSettingsFile += QString("Linux.");
-#endif
-    sSettingsFile += QString("%1.ini").arg(X_APPLICATIONNAME);
-
-    QSettings settings(sSettingsFile, QSettings::IniFormat);
-
     connect(ui->checkBoxBinary, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxCOM, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxMSDOS, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
@@ -111,9 +103,13 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     ui->comboBoxCopyType->addItem("Identified/Unknown");
     ui->comboBoxCopyType->addItem("Unknown");
 
-    ui->comboBoxFileFormat->addItem("Original");
-    ui->comboBoxFileFormat->addItem("MD5");
-    ui->comboBoxFileFormat->addItem("MD5+Original");
+    ui->comboBoxFileNameFormat->addItem("Original");
+    ui->comboBoxFileNameFormat->addItem("MD5");
+    ui->comboBoxFileNameFormat->addItem("MD5+Original");
+    ui->comboBoxFileNameFormat->addItem("Entropy");
+    ui->comboBoxFileNameFormat->addItem("Entropy+Original");
+    ui->comboBoxFileNameFormat->addItem("EntropyProcent");
+    ui->comboBoxFileNameFormat->addItem("EntropyProcent+Original");
 
     ui->comboBoxUnknownPrefix->addItem("NONE");
     ui->comboBoxUnknownPrefix->addItem("EP Bytes");
@@ -130,77 +126,11 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     ui->comboBoxEntropy->addItem("More than");
     ui->comboBoxEntropy->addItem("Less than");
 
-    ui->comboBoxCopyFormat->setCurrentIndex(settings.value("CopyFormat", 0).toInt());
-    ui->comboBoxCopyType->setCurrentIndex(settings.value("CopyType", 0).toInt());
-    ui->comboBoxFileFormat->setCurrentIndex(settings.value("FileFormat", 0).toInt());
-    ui->comboBoxUnknownPrefix->setCurrentIndex(settings.value("UnknownPrefix", 0).toInt());
-    ui->comboBoxOverlay->setCurrentIndex(settings.value("Overlay", 0).toInt());
-    ui->comboBoxEntropy->setCurrentIndex(settings.value("Entropy", 0).toInt());
-
-    ui->spinBoxUnknownCount->setValue(settings.value("UnknownCount", 10).toInt());
-    ui->doubleSpinBoxEntropy->setValue(settings.value("EntropyValue", 6.5).toDouble());
-
-    ui->lineEditDirectoryName->setText(settings.value("DirectoryName", QDir::currentPath()).toString());
-    ui->lineEditSignatures->setText(settings.value("Signatures", "$app/db").toString());
-    ui->lineEditSignaturesExtra->setText(settings.value("SignaturesExtra", "$app/db_extra").toString());
-    ui->lineEditSignaturesCustom->setText(settings.value("SignaturesCustom", "$app/db_custom").toString());
-    ui->groupBoxSignaturesExtra->setChecked(settings.value("SignaturesExtraEnable", true).toBool());
-    ui->groupBoxSignaturesCustom->setChecked(settings.value("SignaturesCustomEnable", true).toBool());
-    ui->lineEditOut->setText(settings.value("ResultName", QDir::currentPath()).toString());
-
-    ui->spinBoxCopyCount->setValue(settings.value("CopyCount", 0).toInt());
-
-    ui->checkBoxRemoveCopied->setChecked(settings.value("RemoveCopied", false).toBool());
-    ui->checkBoxCopyTheFirstOnly->setChecked(settings.value("CopyTheFirstOnly", false).toBool());
-
-    // ui->spinBoxThreads->setValue(settings.value("Threads", 1).toInt());
-
-    options.bContinue = settings.value("Continue", false).toBool();
-    options.bDebug = settings.value("Debug", false).toBool();
-
-#ifdef QT_DEBUG
-    options.bDebug = true;
-#endif
-
-    QString sDatabaseName = settings.value("DatabaseName", ":memory:").toString();
-
-    if (!ScanProgress::createDatabase(&options.dbSQLLite, sDatabaseName)) {
-        QMessageBox::critical(this, tr("Error"), tr("Cannot open SQLITE database"));
-        exit(1);
-    }
+    loadSettings();
 }
 
 GuiMainWindow::~GuiMainWindow()
 {
-    QString sSettingsFile = QApplication::applicationDirPath() + QDir::separator();
-#ifdef Q_OS_LINUX
-    sSettingsFile += QString("Linux.");
-#endif
-    sSettingsFile += QString("%1.ini").arg(X_APPLICATIONNAME);
-    QSettings settings(sSettingsFile, QSettings::IniFormat);
-
-    settings.setValue("DirectoryName", ui->lineEditDirectoryName->text());
-    settings.setValue("ResultName", ui->lineEditOut->text());
-    settings.setValue("Signatures", ui->lineEditSignatures->text());
-    settings.setValue("SignaturesExtra", ui->lineEditSignaturesExtra->text());
-    settings.setValue("SignaturesCustom", ui->lineEditSignaturesCustom->text());
-    settings.setValue("SignaturesExtraEnable", ui->groupBoxSignaturesExtra->isChecked());
-    settings.setValue("SignaturesCustomEnable", ui->groupBoxSignaturesCustom->isChecked());
-    settings.setValue("CopyCount", ui->spinBoxCopyCount->value());
-    settings.setValue("CopyFormat", ui->comboBoxCopyFormat->currentIndex());
-    settings.setValue("CopyType", ui->comboBoxCopyType->currentIndex());
-    settings.setValue("FileFormat", ui->comboBoxFileFormat->currentIndex());
-    settings.setValue("RemoveCopied", ui->checkBoxRemoveCopied->isChecked());
-    settings.setValue("CopyTheFirstOnly", ui->checkBoxCopyTheFirstOnly->isChecked());
-
-    settings.setValue("UnknownPrefix", ui->comboBoxUnknownPrefix->currentIndex());
-    settings.setValue("UnknownCount", ui->spinBoxUnknownCount->value());
-
-    settings.setValue("Overlay", ui->comboBoxOverlay->currentIndex());
-    settings.setValue("Entropy", ui->comboBoxEntropy->currentIndex());
-    settings.setValue("EntropyValue", ui->doubleSpinBoxEntropy->value());
-    // settings.setValue("Threads", ui->spinBoxThreads->value());
-
     delete ui;
 }
 
@@ -233,6 +163,7 @@ void GuiMainWindow::on_pushButtonOut_clicked()
 
 void GuiMainWindow::on_pushButtonScan_clicked()
 {
+    saveSettings();
     _scan();
 }
 
@@ -304,6 +235,7 @@ void GuiMainWindow::_scan()
     options.bIsDeepScan = ui->checkBoxDeepScan->isChecked();
     options.bIsVerbose = ui->checkBoxVerbose->isChecked();
     options.bIsHeuristicScan = ui->checkBoxHeuristicScan->isChecked();
+    options.bIsAggressive = ui->checkBoxAggressive->isChecked();
     options.bShowVersion = ui->checkBoxShowVersion->isChecked();
     options.bShowInfo = ui->checkBoxShowInfo->isChecked();
     options.bSubdirectories = ui->checkBoxScanSubdirectories->isChecked();
@@ -322,7 +254,7 @@ void GuiMainWindow::_scan()
     options.unknownPrefix = (ScanProgress::UP)ui->comboBoxUnknownPrefix->currentIndex();
     options.nUnknownCount = ui->spinBoxUnknownCount->value();
 
-    options.fileFormat = (ScanProgress::FF)ui->comboBoxFileFormat->currentIndex();
+    options.fileFormat = (ScanProgress::FF)ui->comboBoxFileNameFormat->currentIndex();
     options.overlay = (ScanProgress::OVERLAY)ui->comboBoxOverlay->currentIndex();
     options.entropy = (ScanProgress::ENTROPY)ui->comboBoxEntropy->currentIndex();
     options.dEntropyValue = ui->doubleSpinBoxEntropy->value();
@@ -472,4 +404,217 @@ void GuiMainWindow::on_pushButtonSignaturesExtra_clicked()
     if (!sDirectoryName.isEmpty()) {
         ui->lineEditSignaturesExtra->setText(sDirectoryName);
     }
+}
+
+void GuiMainWindow::loadSettings()
+{
+    QString sSettingsFile = QApplication::applicationDirPath() + QDir::separator();
+#ifdef Q_OS_LINUX
+    sSettingsFile += QString("Linux.");
+#endif
+    sSettingsFile += QString("%1.ini").arg(X_APPLICATIONNAME);
+
+    QSettings settings(sSettingsFile, QSettings::IniFormat);
+
+    ui->comboBoxCopyFormat->setCurrentIndex(settings.value("CopyFormat", 0).toInt());
+    ui->comboBoxCopyType->setCurrentIndex(settings.value("CopyType", 0).toInt());
+    ui->comboBoxFileNameFormat->setCurrentIndex(settings.value("FileFormat", 0).toInt());
+    ui->comboBoxUnknownPrefix->setCurrentIndex(settings.value("UnknownPrefix", 0).toInt());
+    ui->comboBoxOverlay->setCurrentIndex(settings.value("Overlay", 0).toInt());
+    ui->comboBoxEntropy->setCurrentIndex(settings.value("Entropy", 0).toInt());
+
+    ui->spinBoxUnknownCount->setValue(settings.value("UnknownCount", 10).toInt());
+    ui->doubleSpinBoxEntropy->setValue(settings.value("EntropyValue", 6.5).toDouble());
+
+    ui->lineEditDirectoryName->setText(settings.value("DirectoryName", QDir::currentPath()).toString());
+    ui->lineEditSignatures->setText(settings.value("Signatures", "$app/db").toString());
+    ui->lineEditSignaturesExtra->setText(settings.value("SignaturesExtra", "$app/db_extra").toString());
+    ui->lineEditSignaturesCustom->setText(settings.value("SignaturesCustom", "$app/db_custom").toString());
+    ui->groupBoxSignaturesExtra->setChecked(settings.value("SignaturesExtraEnable", true).toBool());
+    ui->groupBoxSignaturesCustom->setChecked(settings.value("SignaturesCustomEnable", true).toBool());
+    ui->lineEditOut->setText(settings.value("ResultName", QDir::currentPath()).toString());
+
+    ui->spinBoxCopyCount->setValue(settings.value("CopyCount", 0).toInt());
+
+    ui->checkBoxRemoveCopied->setChecked(settings.value("RemoveCopied", false).toBool());
+    ui->checkBoxCopyTheFirstOnly->setChecked(settings.value("CopyTheFirstOnly", false).toBool());
+
+    ui->checkBoxAllFileTypes->setChecked(settings.value("AllFileTypes", true).toBool());
+    ui->checkBoxBinary->setChecked(settings.value("FT_Binary", true).toBool());
+    ui->checkBoxCOM->setChecked(settings.value("FT_COM", true).toBool());
+    ui->checkBoxMSDOS->setChecked(settings.value("FT_MSDOS", true).toBool());
+    ui->checkBoxNE->setChecked(settings.value("FT_NE", true).toBool());
+    ui->checkBoxLE->setChecked(settings.value("FT_LE", true).toBool());
+    ui->checkBoxLX->setChecked(settings.value("FT_LX", true).toBool());
+    ui->checkBoxPE32->setChecked(settings.value("FT_PE32", true).toBool());
+    ui->checkBoxPE64->setChecked(settings.value("FT_PE64", true).toBool());
+    ui->checkBoxELF32->setChecked(settings.value("FT_ELF32", true).toBool());
+    ui->checkBoxELF64->setChecked(settings.value("FT_ELF64", true).toBool());
+    ui->checkBoxMACHO32->setChecked(settings.value("FT_MACHO32", true).toBool());
+    ui->checkBoxMACHO64->setChecked(settings.value("FT_MACHO64", true).toBool());
+    ui->checkBoxZIP->setChecked(settings.value("FT_ZIP", true).toBool());
+    ui->checkBoxJAR->setChecked(settings.value("FT_JAR", true).toBool());
+    ui->checkBoxAPK->setChecked(settings.value("FT_APK", true).toBool());
+    ui->checkBoxMACHOFAT->setChecked(settings.value("FT_MACHOFAT", true).toBool());
+    ui->checkBoxNPM->setChecked(settings.value("FT_NPM", true).toBool());
+
+    ui->checkBoxAllTypes->setChecked(settings.value("AllTypes", true).toBool());
+    ui->checkBox_archive->setChecked(settings.value("type_archive", true).toBool());
+    ui->checkBox_audio->setChecked(settings.value("type_audio", true).toBool());
+    ui->checkBox_boot->setChecked(settings.value("type_boot", true).toBool());
+    ui->checkBox_compiler->setChecked(settings.value("type_compiler", true).toBool());
+    ui->checkBox_converter->setChecked(settings.value("type_converter", true).toBool());
+    ui->checkBox_driver->setChecked(settings.value("type_driver", true).toBool());
+    ui->checkBox_emulator->setChecked(settings.value("type_emulator", true).toBool());
+    ui->checkBox_extender->setChecked(settings.value("type_extender", true).toBool());
+    ui->checkBox_format->setChecked(settings.value("type_format", true).toBool());
+    ui->checkBox_framework->setChecked(settings.value("type_framework", true).toBool());
+    ui->checkBox_image->setChecked(settings.value("type_image", true).toBool());
+    ui->checkBox_immunizer->setChecked(settings.value("type_immunizer", true).toBool());
+    ui->checkBox_installer->setChecked(settings.value("type_installer", true).toBool());
+    ui->checkBox_joiner->setChecked(settings.value("type_joiner", true).toBool());
+    ui->checkBox_keygen->setChecked(settings.value("type_keygen", true).toBool());
+    ui->checkBox_library->setChecked(settings.value("type_library", true).toBool());
+    ui->checkBox_linker->setChecked(settings.value("type_linker", true).toBool());
+    ui->checkBox_loader->setChecked(settings.value("type_loader", true).toBool());
+    ui->checkBox_other->setChecked(settings.value("type_other", true).toBool());
+    ui->checkBox_overlay->setChecked(settings.value("type_overlay", true).toBool());
+    ui->checkBox_packer->setChecked(settings.value("type_packer", true).toBool());
+    ui->checkBox_patcher->setChecked(settings.value("type_patcher", true).toBool());
+    ui->checkBox_player->setChecked(settings.value("type_player", true).toBool());
+    ui->checkBox_protection->setChecked(settings.value("type_protection", true).toBool());
+    ui->checkBox_protector->setChecked(settings.value("type_protector", true).toBool());
+    ui->checkBox_script->setChecked(settings.value("type_script", true).toBool());
+    ui->checkBox_self_displayer->setChecked(settings.value("type_self_displayer", true).toBool());
+    ui->checkBox_sfx->setChecked(settings.value("type_sfx", true).toBool());
+    ui->checkBox_source->setChecked(settings.value("type_source", true).toBool());
+    ui->checkBox_system->setChecked(settings.value("type_system", true).toBool());
+    ui->checkBox_type->setChecked(settings.value("type_type", true).toBool());
+    ui->checkBox_operation_system->setChecked(settings.value("type_operation_system", true).toBool());
+    ui->checkBox_cryptor->setChecked(settings.value("type_cryptor", true).toBool());
+    ui->checkBox_crypter->setChecked(settings.value("type_crypter", true).toBool());
+
+    ui->checkBoxRecursive->setChecked(settings.value("Recursive", true).toBool());
+    ui->checkBoxDeepScan->setChecked(settings.value("DeepScan", true).toBool());
+    ui->checkBoxVerbose->setChecked(settings.value("Verbose", true).toBool());
+    ui->checkBoxHeuristicScan->setChecked(settings.value("HeuristicScan", true).toBool());
+    ui->checkBoxAggressive->setChecked(settings.value("Aggressive", true).toBool());
+    ui->checkBoxShowVersion->setChecked(settings.value("ShowVersion", true).toBool());
+    ui->checkBoxShowInfo->setChecked(settings.value("ShowInfo", true).toBool());
+    ui->checkBoxScanSubdirectories->setChecked(settings.value("ScanSubdirectories", true).toBool());
+    ui->checkBoxValidOnly->setChecked(settings.value("ValidOnly", true).toBool());
+
+    // ui->spinBoxThreads->setValue(settings.value("Threads", 1).toInt());
+
+    options.bContinue = settings.value("Continue", false).toBool();
+    options.bDebug = settings.value("Debug", false).toBool();
+
+#ifdef QT_DEBUG
+    options.bDebug = true;
+#endif
+
+    QString sDatabaseName = settings.value("DatabaseName", ":memory:").toString();
+
+    if (!ScanProgress::createDatabase(&options.dbSQLLite, sDatabaseName)) {
+        QMessageBox::critical(this, tr("Error"), tr("Cannot open SQLITE database"));
+        exit(1);
+    }
+}
+
+void GuiMainWindow::saveSettings()
+{
+    QString sSettingsFile = QApplication::applicationDirPath() + QDir::separator();
+#ifdef Q_OS_LINUX
+    sSettingsFile += QString("Linux.");
+#endif
+    sSettingsFile += QString("%1.ini").arg(X_APPLICATIONNAME);
+    QSettings settings(sSettingsFile, QSettings::IniFormat);
+
+    settings.setValue("DirectoryName", ui->lineEditDirectoryName->text());
+    settings.setValue("ResultName", ui->lineEditOut->text());
+    settings.setValue("Signatures", ui->lineEditSignatures->text());
+    settings.setValue("SignaturesExtra", ui->lineEditSignaturesExtra->text());
+    settings.setValue("SignaturesCustom", ui->lineEditSignaturesCustom->text());
+    settings.setValue("SignaturesExtraEnable", ui->groupBoxSignaturesExtra->isChecked());
+    settings.setValue("SignaturesCustomEnable", ui->groupBoxSignaturesCustom->isChecked());
+    settings.setValue("CopyCount", ui->spinBoxCopyCount->value());
+    settings.setValue("CopyFormat", ui->comboBoxCopyFormat->currentIndex());
+    settings.setValue("CopyType", ui->comboBoxCopyType->currentIndex());
+    settings.setValue("FileFormat", ui->comboBoxFileNameFormat->currentIndex());
+    settings.setValue("RemoveCopied", ui->checkBoxRemoveCopied->isChecked());
+    settings.setValue("CopyTheFirstOnly", ui->checkBoxCopyTheFirstOnly->isChecked());
+
+    settings.setValue("AllFileTypes", ui->checkBoxAllFileTypes->isChecked());
+    settings.setValue("FT_Binary", ui->checkBoxBinary->isChecked());
+    settings.setValue("FT_COM", ui->checkBoxCOM->isChecked());
+    settings.setValue("FT_MSDOS", ui->checkBoxMSDOS->isChecked());
+    settings.setValue("FT_NE", ui->checkBoxNE->isChecked());
+    settings.setValue("FT_LE", ui->checkBoxLE->isChecked());
+    settings.setValue("FT_LX", ui->checkBoxLX->isChecked());
+    settings.setValue("FT_PE32", ui->checkBoxPE32->isChecked());
+    settings.setValue("FT_PE64", ui->checkBoxPE64->isChecked());
+    settings.setValue("FT_ELF32", ui->checkBoxELF32->isChecked());
+    settings.setValue("FT_ELF64", ui->checkBoxELF64->isChecked());
+    settings.setValue("FT_MACHO32", ui->checkBoxMACHO32->isChecked());
+    settings.setValue("FT_MACHO64", ui->checkBoxMACHO64->isChecked());
+    settings.setValue("FT_ZIP", ui->checkBoxZIP->isChecked());
+    settings.setValue("FT_JAR", ui->checkBoxJAR->isChecked());
+    settings.setValue("FT_APK", ui->checkBoxAPK->isChecked());
+    settings.setValue("FT_MACHOFAT", ui->checkBoxMACHOFAT->isChecked());
+    settings.setValue("FT_NPM", ui->checkBoxNPM->isChecked());
+
+    settings.setValue("AllTypes", ui->checkBoxAllTypes->isChecked());
+    settings.setValue("type_archive", ui->checkBox_archive->isChecked());
+    settings.setValue("type_audio", ui->checkBox_audio->isChecked());
+    settings.setValue("type_boot", ui->checkBox_boot->isChecked());
+    settings.setValue("type_compiler", ui->checkBox_compiler->isChecked());
+    settings.setValue("type_converter", ui->checkBox_converter->isChecked());
+    settings.setValue("type_driver", ui->checkBox_driver->isChecked());
+    settings.setValue("type_emulator", ui->checkBox_emulator->isChecked());
+    settings.setValue("type_extender", ui->checkBox_extender->isChecked());
+    settings.setValue("type_format", ui->checkBox_format->isChecked());
+    settings.setValue("type_framework", ui->checkBox_framework->isChecked());
+    settings.setValue("type_image", ui->checkBox_image->isChecked());
+    settings.setValue("type_immunizer", ui->checkBox_immunizer->isChecked());
+    settings.setValue("type_installer", ui->checkBox_installer->isChecked());
+    settings.setValue("type_joiner", ui->checkBox_joiner->isChecked());
+    settings.setValue("type_keygen", ui->checkBox_keygen->isChecked());
+    settings.setValue("type_library", ui->checkBox_library->isChecked());
+    settings.setValue("type_linker", ui->checkBox_linker->isChecked());
+    settings.setValue("type_loader", ui->checkBox_loader->isChecked());
+    settings.setValue("type_other", ui->checkBox_other->isChecked());
+    settings.setValue("type_overlay", ui->checkBox_overlay->isChecked());
+    settings.setValue("type_packer", ui->checkBox_packer->isChecked());
+    settings.setValue("type_patcher", ui->checkBox_patcher->isChecked());
+    settings.setValue("type_player", ui->checkBox_player->isChecked());
+    settings.setValue("type_protection", ui->checkBox_protection->isChecked());
+    settings.setValue("type_protector", ui->checkBox_protector->isChecked());
+    settings.setValue("type_script", ui->checkBox_script->isChecked());
+    settings.setValue("type_self_displayer", ui->checkBox_self_displayer->isChecked());
+    settings.setValue("type_sfx", ui->checkBox_sfx->isChecked());
+    settings.setValue("type_source", ui->checkBox_source->isChecked());
+    settings.setValue("type_system", ui->checkBox_system->isChecked());
+    settings.setValue("type_type", ui->checkBox_type->isChecked());
+    settings.setValue("type_operation_system", ui->checkBox_operation_system->isChecked());
+    settings.setValue("type_cryptor", ui->checkBox_cryptor->isChecked());
+    settings.setValue("type_crypter", ui->checkBox_crypter->isChecked());
+
+    settings.setValue("Recursive", ui->checkBoxRecursive->isChecked());
+    settings.setValue("DeepScan", ui->checkBoxDeepScan->isChecked());
+    settings.setValue("Verbose", ui->checkBoxVerbose->isChecked());
+    settings.setValue("HeuristicScan", ui->checkBoxHeuristicScan->isChecked());
+    settings.setValue("Aggressive", ui->checkBoxAggressive->isChecked());
+    settings.setValue("ShowVersion", ui->checkBoxShowVersion->isChecked());
+    settings.setValue("ShowInfo", ui->checkBoxShowInfo->isChecked());
+    settings.setValue("ScanSubdirectories", ui->checkBoxScanSubdirectories->isChecked());
+    settings.setValue("ValidOnly", ui->checkBoxValidOnly->isChecked());
+
+
+    settings.setValue("UnknownPrefix", ui->comboBoxUnknownPrefix->currentIndex());
+    settings.setValue("UnknownCount", ui->spinBoxUnknownCount->value());
+
+    settings.setValue("Overlay", ui->comboBoxOverlay->currentIndex());
+    settings.setValue("Entropy", ui->comboBoxEntropy->currentIndex());
+    settings.setValue("EntropyValue", ui->doubleSpinBoxEntropy->value());
+    // settings.setValue("Threads", ui->spinBoxThreads->value());
 }
