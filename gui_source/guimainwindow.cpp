@@ -230,6 +230,7 @@ void GuiMainWindow::_scan()
     if (ui->checkBox_operation_system->isChecked()) options.stTypes.insert("operation system");
     if (ui->checkBox_cryptor->isChecked()) options.stTypes.insert("cryptor");
     if (ui->checkBox_crypter->isChecked()) options.stTypes.insert("crypter");
+    if (ui->checkBox_licensing->isChecked()) options.stTypes.insert("licensing");
 
     options.bIsRecursive = ui->checkBoxRecursive->isChecked();
     options.bIsDeepScan = ui->checkBoxDeepScan->isChecked();
@@ -341,6 +342,7 @@ void GuiMainWindow::on_checkBoxAllTypes_toggled(bool checked)
     ui->checkBox_operation_system->setChecked(checked);
     ui->checkBox_crypter->setChecked(checked);
     ui->checkBox_cryptor->setChecked(checked);
+    ui->checkBox_licensing->setChecked(checked);
 }
 
 void GuiMainWindow::on_pushButtonInfo_clicked()
@@ -598,6 +600,7 @@ void GuiMainWindow::saveSettings()
     settings.setValue("type_operation_system", ui->checkBox_operation_system->isChecked());
     settings.setValue("type_cryptor", ui->checkBox_cryptor->isChecked());
     settings.setValue("type_crypter", ui->checkBox_crypter->isChecked());
+    settings.setValue("type_licensing", ui->checkBox_licensing->isChecked());
 
     settings.setValue("Recursive", ui->checkBoxRecursive->isChecked());
     settings.setValue("DeepScan", ui->checkBoxDeepScan->isChecked());

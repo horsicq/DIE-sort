@@ -701,6 +701,13 @@
            </property>
           </widget>
          </item>
+         <item row="3" column="4">
+          <widget class="QCheckBox" name="checkBox_licensing">
+           <property name="text">
+            <string>licensing</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </item>
