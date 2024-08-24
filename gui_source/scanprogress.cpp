@@ -349,7 +349,7 @@ void ScanProgress::_processFile(QString sFileName)
                 }
             } else if ((_pOptions->fileFormat == FF_ENTROPYPROCENT) || (_pOptions->fileFormat == FF_ENTROPYPROCENT_ORIGINAL)) {
                 double dEntropy = XBinary::getEntropy(scanResult.sFileName, g_pPdStruct);
-                dEntropy = (dEntropy * 100.0)/8.0;
+                dEntropy = (dEntropy * 100.0) / 8.0;
                 QString sEntropy = QString::number(dEntropy, 'f', 0);
 
                 if (_pOptions->fileFormat == FF_ENTROPYPROCENT) {
@@ -380,7 +380,6 @@ void ScanProgress::_processFile(QString sFileName)
 
                 for (int i = 0; (i < nCount) && (!(g_pPdStruct->bIsStop)); i++) {
                     XScanEngine::SCANSTRUCT ss = scanResult.listRecords.at(i);
-
 
                     if (_pOptions->stFileTypes.contains(ss.id.fileType) && (ss.sName != "") && (!ss.bIsUnknown)) {
                         if ((_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPBYTES) ||

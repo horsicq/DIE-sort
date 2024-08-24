@@ -612,7 +612,6 @@ void GuiMainWindow::saveSettings()
     settings.setValue("ScanSubdirectories", ui->checkBoxScanSubdirectories->isChecked());
     settings.setValue("ValidOnly", ui->checkBoxValidOnly->isChecked());
 
-
     settings.setValue("UnknownPrefix", ui->comboBoxUnknownPrefix->currentIndex());
     settings.setValue("UnknownCount", ui->spinBoxUnknownCount->value());
 
