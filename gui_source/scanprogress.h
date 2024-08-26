@@ -101,6 +101,7 @@ public:
         bool bSubdirectories;
         bool bShowVersion;
         bool bShowInfo;
+        bool bIsSort;
         QSet<XBinary::FT> stFileTypes;
         bool bAllTypes;
         QSet<QString> stTypes;

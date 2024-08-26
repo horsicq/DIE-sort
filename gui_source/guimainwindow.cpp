@@ -34,6 +34,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     connect(ui->checkBoxBinary, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxCOM, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxMSDOS, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxDOS16M, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxDOS4G, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxNE, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxLE, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxLX, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
@@ -177,6 +179,8 @@ void GuiMainWindow::_scan()
     if (ui->checkBoxBinary->isChecked()) options.stFileTypes.insert(XBinary::FT_BINARY);
     if (ui->checkBoxCOM->isChecked()) options.stFileTypes.insert(XBinary::FT_COM);
     if (ui->checkBoxMSDOS->isChecked()) options.stFileTypes.insert(XBinary::FT_MSDOS);
+    if (ui->checkBoxDOS16M->isChecked()) options.stFileTypes.insert(XBinary::FT_DOS16M);
+    if (ui->checkBoxDOS4G->isChecked()) options.stFileTypes.insert(XBinary::FT_DOS4G);
     if (ui->checkBoxNE->isChecked()) options.stFileTypes.insert(XBinary::FT_NE);
     if (ui->checkBoxLE->isChecked()) options.stFileTypes.insert(XBinary::FT_LE);
     if (ui->checkBoxLX->isChecked()) options.stFileTypes.insert(XBinary::FT_LX);
@@ -231,6 +235,7 @@ void GuiMainWindow::_scan()
     if (ui->checkBox_cryptor->isChecked()) options.stTypes.insert("cryptor");
     if (ui->checkBox_crypter->isChecked()) options.stTypes.insert("crypter");
     if (ui->checkBox_licensing->isChecked()) options.stTypes.insert("licensing");
+    if (ui->checkBox_language->isChecked()) options.stTypes.insert("language");
 
     options.bIsRecursive = ui->checkBoxRecursive->isChecked();
     options.bIsDeepScan = ui->checkBoxDeepScan->isChecked();
@@ -239,6 +244,7 @@ void GuiMainWindow::_scan()
     options.bIsAggressive = ui->checkBoxAggressive->isChecked();
     options.bShowVersion = ui->checkBoxShowVersion->isChecked();
     options.bShowInfo = ui->checkBoxShowInfo->isChecked();
+    options.bIsSort = ui->checkBoxSort->isChecked();
     options.bSubdirectories = ui->checkBoxScanSubdirectories->isChecked();
     options.sSignatures = ui->lineEditSignatures->text();
     options.sSignaturesExtra = ui->lineEditSignaturesExtra->text();
@@ -280,6 +286,8 @@ void GuiMainWindow::on_checkBoxAllFileTypes_toggled(bool checked)
     ui->checkBoxBinary->setChecked(checked);
     ui->checkBoxCOM->setChecked(checked);
     ui->checkBoxMSDOS->setChecked(checked);
+    ui->checkBoxDOS16M->setChecked(checked);
+    ui->checkBoxDOS4G->setChecked(checked);
     ui->checkBoxNE->setChecked(checked);
     ui->checkBoxLE->setChecked(checked);
     ui->checkBoxLX->setChecked(checked);
@@ -343,6 +351,7 @@ void GuiMainWindow::on_checkBoxAllTypes_toggled(bool checked)
     ui->checkBox_crypter->setChecked(checked);
     ui->checkBox_cryptor->setChecked(checked);
     ui->checkBox_licensing->setChecked(checked);
+    ui->checkBox_language->setChecked(checked);
 }
 
 void GuiMainWindow::on_pushButtonInfo_clicked()
@@ -445,6 +454,8 @@ void GuiMainWindow::loadSettings()
     ui->checkBoxBinary->setChecked(settings.value("FT_Binary", true).toBool());
     ui->checkBoxCOM->setChecked(settings.value("FT_COM", true).toBool());
     ui->checkBoxMSDOS->setChecked(settings.value("FT_MSDOS", true).toBool());
+    ui->checkBoxDOS16M->setChecked(settings.value("FT_DOS16M", true).toBool());
+    ui->checkBoxDOS4G->setChecked(settings.value("FT_DOS4G", true).toBool());
     ui->checkBoxNE->setChecked(settings.value("FT_NE", true).toBool());
     ui->checkBoxLE->setChecked(settings.value("FT_LE", true).toBool());
     ui->checkBoxLX->setChecked(settings.value("FT_LX", true).toBool());
@@ -503,6 +514,7 @@ void GuiMainWindow::loadSettings()
     ui->checkBoxAggressive->setChecked(settings.value("Aggressive", true).toBool());
     ui->checkBoxShowVersion->setChecked(settings.value("ShowVersion", true).toBool());
     ui->checkBoxShowInfo->setChecked(settings.value("ShowInfo", true).toBool());
+    ui->checkBoxSort->setChecked(settings.value("Sort", true).toBool());
     ui->checkBoxScanSubdirectories->setChecked(settings.value("ScanSubdirectories", true).toBool());
     ui->checkBoxValidOnly->setChecked(settings.value("ValidOnly", true).toBool());
 
@@ -550,6 +562,8 @@ void GuiMainWindow::saveSettings()
     settings.setValue("FT_Binary", ui->checkBoxBinary->isChecked());
     settings.setValue("FT_COM", ui->checkBoxCOM->isChecked());
     settings.setValue("FT_MSDOS", ui->checkBoxMSDOS->isChecked());
+    settings.setValue("FT_DOS16M", ui->checkBoxDOS16M->isChecked());
+    settings.setValue("FT_DOS4G", ui->checkBoxDOS4G->isChecked());
     settings.setValue("FT_NE", ui->checkBoxNE->isChecked());
     settings.setValue("FT_LE", ui->checkBoxLE->isChecked());
     settings.setValue("FT_LX", ui->checkBoxLX->isChecked());
@@ -601,6 +615,7 @@ void GuiMainWindow::saveSettings()
     settings.setValue("type_cryptor", ui->checkBox_cryptor->isChecked());
     settings.setValue("type_crypter", ui->checkBox_crypter->isChecked());
     settings.setValue("type_licensing", ui->checkBox_licensing->isChecked());
+    settings.setValue("type_language", ui->checkBox_language->isChecked());
 
     settings.setValue("Recursive", ui->checkBoxRecursive->isChecked());
     settings.setValue("DeepScan", ui->checkBoxDeepScan->isChecked());
@@ -609,6 +624,7 @@ void GuiMainWindow::saveSettings()
     settings.setValue("Aggressive", ui->checkBoxAggressive->isChecked());
     settings.setValue("ShowVersion", ui->checkBoxShowVersion->isChecked());
     settings.setValue("ShowInfo", ui->checkBoxShowInfo->isChecked());
+    settings.setValue("Sort", ui->checkBoxSort->isChecked());
     settings.setValue("ScanSubdirectories", ui->checkBoxScanSubdirectories->isChecked());
     settings.setValue("ValidOnly", ui->checkBoxValidOnly->isChecked());
 

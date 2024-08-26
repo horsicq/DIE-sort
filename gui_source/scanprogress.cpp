@@ -226,7 +226,7 @@ void ScanProgress::_processFile(QString sFileName)
 
         bool bProcess = _pOptions->stFileTypes.contains(ftPref);
         bool bIsOverlayPresent = false;
-        bool bIsValid = false;
+        bool bIsValid = true;
 
         if (bProcess) {
             QFile file;
@@ -320,6 +320,7 @@ void ScanProgress::_processFile(QString sFileName)
             scanOptions.bShowType = true;
             scanOptions.bShowVersion = _pOptions->bShowVersion;
             scanOptions.bShowInfo = _pOptions->bShowInfo;
+            scanOptions.bIsSort = _pOptions->bIsSort;
             scanOptions.nBufferSize = 8 * 1024 * 1024;
             scanOptions.bUseExtraDatabase = _pOptions->bSignaturesExtraUse;
             scanOptions.bUseCustomDatabase = _pOptions->bSignaturesCustomUse;
@@ -678,6 +679,14 @@ void ScanProgress::_processFile(QString sFileName)
             if ((_pOptions->bRemoveCopied) && bGlobalCopy) {
                 XBinary::removeFile(scanResult.sFileName);
             }
+        } else if ((_pOptions->bValidOnly) && (!bIsValid)) {
+            QString sTempFile = _pOptions->sResultDirectory + QDir::separator() + XBinary::fileTypeIdToString(ftPref) + QDir::separator() +"__BROKEN";
+
+            XBinary::createDirectory(sTempFile);
+
+            sTempFile += QDir::separator() + QFileInfo(sFileName).fileName();
+
+            XBinary::copyFile(sFileName, sTempFile);
         }
     }
 
