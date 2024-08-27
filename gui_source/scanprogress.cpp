@@ -324,6 +324,7 @@ void ScanProgress::_processFile(QString sFileName)
             scanOptions.nBufferSize = 8 * 1024 * 1024;
             scanOptions.bUseExtraDatabase = _pOptions->bSignaturesExtraUse;
             scanOptions.bUseCustomDatabase = _pOptions->bSignaturesCustomUse;
+            scanOptions.fileType = ftPref;
             // scanOptions.bShowUnknown = false;
 
             setFileStat(sFileName, "", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
@@ -364,6 +365,7 @@ void ScanProgress::_processFile(QString sFileName)
 
             bool bGlobalCopy = false;
             bool bIdentified = false;
+            bool bCopyTheFirstOnly = false;
 
             QString sEPBytes;
             QString sEP;
@@ -374,10 +376,6 @@ void ScanProgress::_processFile(QString sFileName)
 
             if (nCount) {
                 _id = scanResult.listRecords.at(0).id;
-
-                if (_pOptions->bCopyTheFirstOnly) {
-                    nCount = 1;
-                }
 
                 for (int i = 0; (i < nCount) && (!(g_pPdStruct->bIsStop)); i++) {
                     XScanEngine::SCANSTRUCT ss = scanResult.listRecords.at(i);
@@ -448,6 +446,14 @@ void ScanProgress::_processFile(QString sFileName)
 
                                 if (_pOptions->nCopyCount) {
                                     if (nCurrentCount >= _pOptions->nCopyCount) {
+                                        bCopy = false;
+                                    }
+                                }
+
+                                if (_pOptions->bCopyTheFirstOnly) {
+                                    if (!bCopyTheFirstOnly) {
+                                        bCopyTheFirstOnly = true;
+                                    } else {
                                         bCopy = false;
                                     }
                                 }
