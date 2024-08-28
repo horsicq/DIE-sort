@@ -224,7 +224,7 @@ void ScanProgress::_processFile(QString sFileName)
 
         XBinary::FT ftPref = XBinary::_getPrefFileType(&fileTypes);
 
-        bool bProcess = _pOptions->stFileTypes.contains(ftPref);
+        bool bProcess = _pOptions->stFileTypes.contains(ftPref) || (_pOptions->bAllTypes);
         bool bIsOverlayPresent = false;
         bool bIsValid = true;
 
@@ -434,7 +434,9 @@ void ScanProgress::_processFile(QString sFileName)
                             bIdentified = true;
 
                             if ((_pOptions->copyType == CT_IDENT) || (_pOptions->copyType == CT_IDENT_UNK)) {
-                                QString sResult = XScanEngine::createResultStringEx(&scanOptions, &ss);
+                                XScanEngine::SCAN_OPTIONS _scanOptions = scanOptions;
+                                _scanOptions.bShowType = false;
+                                QString sResult = XScanEngine::createResultStringEx(&_scanOptions, &ss);
 
                                 sResult = XBinary::convertFileNameSymbols(sResult);
 

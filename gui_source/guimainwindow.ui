@@ -468,6 +468,20 @@
            </property>
           </widget>
          </item>
+         <item row="10" column="1">
+          <widget class="QCheckBox" name="checkBoxPDF">
+           <property name="text">
+            <string>PDF</string>
+           </property>
+          </widget>
+         </item>
+         <item row="11" column="0">
+          <widget class="QCheckBox" name="checkBoxRAR">
+           <property name="text">
+            <string>RAR</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </item>

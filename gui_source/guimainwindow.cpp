@@ -50,6 +50,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     connect(ui->checkBoxAPK, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxMACHOFAT, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxNPM, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxPDF, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxRAR, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
 
     connect(ui->checkBox_archive, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
     connect(ui->checkBox_audio, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
@@ -83,6 +85,10 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     connect(ui->checkBox_system, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
     connect(ui->checkBox_type, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
     connect(ui->checkBox_operation_system, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_cryptor, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_crypter, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_licensing, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_language, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
 
     ui->checkBoxAllFileTypes->setChecked(true);
     ui->checkBoxAllTypes->setChecked(true);
@@ -195,6 +201,8 @@ void GuiMainWindow::_scan()
     if (ui->checkBoxAPK->isChecked()) options.stFileTypes.insert(XBinary::FT_APK);
     if (ui->checkBoxMACHOFAT->isChecked()) options.stFileTypes.insert(XBinary::FT_MACHOFAT);
     if (ui->checkBoxNPM->isChecked()) options.stFileTypes.insert(XBinary::FT_NPM);
+    if (ui->checkBoxPDF->isChecked()) options.stFileTypes.insert(XBinary::FT_PDF);
+    if (ui->checkBoxRAR->isChecked()) options.stFileTypes.insert(XBinary::FT_RAR);
 
     options.stTypes.clear();
 
@@ -302,6 +310,8 @@ void GuiMainWindow::on_checkBoxAllFileTypes_toggled(bool checked)
     ui->checkBoxAPK->setChecked(checked);
     ui->checkBoxMACHOFAT->setChecked(checked);
     ui->checkBoxNPM->setChecked(checked);
+    ui->checkBoxPDF->setChecked(checked);
+    ui->checkBoxRAR->setChecked(checked);
 }
 
 // void GuiMainWindow::on_checkBoxBinary_toggled(bool checked)
@@ -390,6 +400,8 @@ void GuiMainWindow::on_pushButtonSignatures_clicked()
 
 void GuiMainWindow::on_doubleSpinBoxEntropy_valueChanged(double arg1)
 {
+    Q_UNUSED(arg1)
+
     double dEntropy = ui->doubleSpinBoxEntropy->value();
     double dProcent = (dEntropy / 8) * 100;
     ui->lineEditEntropy->setText(QString::number(dProcent));
@@ -470,6 +482,8 @@ void GuiMainWindow::loadSettings()
     ui->checkBoxAPK->setChecked(settings.value("FT_APK", true).toBool());
     ui->checkBoxMACHOFAT->setChecked(settings.value("FT_MACHOFAT", true).toBool());
     ui->checkBoxNPM->setChecked(settings.value("FT_NPM", true).toBool());
+    ui->checkBoxPDF->setChecked(settings.value("FT_PDF", true).toBool());
+    ui->checkBoxRAR->setChecked(settings.value("FT_RAR", true).toBool());
 
     ui->checkBoxAllTypes->setChecked(settings.value("AllTypes", true).toBool());
     ui->checkBox_archive->setChecked(settings.value("type_archive", true).toBool());
@@ -578,6 +592,8 @@ void GuiMainWindow::saveSettings()
     settings.setValue("FT_APK", ui->checkBoxAPK->isChecked());
     settings.setValue("FT_MACHOFAT", ui->checkBoxMACHOFAT->isChecked());
     settings.setValue("FT_NPM", ui->checkBoxNPM->isChecked());
+    settings.setValue("FT_PDF", ui->checkBoxPDF->isChecked());
+    settings.setValue("FT_RAR", ui->checkBoxRAR->isChecked());
 
     settings.setValue("AllTypes", ui->checkBoxAllTypes->isChecked());
     settings.setValue("type_archive", ui->checkBox_archive->isChecked());
