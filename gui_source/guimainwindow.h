@@ -47,6 +47,7 @@ private slots:
     void on_pushButtonOut_clicked();
     void on_pushButtonScan_clicked();
     void _scan();
+    void _appendType(QString sType);
 
     void on_checkBoxAllFileTypes_toggled(bool checked);
     void on_checkBoxAllTypes_toggled(bool checked);

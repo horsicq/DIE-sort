@@ -208,42 +208,42 @@ void GuiMainWindow::_scan()
 
     options.bAllTypes = ui->checkBoxAllTypes->isChecked();
 
-    if (ui->checkBox_archive->isChecked()) options.stTypes.insert("archive");
-    if (ui->checkBox_audio->isChecked()) options.stTypes.insert("audio");
-    if (ui->checkBox_boot->isChecked()) options.stTypes.insert("boot");
-    if (ui->checkBox_compiler->isChecked()) options.stTypes.insert("compiler");
-    if (ui->checkBox_converter->isChecked()) options.stTypes.insert("converter");
-    if (ui->checkBox_driver->isChecked()) options.stTypes.insert("driver");
-    if (ui->checkBox_emulator->isChecked()) options.stTypes.insert("emulator");
-    if (ui->checkBox_extender->isChecked()) options.stTypes.insert("extender");
-    if (ui->checkBox_format->isChecked()) options.stTypes.insert("format");
-    if (ui->checkBox_framework->isChecked()) options.stTypes.insert("framework");
-    if (ui->checkBox_image->isChecked()) options.stTypes.insert("image");
-    if (ui->checkBox_immunizer->isChecked()) options.stTypes.insert("immunizer");
-    if (ui->checkBox_installer->isChecked()) options.stTypes.insert("installer");
-    if (ui->checkBox_joiner->isChecked()) options.stTypes.insert("joiner");
-    if (ui->checkBox_keygen->isChecked()) options.stTypes.insert("keygen");
-    if (ui->checkBox_library->isChecked()) options.stTypes.insert("library");
-    if (ui->checkBox_linker->isChecked()) options.stTypes.insert("linker");
-    if (ui->checkBox_loader->isChecked()) options.stTypes.insert("loader");
-    if (ui->checkBox_other->isChecked()) options.stTypes.insert("other");
-    if (ui->checkBox_overlay->isChecked()) options.stTypes.insert("overlay");
-    if (ui->checkBox_packer->isChecked()) options.stTypes.insert("packer");
-    if (ui->checkBox_patcher->isChecked()) options.stTypes.insert("patcher");
-    if (ui->checkBox_player->isChecked()) options.stTypes.insert("player");
-    if (ui->checkBox_protection->isChecked()) options.stTypes.insert("protection");
-    if (ui->checkBox_protector->isChecked()) options.stTypes.insert("protector");
-    if (ui->checkBox_script->isChecked()) options.stTypes.insert("script");
-    if (ui->checkBox_self_displayer->isChecked()) options.stTypes.insert("self-displayer");
-    if (ui->checkBox_sfx->isChecked()) options.stTypes.insert("sfx");
-    if (ui->checkBox_source->isChecked()) options.stTypes.insert("source");
-    if (ui->checkBox_system->isChecked()) options.stTypes.insert("system");
-    if (ui->checkBox_type->isChecked()) options.stTypes.insert("type");
-    if (ui->checkBox_operation_system->isChecked()) options.stTypes.insert("operation system");
-    if (ui->checkBox_cryptor->isChecked()) options.stTypes.insert("cryptor");
-    if (ui->checkBox_crypter->isChecked()) options.stTypes.insert("crypter");
-    if (ui->checkBox_licensing->isChecked()) options.stTypes.insert("licensing");
-    if (ui->checkBox_language->isChecked()) options.stTypes.insert("language");
+    if (ui->checkBox_archive->isChecked()) _appendType("archive");
+    if (ui->checkBox_audio->isChecked()) _appendType("audio");
+    if (ui->checkBox_boot->isChecked()) _appendType("boot");
+    if (ui->checkBox_compiler->isChecked()) _appendType("compiler");
+    if (ui->checkBox_converter->isChecked()) _appendType("converter");
+    if (ui->checkBox_driver->isChecked()) _appendType("driver");
+    if (ui->checkBox_emulator->isChecked()) _appendType("emulator");
+    if (ui->checkBox_extender->isChecked()) _appendType("extender");
+    if (ui->checkBox_format->isChecked()) _appendType("format");
+    if (ui->checkBox_framework->isChecked()) _appendType("framework");
+    if (ui->checkBox_image->isChecked()) _appendType("image");
+    if (ui->checkBox_immunizer->isChecked()) _appendType("immunizer");
+    if (ui->checkBox_installer->isChecked()) _appendType("installer");
+    if (ui->checkBox_joiner->isChecked()) _appendType("joiner");
+    if (ui->checkBox_keygen->isChecked()) _appendType("keygen");
+    if (ui->checkBox_library->isChecked()) _appendType("library");
+    if (ui->checkBox_linker->isChecked()) _appendType("linker");
+    if (ui->checkBox_loader->isChecked()) _appendType("loader");
+    if (ui->checkBox_other->isChecked()) _appendType("other");
+    if (ui->checkBox_overlay->isChecked()) _appendType("overlay");
+    if (ui->checkBox_packer->isChecked()) _appendType("packer");
+    if (ui->checkBox_patcher->isChecked()) _appendType("patcher");
+    if (ui->checkBox_player->isChecked()) _appendType("player");
+    if (ui->checkBox_protection->isChecked()) _appendType("protection");
+    if (ui->checkBox_protector->isChecked()) _appendType("protector");
+    if (ui->checkBox_script->isChecked()) _appendType("script");
+    if (ui->checkBox_self_displayer->isChecked()) _appendType("self-displayer");
+    if (ui->checkBox_sfx->isChecked()) _appendType("sfx");
+    if (ui->checkBox_source->isChecked()) _appendType("source");
+    if (ui->checkBox_system->isChecked()) _appendType("system");
+    if (ui->checkBox_type->isChecked()) _appendType("type");
+    if (ui->checkBox_operation_system->isChecked()) _appendType("operation system");
+    if (ui->checkBox_cryptor->isChecked()) _appendType("cryptor");
+    if (ui->checkBox_crypter->isChecked()) _appendType("crypter");
+    if (ui->checkBox_licensing->isChecked()) _appendType("licensing");
+    if (ui->checkBox_language->isChecked()) _appendType("language");
 
     options.bIsRecursive = ui->checkBoxRecursive->isChecked();
     options.bIsDeepScan = ui->checkBoxDeepScan->isChecked();
@@ -287,6 +287,12 @@ void GuiMainWindow::_scan()
     //    connect(&ds, SIGNAL(scanResult(SpecAbstract::SCAN_RESULT)),this,SLOT(scanResult(SpecAbstract::SCAN_RESULT)),Qt::DirectConnection);
     //    ds.setData(ui->lineEditDirectoryName->text(),&options);
     //    ds.exec();
+}
+
+void GuiMainWindow::_appendType(QString sType)
+{
+    options.stTypes.insert(sType);
+    options.stTypes.insert("(heur)" + sType);
 }
 
 void GuiMainWindow::on_checkBoxAllFileTypes_toggled(bool checked)
