@@ -30,6 +30,8 @@ DialogScanProgress::DialogScanProgress(QWidget *pParent) : XDialogProcess(pParen
 
     connect(pThread, SIGNAL(started()), pScan, SLOT(process()));
     connect(pScan, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
+
+    setAdvanced(false);
 }
 
 DialogScanProgress::~DialogScanProgress()
