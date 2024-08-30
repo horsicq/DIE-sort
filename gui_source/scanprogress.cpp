@@ -688,7 +688,7 @@ void ScanProgress::_processFile(QString sFileName)
                 XBinary::removeFile(scanResult.sFileName);
             }
         } else if ((_pOptions->bValidOnly) && (!bIsValid)) {
-            QString sTempFile = _pOptions->sResultDirectory + QDir::separator() + XBinary::fileTypeIdToString(ftPref) + QDir::separator() +"__BROKEN";
+            QString sTempFile = _pOptions->sResultDirectory + QDir::separator() + XBinary::fileTypeIdToString(ftPref) + QDir::separator() + "__BROKEN";
 
             XBinary::createDirectory(sTempFile);
 
