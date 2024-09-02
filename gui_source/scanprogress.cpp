@@ -349,14 +349,19 @@ void ScanProgress::_processFile(QString sFileName)
                 } else if (_pOptions->fileFormat == FF_ENTROPY_ORIGINAL) {
                     _sBaseFileName = sEntropy + "_" + _sBaseFileName;
                 }
-            } else if ((_pOptions->fileFormat == FF_ENTROPYPROCENT) || (_pOptions->fileFormat == FF_ENTROPYPROCENT_ORIGINAL)) {
+            } else if ((_pOptions->fileFormat == FF_ENTROPYPERCENTAGE) || (_pOptions->fileFormat == FF_ENTROPYPERCENTAGE_ORIGINAL)) {
                 double dEntropy = XBinary::getEntropy(scanResult.sFileName, g_pPdStruct);
-                dEntropy = (dEntropy * 100.0) / 8.0;
-                QString sEntropy = QString::number(dEntropy, 'f', 0);
+                qint32 nEntropy = (dEntropy * 100.0) / 8.0;
 
-                if (_pOptions->fileFormat == FF_ENTROPYPROCENT) {
+                if (nEntropy == 100) {
+                    nEntropy = 99;
+                }
+
+                QString sEntropy = QString("%1").arg(nEntropy, 2, 10, QChar('0');
+
+                if (_pOptions->fileFormat == FF_ENTROPYPERCENTAGE) {
                     _sBaseFileName = sEntropy;
-                } else if (_pOptions->fileFormat == FF_ENTROPYPROCENT_ORIGINAL) {
+                } else if (_pOptions->fileFormat == FF_ENTROPYPERCENTAGE_ORIGINAL) {
                     _sBaseFileName = sEntropy + "_" + _sBaseFileName;
                 }
             }
@@ -695,6 +700,10 @@ void ScanProgress::_processFile(QString sFileName)
             sTempFile += QDir::separator() + QFileInfo(sFileName).fileName();
 
             XBinary::copyFile(sFileName, sTempFile);
+
+            if (_pOptions->bRemoveCopied) {
+                XBinary::removeFile(sFileName);
+            }
         }
     }
 

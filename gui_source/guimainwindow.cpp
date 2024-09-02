@@ -116,8 +116,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     ui->comboBoxFileNameFormat->addItem("MD5+Original");
     ui->comboBoxFileNameFormat->addItem("Entropy");
     ui->comboBoxFileNameFormat->addItem("Entropy+Original");
-    ui->comboBoxFileNameFormat->addItem("EntropyProcent");
-    ui->comboBoxFileNameFormat->addItem("EntropyProcent+Original");
+    ui->comboBoxFileNameFormat->addItem("EntropyPercentage");
+    ui->comboBoxFileNameFormat->addItem("EntropyPercentage+Original");
 
     ui->comboBoxUnknownPrefix->addItem("NONE");
     ui->comboBoxUnknownPrefix->addItem("EP Bytes");
