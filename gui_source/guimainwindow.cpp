@@ -409,8 +409,8 @@ void GuiMainWindow::on_doubleSpinBoxEntropy_valueChanged(double arg1)
     Q_UNUSED(arg1)
 
     double dEntropy = ui->doubleSpinBoxEntropy->value();
-    double dProcent = (dEntropy / 8) * 100;
-    ui->lineEditEntropy->setText(QString::number(dProcent));
+    double dPercentage = (dEntropy / 8) * 100;
+    ui->lineEditEntropy->setText(QString::number(dPercentage, 'f', 2));
 }
 
 void GuiMainWindow::on_pushButtonSignaturesCustom_clicked()

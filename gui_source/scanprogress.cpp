@@ -357,7 +357,7 @@ void ScanProgress::_processFile(QString sFileName)
                     nEntropy = 99;
                 }
 
-                QString sEntropy = QString("%1").arg(nEntropy, 2, 10, QChar('0');
+                QString sEntropy = QString("%1").arg(nEntropy, 2, 10, QChar('0'));
 
                 if (_pOptions->fileFormat == FF_ENTROPYPERCENTAGE) {
                     _sBaseFileName = sEntropy;
