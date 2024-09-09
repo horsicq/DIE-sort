@@ -51,6 +51,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     connect(ui->checkBoxMACHOFAT, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxNPM, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxPDF, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxDEX, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxRAR, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
 
     connect(ui->checkBox_archive, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
@@ -202,6 +203,7 @@ void GuiMainWindow::_scan()
     if (ui->checkBoxMACHOFAT->isChecked()) options.stFileTypes.insert(XBinary::FT_MACHOFAT);
     if (ui->checkBoxNPM->isChecked()) options.stFileTypes.insert(XBinary::FT_NPM);
     if (ui->checkBoxPDF->isChecked()) options.stFileTypes.insert(XBinary::FT_PDF);
+    if (ui->checkBoxDEX->isChecked()) options.stFileTypes.insert(XBinary::FT_DEX);
     if (ui->checkBoxRAR->isChecked()) options.stFileTypes.insert(XBinary::FT_RAR);
 
     options.stTypes.clear();
@@ -317,6 +319,7 @@ void GuiMainWindow::on_checkBoxAllFileTypes_toggled(bool checked)
     ui->checkBoxMACHOFAT->setChecked(checked);
     ui->checkBoxNPM->setChecked(checked);
     ui->checkBoxPDF->setChecked(checked);
+    ui->checkBoxDEX->setChecked(checked);
     ui->checkBoxRAR->setChecked(checked);
 }
 
@@ -489,6 +492,7 @@ void GuiMainWindow::loadSettings()
     ui->checkBoxMACHOFAT->setChecked(settings.value("FT_MACHOFAT", true).toBool());
     ui->checkBoxNPM->setChecked(settings.value("FT_NPM", true).toBool());
     ui->checkBoxPDF->setChecked(settings.value("FT_PDF", true).toBool());
+    ui->checkBoxDEX->setChecked(settings.value("FT_DEX", true).toBool());
     ui->checkBoxRAR->setChecked(settings.value("FT_RAR", true).toBool());
 
     ui->checkBoxAllTypes->setChecked(settings.value("AllTypes", true).toBool());
@@ -599,6 +603,7 @@ void GuiMainWindow::saveSettings()
     settings.setValue("FT_MACHOFAT", ui->checkBoxMACHOFAT->isChecked());
     settings.setValue("FT_NPM", ui->checkBoxNPM->isChecked());
     settings.setValue("FT_PDF", ui->checkBoxPDF->isChecked());
+    settings.setValue("FT_DEX", ui->checkBoxDEX->isChecked());
     settings.setValue("FT_RAR", ui->checkBoxRAR->isChecked());
 
     settings.setValue("AllTypes", ui->checkBoxAllTypes->isChecked());
