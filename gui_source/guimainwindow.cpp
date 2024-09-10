@@ -90,6 +90,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     connect(ui->checkBox_crypter, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
     connect(ui->checkBox_licensing, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
     connect(ui->checkBox_language, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_tool, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_dosextender, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
 
     ui->checkBoxAllFileTypes->setChecked(true);
     ui->checkBoxAllTypes->setChecked(true);
@@ -246,6 +248,8 @@ void GuiMainWindow::_scan()
     if (ui->checkBox_crypter->isChecked()) _appendType("crypter");
     if (ui->checkBox_licensing->isChecked()) _appendType("licensing");
     if (ui->checkBox_language->isChecked()) _appendType("language");
+    if (ui->checkBox_tool->isChecked()) _appendType("tool");
+    if (ui->checkBox_dosextender->isChecked()) _appendType("dos extender");
 
     options.bIsRecursive = ui->checkBoxRecursive->isChecked();
     options.bIsDeepScan = ui->checkBoxDeepScan->isChecked();
@@ -371,6 +375,8 @@ void GuiMainWindow::on_checkBoxAllTypes_toggled(bool checked)
     ui->checkBox_cryptor->setChecked(checked);
     ui->checkBox_licensing->setChecked(checked);
     ui->checkBox_language->setChecked(checked);
+    ui->checkBox_tool->setChecked(checked);
+    ui->checkBox_dosextender->setChecked(checked);
 }
 
 void GuiMainWindow::on_pushButtonInfo_clicked()
@@ -530,6 +536,10 @@ void GuiMainWindow::loadSettings()
     ui->checkBox_operation_system->setChecked(settings.value("type_operation_system", true).toBool());
     ui->checkBox_cryptor->setChecked(settings.value("type_cryptor", true).toBool());
     ui->checkBox_crypter->setChecked(settings.value("type_crypter", true).toBool());
+    ui->checkBox_licensing->setChecked(settings.value("type_licensing", true).toBool());
+    ui->checkBox_language->setChecked(settings.value("type_language", true).toBool());
+    ui->checkBox_tool->setChecked(settings.value("type_tool", true).toBool());
+    ui->checkBox_dosextender->setChecked(settings.value("type_dosextender", true).toBool());
 
     ui->checkBoxRecursive->setChecked(settings.value("Recursive", true).toBool());
     ui->checkBoxDeepScan->setChecked(settings.value("DeepScan", true).toBool());
@@ -643,6 +653,8 @@ void GuiMainWindow::saveSettings()
     settings.setValue("type_crypter", ui->checkBox_crypter->isChecked());
     settings.setValue("type_licensing", ui->checkBox_licensing->isChecked());
     settings.setValue("type_language", ui->checkBox_language->isChecked());
+    settings.setValue("type_tool", ui->checkBox_tool->isChecked());
+    settings.setValue("type_dosextender", ui->checkBox_dosextender->isChecked());
 
     settings.setValue("Recursive", ui->checkBoxRecursive->isChecked());
     settings.setValue("DeepScan", ui->checkBoxDeepScan->isChecked());

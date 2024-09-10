@@ -498,6 +498,10 @@ void ScanProgress::_processFile(QString sFileName)
                                     }
                                 }
                             }
+                        } else {
+#ifdef QT_DEBUG
+                            qDebug("Missed %s", ss.sType.toLower().toLatin1().data());
+#endif
                         }
                     }
                 }
