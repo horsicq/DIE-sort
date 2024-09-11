@@ -498,45 +498,31 @@
          <string>Types</string>
         </property>
         <layout class="QGridLayout" name="gridLayout">
-         <item row="8" column="3">
-          <widget class="QCheckBox" name="checkBox_operation_system">
+         <item row="6" column="3">
+          <widget class="QCheckBox" name="checkBox_system">
            <property name="text">
-            <string>operation system</string>
+            <string>system</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="0">
-          <widget class="QCheckBox" name="checkBoxAllTypes">
+         <item row="8" column="2">
+          <widget class="QCheckBox" name="checkBox_protection">
            <property name="text">
-            <string>All</string>
+            <string>protection</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="1">
-          <widget class="QCheckBox" name="checkBox_immunizer">
+         <item row="7" column="3">
+          <widget class="QCheckBox" name="checkBox_type">
            <property name="text">
-            <string>immunizer</string>
+            <string>type</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="3">
-          <widget class="QCheckBox" name="checkBox_script">
+         <item row="2" column="2">
+          <widget class="QCheckBox" name="checkBox_loader">
            <property name="text">
-            <string>script</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="1">
-          <widget class="QCheckBox" name="checkBox_library">
-           <property name="text">
-            <string>library</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="0">
-          <widget class="QCheckBox" name="checkBox_extender">
-           <property name="text">
-            <string>extender</string>
+            <string>loader</string>
            </property>
           </widget>
          </item>
@@ -547,27 +533,6 @@
            </property>
           </widget>
          </item>
-         <item row="5" column="1">
-          <widget class="QCheckBox" name="checkBox_installer">
-           <property name="text">
-            <string>installer</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QCheckBox" name="checkBox_converter">
-           <property name="text">
-            <string>converter</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QCheckBox" name="checkBox_joiner">
-           <property name="text">
-            <string>joiner</string>
-           </property>
-          </widget>
-         </item>
          <item row="1" column="4">
           <widget class="QCheckBox" name="checkBox_cryptor">
            <property name="text">
@@ -575,38 +540,59 @@
            </property>
           </widget>
          </item>
+         <item row="3" column="2">
+          <widget class="QCheckBox" name="checkBox_other">
+           <property name="text">
+            <string>other</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QCheckBox" name="checkBox_boot">
+           <property name="text">
+            <string>boot</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QCheckBox" name="checkBox_format">
+           <property name="text">
+            <string>format</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="4">
+          <widget class="QCheckBox" name="checkBox_licensing">
+           <property name="text">
+            <string>licensing</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QCheckBox" name="checkBox_immunizer">
+           <property name="text">
+            <string>immunizer</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="4">
+          <widget class="QCheckBox" name="checkBox_tool">
+           <property name="text">
+            <string>tool</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="checkBoxAllTypes">
+           <property name="text">
+            <string>All</string>
+           </property>
+          </widget>
+         </item>
          <item row="3" column="3">
           <widget class="QCheckBox" name="checkBox_self_displayer">
            <property name="text">
             <string>self-displayer</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="3">
-          <widget class="QCheckBox" name="checkBox_system">
-           <property name="text">
-            <string>system</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="2">
-          <widget class="QCheckBox" name="checkBox_player">
-           <property name="text">
-            <string>player</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="2">
-          <widget class="QCheckBox" name="checkBox_packer">
-           <property name="text">
-            <string>packer</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="0">
-          <widget class="QCheckBox" name="checkBox_emulator">
-           <property name="text">
-            <string>emulator</string>
            </property>
           </widget>
          </item>
@@ -624,59 +610,10 @@
            </property>
           </widget>
          </item>
-         <item row="6" column="0">
-          <widget class="QCheckBox" name="checkBox_driver">
-           <property name="text">
-            <string>driver</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="2">
-          <widget class="QCheckBox" name="checkBox_patcher">
-           <property name="text">
-            <string>patcher</string>
-           </property>
-          </widget>
-         </item>
          <item row="4" column="2">
           <widget class="QCheckBox" name="checkBox_overlay">
            <property name="text">
             <string>overlay</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QCheckBox" name="checkBox_format">
-           <property name="text">
-            <string>format</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QCheckBox" name="checkBox_archive">
-           <property name="text">
-            <string>archive</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="2">
-          <widget class="QCheckBox" name="checkBox_other">
-           <property name="text">
-            <string>other</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QCheckBox" name="checkBox_audio">
-           <property name="text">
-            <string>audio</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="2">
-          <widget class="QCheckBox" name="checkBox_protection">
-           <property name="text">
-            <string>protection</string>
            </property>
           </widget>
          </item>
@@ -687,31 +624,45 @@
            </property>
           </widget>
          </item>
-         <item row="7" column="3">
-          <widget class="QCheckBox" name="checkBox_type">
+         <item row="4" column="4">
+          <widget class="QCheckBox" name="checkBox_language">
            <property name="text">
-            <string>type</string>
+            <string>language</string>
            </property>
           </widget>
          </item>
-         <item row="3" column="0">
-          <widget class="QCheckBox" name="checkBox_boot">
+         <item row="7" column="0">
+          <widget class="QCheckBox" name="checkBox_emulator">
            <property name="text">
-            <string>boot</string>
+            <string>emulator</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="2">
-          <widget class="QCheckBox" name="checkBox_loader">
+         <item row="6" column="4">
+          <widget class="QCheckBox" name="checkBox_dos_extender">
            <property name="text">
-            <string>loader</string>
+            <string>dos extender</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="2">
-          <widget class="QCheckBox" name="checkBox_linker">
+         <item row="2" column="0">
+          <widget class="QCheckBox" name="checkBox_audio">
            <property name="text">
-            <string>linker</string>
+            <string>audio</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QCheckBox" name="checkBox_joiner">
+           <property name="text">
+            <string>joiner</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <widget class="QCheckBox" name="checkBox_script">
+           <property name="text">
+            <string>script</string>
            </property>
           </widget>
          </item>
@@ -719,6 +670,76 @@
           <widget class="QCheckBox" name="checkBox_framework">
            <property name="text">
             <string>framework</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="1">
+          <widget class="QCheckBox" name="checkBox_library">
+           <property name="text">
+            <string>library</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="2">
+          <widget class="QCheckBox" name="checkBox_patcher">
+           <property name="text">
+            <string>patcher</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="2">
+          <widget class="QCheckBox" name="checkBox_packer">
+           <property name="text">
+            <string>packer</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="4">
+          <widget class="QCheckBox" name="checkBox_crypter">
+           <property name="text">
+            <string>crypter</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QCheckBox" name="checkBox_converter">
+           <property name="text">
+            <string>converter</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="2">
+          <widget class="QCheckBox" name="checkBox_player">
+           <property name="text">
+            <string>player</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="3">
+          <widget class="QCheckBox" name="checkBox_operation_system">
+           <property name="text">
+            <string>operation system</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QCheckBox" name="checkBox_installer">
+           <property name="text">
+            <string>installer</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="0">
+          <widget class="QCheckBox" name="checkBox_extender">
+           <property name="text">
+            <string>extender</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QCheckBox" name="checkBox_archive">
+           <property name="text">
+            <string>archive</string>
            </property>
           </widget>
          </item>
@@ -736,38 +757,24 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="4">
-          <widget class="QCheckBox" name="checkBox_crypter">
+         <item row="6" column="0">
+          <widget class="QCheckBox" name="checkBox_driver">
            <property name="text">
-            <string>crypter</string>
+            <string>driver</string>
            </property>
           </widget>
          </item>
-         <item row="3" column="4">
-          <widget class="QCheckBox" name="checkBox_licensing">
+         <item row="1" column="2">
+          <widget class="QCheckBox" name="checkBox_linker">
            <property name="text">
-            <string>licensing</string>
+            <string>linker</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="4">
-          <widget class="QCheckBox" name="checkBox_language">
+         <item row="7" column="4">
+          <widget class="QCheckBox" name="checkBox_sign_tool">
            <property name="text">
-            <string>language</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="4">
-          <widget class="QCheckBox" name="checkBox_tool">
-           <property name="text">
-            <string>tool</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="4">
-          <widget class="QCheckBox" name="checkBox_dosextender">
-           <property name="text">
-            <string>dos extender</string>
+            <string>sign tool</string>
            </property>
           </widget>
          </item>

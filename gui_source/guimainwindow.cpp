@@ -91,7 +91,9 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     connect(ui->checkBox_licensing, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
     connect(ui->checkBox_language, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
     connect(ui->checkBox_tool, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
-    connect(ui->checkBox_dosextender, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_dos_extender, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_sign_tool, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_virtual_machine, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
 
     ui->checkBoxAllFileTypes->setChecked(true);
     ui->checkBoxAllTypes->setChecked(true);
@@ -249,7 +251,9 @@ void GuiMainWindow::_scan()
     if (ui->checkBox_licensing->isChecked()) _appendType("licensing");
     if (ui->checkBox_language->isChecked()) _appendType("language");
     if (ui->checkBox_tool->isChecked()) _appendType("tool");
-    if (ui->checkBox_dosextender->isChecked()) _appendType("dos extender");
+    if (ui->checkBox_dos_extender->isChecked()) _appendType("dos extender");
+    if (ui->checkBox_sign_tool->isChecked()) _appendType("sign tool");
+    if (ui->checkBox_virtual_machine->isChecked()) _appendType("virtual machine");
 
     options.bIsRecursive = ui->checkBoxRecursive->isChecked();
     options.bIsDeepScan = ui->checkBoxDeepScan->isChecked();
@@ -376,7 +380,9 @@ void GuiMainWindow::on_checkBoxAllTypes_toggled(bool checked)
     ui->checkBox_licensing->setChecked(checked);
     ui->checkBox_language->setChecked(checked);
     ui->checkBox_tool->setChecked(checked);
-    ui->checkBox_dosextender->setChecked(checked);
+    ui->checkBox_dos_extender->setChecked(checked);
+    ui->checkBox_sign_tool->setChecked(checked);
+    ui->checkBox_virtual_machine->setChecked(checked);
 }
 
 void GuiMainWindow::on_pushButtonInfo_clicked()
@@ -539,7 +545,9 @@ void GuiMainWindow::loadSettings()
     ui->checkBox_licensing->setChecked(settings.value("type_licensing", true).toBool());
     ui->checkBox_language->setChecked(settings.value("type_language", true).toBool());
     ui->checkBox_tool->setChecked(settings.value("type_tool", true).toBool());
-    ui->checkBox_dosextender->setChecked(settings.value("type_dosextender", true).toBool());
+    ui->checkBox_dos_extender->setChecked(settings.value("type_dos_extender", true).toBool());
+    ui->checkBox_sign_tool->setChecked(settings.value("type_sign_tool", true).toBool());
+    ui->checkBox_virtual_machine->setChecked(settings.value("type_virtual_machine", true).toBool());
 
     ui->checkBoxRecursive->setChecked(settings.value("Recursive", true).toBool());
     ui->checkBoxDeepScan->setChecked(settings.value("DeepScan", true).toBool());
@@ -654,7 +662,9 @@ void GuiMainWindow::saveSettings()
     settings.setValue("type_licensing", ui->checkBox_licensing->isChecked());
     settings.setValue("type_language", ui->checkBox_language->isChecked());
     settings.setValue("type_tool", ui->checkBox_tool->isChecked());
-    settings.setValue("type_dosextender", ui->checkBox_dosextender->isChecked());
+    settings.setValue("type_dos_extender", ui->checkBox_dos_extender->isChecked());
+    settings.setValue("type_sign_tool", ui->checkBox_sign_tool->isChecked());
+    settings.setValue("type_virtual_machine", ui->checkBox_virtual_machine->isChecked());
 
     settings.setValue("Recursive", ui->checkBoxRecursive->isChecked());
     settings.setValue("DeepScan", ui->checkBoxDeepScan->isChecked());
