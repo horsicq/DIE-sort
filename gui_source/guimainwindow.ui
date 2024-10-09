@@ -489,6 +489,13 @@
            </property>
           </widget>
          </item>
+         <item row="12" column="0">
+          <widget class="QCheckBox" name="checkBoxAmiga">
+           <property name="text">
+            <string>Amiga</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </item>
