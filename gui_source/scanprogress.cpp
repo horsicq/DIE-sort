@@ -47,7 +47,7 @@ quint32 ScanProgress::getFileCount(quint32 nCRC)
     query.exec(QString("SELECT FILECOUNT FROM records where FILECRC='%1'").arg(nCRC));
 
     if (query.next()) {
-        nResult = query.value("FILECOUNT").toString().trimmed().toUInt();
+        nResult = query.value("FILECOUNT").toString().toUInt();
     }
 
     if (query.lastError().text().trimmed() != "") {
@@ -78,7 +78,9 @@ void ScanProgress::setFileStat(QString sFileName, QString sTimeCount, QString sD
 
     QSqlQuery query(_pOptions->dbSQLLite);
 
-    query.exec(QString("INSERT OR REPLACE INTO files(FILENAME,TIMECOUNT,DATETIME) VALUES('%1','%2','%3')").arg(sFileName.replace("'", "''")).arg(sTimeCount).arg(sDate));
+    QString sSQL = QString("INSERT OR REPLACE INTO files(FILENAME,TIMECOUNT,DATETIME) VALUES('%1','%2','%3')").arg(sFileName.replace("'", "''")).arg(sTimeCount).arg(sDate);
+
+    query.exec(sSQL);
 
     // QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")
 
@@ -106,10 +108,12 @@ QString ScanProgress::getCurrentFileName()
 
     QSqlQuery query(_pOptions->dbSQLLite);
 
-    query.exec(QString("SELECT FILENAME FROM files where TIMECOUNT='' AND DATETIME='' LIMIT 1"));
+    QString sSQL = QString("SELECT FILENAME FROM files where TIMECOUNT='' AND DATETIME='' LIMIT 1");
+
+    query.exec(sSQL);
 
     if (query.next()) {
-        sResult = query.value("FILENAME").toString().trimmed();
+        sResult = query.value("FILENAME").toString();
     }
 
     if (query.lastError().text().trimmed() != "") {
@@ -128,10 +132,12 @@ QString ScanProgress::getCurrentFileNameAndLock()
 
     QSqlQuery query(_pOptions->dbSQLLite);
 
-    query.exec(QString("SELECT FILENAME FROM files where TIMECOUNT='' AND DATETIME='' LIMIT 1"));
+    QString sSQL = QString("SELECT FILENAME FROM files where TIMECOUNT='' AND DATETIME='' LIMIT 1");
+
+    query.exec(sSQL);
 
     if (query.next()) {
-        sResult = query.value("FILENAME").toString().trimmed();
+        sResult = query.value("FILENAME").toString();
     }
 
     if (query.lastError().text().trimmed() != "") {
@@ -687,7 +693,7 @@ void ScanProgress::_processFile(QString sFileName)
                 XBinary::copyFile(scanResult.sFileName, _sFileName);
             }
 
-            setFileStat(scanResult.sFileName, QString::number(scanResult.nScanTime), QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+            setFileStat(sFileName, QString::number(scanResult.nScanTime), QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 
             if (_pOptions->bDebug) {
                 XBinary::removeFile(sTempFile);

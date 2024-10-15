@@ -574,6 +574,7 @@ void GuiMainWindow::loadSettings()
 #endif
 
     QString sDatabaseName = settings.value("DatabaseName", ":memory:").toString();
+    // QString sDatabaseName = settings.value("DatabaseName", "/home/hors/sort.db").toString();
 
     if (!ScanProgress::createDatabase(&options.dbSQLLite, sDatabaseName)) {
         QMessageBox::critical(this, tr("Error"), tr("Cannot open SQLITE database"));
