@@ -245,37 +245,37 @@ void ScanProgress::_processFile(QString sFileName)
                     XPE pe(&file);
 
                     bIsOverlayPresent = pe.isOverlayPresent();
-                    bIsValid = pe.checkFileFormat(XPE::CFF_ENTRYPOINT, nullptr, g_pPdStruct);
+                    bIsValid = pe.isFileFormatValid(false, g_pPdStruct);
                 } else if ((ftPref == XBinary::FT_ELF32) || (ftPref == XBinary::FT_ELF64)) {
                     XELF elf(&file);
 
                     bIsOverlayPresent = elf.isOverlayPresent();
-                    bIsValid = elf.checkFileFormat(0, nullptr, g_pPdStruct);
+                    bIsValid = elf.isFileFormatValid(false, g_pPdStruct);
                 } else if ((ftPref == XBinary::FT_MACHO32) || (ftPref == XBinary::FT_MACHO64)) {
                     XMACH mach(&file);
 
                     bIsOverlayPresent = mach.isOverlayPresent();
-                    bIsValid = mach.checkFileFormat(0, nullptr, g_pPdStruct);
+                    bIsValid = mach.isFileFormatValid(false, g_pPdStruct);
                 } else if ((ftPref == XBinary::FT_LE) || (ftPref == XBinary::FT_LX)) {
                     XLE le(&file);
 
                     bIsOverlayPresent = le.isOverlayPresent();
-                    bIsValid = le.checkFileFormat(0, nullptr, g_pPdStruct);
+                    bIsValid = le.isFileFormatValid(false, g_pPdStruct);
                 } else if (ftPref == XBinary::FT_NE) {
                     XNE ne(&file);
 
                     bIsOverlayPresent = ne.isOverlayPresent();
-                    bIsValid = ne.checkFileFormat(0, nullptr, g_pPdStruct);
+                    bIsValid = ne.isFileFormatValid(false, g_pPdStruct);
                 } else if (ftPref == XBinary::FT_MSDOS) {
                     XMSDOS msdos(&file);
 
                     bIsOverlayPresent = msdos.isOverlayPresent();
-                    bIsValid = msdos.checkFileFormat(0, nullptr, g_pPdStruct);
+                    bIsValid = msdos.isFileFormatValid(false, g_pPdStruct);
                 } else {
                     XBinary binary(&file);
 
                     bIsOverlayPresent = binary.isOverlayPresent();
-                    bIsValid = binary.checkFileFormat(0, nullptr, g_pPdStruct);
+                    bIsValid = binary.isFileFormatValid(false, g_pPdStruct);
                 }
             }
         }
@@ -406,9 +406,12 @@ void ScanProgress::_processFile(QString sFileName)
                                 qint64 nEPAddress = XFormats::getEntryPointAddress(ss.id.fileType, &_file);
                                 qint64 nEPOffset = XFormats::getEntryPointOffset(ss.id.fileType, &_file);
 
+                                XDisasmCore disasmCore;
+                                disasmCore.setMode(XBinary::getDisasmMode(&memoryMap));
+
                                 sEPBytes = XBinary::getSignature(&_file, nEPOffset, 20);
-                                sEP = XCapstone::getSignature(&_file, &memoryMap, nEPAddress, XCapstone::ST_MASK, 10).replace(".", "_");
-                                sEPREL = XCapstone::getSignature(&_file, &memoryMap, nEPAddress, XCapstone::ST_MASKREL, 10).replace(".", "_");
+                                sEP = disasmCore.getSignature(&_file, &memoryMap, nEPAddress, XDisasmCore::ST_MASK, 10).replace(".", "_");
+                                sEPREL = disasmCore.getSignature(&_file, &memoryMap, nEPAddress, XDisasmCore::ST_REL, 10).replace(".", "_");
 
                                 _file.close();
                             }
@@ -647,12 +650,18 @@ void ScanProgress::_processFile(QString sFileName)
                                     XBinary::_MEMORY_MAP memoryMap = XFormats::getMemoryMap(_id.fileType, XBinary::MAPMODE_UNKNOWN, &file);
                                     qint64 nEntryPointAddress = XFormats::getEntryPointAddress(_id.fileType, &file);
 
-                                    sFolderName = XCapstone::getSignature(&file, &memoryMap, nEntryPointAddress, XCapstone::ST_MASK, nUnknownCount);
+                                    XDisasmCore disasmCore;
+                                    disasmCore.setMode(XBinary::getDisasmMode(&memoryMap));
+
+                                    sFolderName = disasmCore.getSignature(&file, &memoryMap, nEntryPointAddress, XDisasmCore::ST_MASK, nUnknownCount);
                                 } else if (_pOptions->unknownPrefix == UP_OPCODES_REL) {
                                     XBinary::_MEMORY_MAP memoryMap = XFormats::getMemoryMap(_id.fileType, XBinary::MAPMODE_UNKNOWN, &file);
                                     qint64 nEntryPointAddress = XFormats::getEntryPointAddress(_id.fileType, &file);
 
-                                    sFolderName = XCapstone::getSignature(&file, &memoryMap, nEntryPointAddress, XCapstone::ST_MASKREL, nUnknownCount);
+                                    XDisasmCore disasmCore;
+                                    disasmCore.setMode(XBinary::getDisasmMode(&memoryMap));
+
+                                    sFolderName = disasmCore.getSignature(&file, &memoryMap, nEntryPointAddress, XDisasmCore::ST_REL, nUnknownCount);
                                 }
 
                                 file.close();
