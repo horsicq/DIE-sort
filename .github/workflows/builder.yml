@@ -42,7 +42,45 @@ jobs:
         working-directory: ${{ env.SRC_PATH }}
         run: |
           echo on
-          call ${{ env.SRC_PATH_WIN }}\build_win32.bat"
+          set VSVARS_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars32.bat"
+          set QMAKE_PATH="${{ github.workspace }}\Qt\5.15.2\msvc2019\bin\qmake.exe"
+          set SEVENZIP_PATH="C:\Program Files\7-Zip\7z.exe"
+          set X_SOURCE_PATH=%~dp0
+          set X_BUILD_NAME=diesort_win32_portable
+          set /p X_RELEASE_VERSION=<%X_SOURCE_PATH%\release_version.txt
+          
+          rem call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %VSVARS_PATH%
+          rem call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %QMAKE_PATH%
+          rem call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %SEVENZIP_PATH%
+          
+          IF NOT [%X_ERROR%] == [] goto exit
+          
+          call %X_SOURCE_PATH%\build_tools\windows.cmd make_init
+          call %X_SOURCE_PATH%\build_tools\windows.cmd make_build %X_SOURCE_PATH%\DIE_sort_source.pro
+          
+          rem call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %X_SOURCE_PATH%\build\release\die-sort.exe
+          
+          IF NOT [%X_ERROR%] == [] goto exit
+          
+          copy %X_SOURCE_PATH%\build\release\die-sort.exe %X_SOURCE_PATH%\release\%X_BUILD_NAME%\
+          xcopy %X_SOURCE_PATH%\Detect-It-Easy\db %X_SOURCE_PATH%\release\%X_BUILD_NAME%\db /E /I
+          xcopy %X_SOURCE_PATH%\Detect-It-Easy\db_extra %X_SOURCE_PATH%\release\%X_BUILD_NAME%\db_extra /E /I
+          xcopy %X_SOURCE_PATH%\Detect-It-Easy\db_custom %X_SOURCE_PATH%\release\%X_BUILD_NAME%\db_custom /E /I
+          
+          call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Widgets
+          call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Gui
+          call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Core
+          call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Widgets
+          call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Script
+          call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Sql
+          call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_plugin platforms qwindows
+          call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_plugin sqldrivers qsqlite
+          call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_vc_redist
+          
+          call %X_SOURCE_PATH%\build_tools\windows.cmd make_release
+          
+          :exit
+          call %X_SOURCE_PATH%\build_tools\windows.cmd make_clear
           
       - name: Upload Release as Download
         uses: softprops/action-gh-release@v2
@@ -56,6 +94,3 @@ jobs:
           files: |
             ${{ env.RELEASE_PATH }}/*.zip
 
-#       working-directory: ${{ env.SRC_PATH }}
-#       run: |
-#         bash -x build_mac.sh
