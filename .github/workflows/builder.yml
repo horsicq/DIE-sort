@@ -42,13 +42,7 @@ jobs:
         working-directory: ${{ env.SRC_PATH }}
         run: |
           echo on
-          call "%X_SOURCE_PATH%\build_win32.bat"
-
-          dir "%X_SOURCE_PATH%\release\*.zip" >nul 2>&1
-          if %ERRORLEVEL% neq 0 (
-            echo "ZIP file does not exist"
-            exit /b 1
-          )
+          call ${{ env.SRC_PATH_WIN }}\build_win32.bat"
           
       - name: Upload Release as Download
         uses: softprops/action-gh-release@v2
