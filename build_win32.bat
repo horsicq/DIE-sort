@@ -2,9 +2,9 @@ set VSVARS_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\V
 set QMAKE_PATH="C:\Qt\5.15.2\msvc2019\bin\qmake.exe"
 set SEVENZIP_PATH="C:\Program Files\7-Zip\7z.exe"
 
-set X_SOURCE_PATH=%~dp0
 set X_BUILD_NAME=diesort_win32_portable
-set /p X_RELEASE_VERSION=<%X_SOURCE_PATH%\release_version.txt
+set X_SOURCE_PATH=${{ env.SRC_PATH_WIN }}
+for /f "delims=" %%x in ('type "%X_SOURCE_PATH%\release_version.txt"') do set X_RELEASE_VERSION=%%x
 
 rem call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %VSVARS_PATH%
 rem call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %QMAKE_PATH%
