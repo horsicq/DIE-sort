@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1031</width>
-    <height>871</height>
+    <width>1055</width>
+    <height>934</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -356,17 +356,31 @@
            </property>
           </widget>
          </item>
-         <item row="4" column="0">
-          <widget class="QCheckBox" name="checkBoxLE">
-           <property name="text">
-            <string>LE</string>
-           </property>
-          </widget>
-         </item>
          <item row="2" column="1">
           <widget class="QCheckBox" name="checkBoxNE">
            <property name="text">
             <string>NE</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QCheckBox" name="checkBoxDOS16M">
+           <property name="text">
+            <string>DOS16M</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QCheckBox" name="checkBoxDOS4G">
+           <property name="text">
+            <string>DOS4G</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QCheckBox" name="checkBoxLE">
+           <property name="text">
+            <string>LE</string>
            </property>
           </widget>
          </item>
@@ -454,20 +468,6 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="0">
-          <widget class="QCheckBox" name="checkBoxDOS16M">
-           <property name="text">
-            <string>DOS16M</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QCheckBox" name="checkBoxDOS4G">
-           <property name="text">
-            <string>DOS4G</string>
-           </property>
-          </widget>
-         </item>
          <item row="10" column="1">
           <widget class="QCheckBox" name="checkBoxPDF">
            <property name="text">
@@ -493,6 +493,13 @@
           <widget class="QCheckBox" name="checkBoxAmiga">
            <property name="text">
             <string>Amiga</string>
+           </property>
+          </widget>
+         </item>
+         <item row="12" column="1">
+          <widget class="QCheckBox" name="checkBoxJavaClass">
+           <property name="text">
+            <string>JavaClass</string>
            </property>
           </widget>
          </item>
