@@ -84,8 +84,6 @@ void ScanProgress::scanFiles(qint64 *pnNumberOfFiles, QString sDirectoryName)
 
             int nCount = eil.count();
 
-            XBinary::setPdStructCurrent(g_pPdStruct, g_nFreeIndex, nCount);
-
             for (int i = 0; (i < nCount) && (!(g_pPdStruct->bIsStop)); i++) {
                 QString sFN = eil.at(i).fileName();
 
@@ -96,7 +94,6 @@ void ScanProgress::scanFiles(qint64 *pnNumberOfFiles, QString sDirectoryName)
         }
     }
 }
-
 
 void ScanProgress::_processFile(QString sFileName)
 {
@@ -641,8 +638,8 @@ void ScanProgress::process()
     dieScript.loadDatabase(_pOptions->sSignaturesCustom, DiE_ScriptEngine::DT_CUSTOM, g_pPdStruct);
 
     {
-        qint32 _nFreeIndex = XBinary::getFreeIndex(g_pPdStruct);
-        XBinary::setPdStructInit(g_pPdStruct, _nFreeIndex, nNumberOfFiles);
+        g_nFreeIndex = XBinary::getFreeIndex(g_pPdStruct);
+        XBinary::setPdStructInit(g_pPdStruct, g_nFreeIndex, nNumberOfFiles);
 
         qint64 nCurrentCount = 0;
 
