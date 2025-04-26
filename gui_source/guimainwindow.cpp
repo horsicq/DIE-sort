@@ -288,7 +288,6 @@ void GuiMainWindow::_scan()
     options.entropy = (ScanProgress::ENTROPY)ui->comboBoxEntropy->currentIndex();
     options.dEntropyValue = ui->doubleSpinBoxEntropy->value();
     // options.nThreads = ui->spinBoxThreads->value();
-    options.nThreads = 1;
 
     DialogScanProgress ds(this);
 
@@ -570,20 +569,11 @@ void GuiMainWindow::loadSettings()
 
     // ui->spinBoxThreads->setValue(settings.value("Threads", 1).toInt());
 
-    options.bContinue = settings.value("Continue", false).toBool();
     options.bDebug = settings.value("Debug", false).toBool();
 
 #ifdef QT_DEBUG
     options.bDebug = true;
 #endif
-
-    QString sDatabaseName = settings.value("DatabaseName", ":memory:").toString();
-    // QString sDatabaseName = settings.value("DatabaseName", "/home/hors/sort.db").toString();
-
-    if (!ScanProgress::createDatabase(&options.dbSQLLite, sDatabaseName)) {
-        QMessageBox::critical(this, tr("Error"), tr("Cannot open SQLITE database"));
-        exit(1);
-    }
 }
 
 void GuiMainWindow::saveSettings()

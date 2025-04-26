@@ -22,16 +22,6 @@
 #ifndef SCANPROGRESS_H
 #define SCANPROGRESS_H
 
-#include <QFutureWatcher>
-#include <QMutex>
-#include <QMutexLocker>
-#include <QObject>
-#include <QSemaphore>
-#include <QSqlDatabase>
-#include <QSqlError>
-#include <QSqlQuery>
-#include <QtConcurrent>
-
 #include "die_script.h"
 #include "xcapstone.h"
 
@@ -112,8 +102,6 @@ public:
         QString sSignaturesCustom;
         bool bSignaturesExtraUse;
         bool bSignaturesCustomUse;
-        QSqlDatabase dbSQLLite;
-        bool bContinue;
         bool bDebug;
         CF copyFormat;
         CT copyType;
@@ -126,7 +114,6 @@ public:
         bool bRemoveCopied;
         bool bCopyTheFirstOnly;
         bool bValidOnly;
-        qint32 nThreads;
     };
 
     struct STATS {
@@ -142,17 +129,8 @@ public:
 
     void setData(QString sDirectoryName, ScanProgress::SCAN_OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct);
 
-    quint32 getFileCount(quint32 nCRC);
-    void setFileCount(quint32 nCRC, quint32 nCount);
-    void setFileStat(QString sFileName, QString sTimeCount, QString sDate);
-    void createTables();
-    QString getCurrentFileName();
-    QString getCurrentFileNameAndLock();
-    qint64 getNumberOfFile();
-    void findFiles(QString sDirectoryName);
-
-    void startTransaction();
-    void endTransaction();
+    void findFiles(qint64 *pnNumberOfFiles, QString sDirectoryName);
+    void scanFiles(qint64 *pnNumberOfFiles, QString sDirectoryName);
 
     void _processFile(QString sFileName);
 
@@ -163,7 +141,6 @@ signals:
 
 public slots:
     void process();
-    static bool createDatabase(QSqlDatabase *pDb, QString sDatabaseName);
 
 private:
     // #ifdef QT_DEBUG
@@ -173,8 +150,6 @@ private:
     // #endif
     QString _sDirectoryName;
     SCAN_OPTIONS *_pOptions;
-    QMutex mutexDB;
-    QSemaphore *pSemaphore;
     DiE_Script dieScript;
     qint32 g_nFreeIndex;
     XBinary::PDSTRUCT *g_pPdStruct;

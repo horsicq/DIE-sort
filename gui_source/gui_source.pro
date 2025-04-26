@@ -28,11 +28,6 @@ FORMS += \
     include(../die_script/die_script.pri)
 }
 
-!contains(XCONFIG, xcapstone) {
-    XCONFIG += xcapstone
-    include(../XCapstone/xcapstone.pri)
-}
-
 !contains(XCONFIG, xdialogprocess) {
     XCONFIG += xdialogprocess
     include(../FormatDialogs/xdialogprocess.pri)
