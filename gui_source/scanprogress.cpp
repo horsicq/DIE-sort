@@ -1,4 +1,4 @@
-/* Copyright (c) 2019-2023 hors<horsicq@gmail.com>
+/* Copyright (c) 2019-2025 hors<horsicq@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -74,9 +74,19 @@ void ScanProgress::scanFiles(qint64 *pnNumberOfFiles, QString sDirectoryName)
             //            g_pPdStruct->pdRecordFiles.nTotal++;
             QString sFileName = fi.absoluteFilePath();
             XBinary::setPdStructStatus(g_pPdStruct, g_nFreeIndex, sFileName);
+
+            {
+                QSettings curSettings(_pOptions->sResultDirectory + QDir::separator() + "current.ini", QSettings::IniFormat);
+
+                curSettings.setValue("CurrentFile", sFileName);
+                curSettings.setValue("Count", (*pnNumberOfFiles));
+            }
+
             _processFile(sFileName);
             (*pnNumberOfFiles)++;
             XBinary::setPdStructCurrent(g_pPdStruct, g_nFreeIndex, *pnNumberOfFiles);
+
+
         } else if (fi.isDir() && (_pOptions->bSubdirectories)) {
             QDir dir(sDirectoryName);
 
