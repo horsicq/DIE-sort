@@ -189,6 +189,8 @@ void GuiMainWindow::_scan()
 
     options.stFileTypes.clear();
 
+    options.bAllFileTypes = ui->checkBoxAllFileTypes->isChecked();
+
     if (ui->checkBoxBinary->isChecked()) options.stFileTypes.insert(XBinary::FT_BINARY);
     if (ui->checkBoxCOM->isChecked()) options.stFileTypes.insert(XBinary::FT_COM);
     if (ui->checkBoxMSDOS->isChecked()) options.stFileTypes.insert(XBinary::FT_MSDOS);

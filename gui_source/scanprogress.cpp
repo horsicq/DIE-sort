@@ -102,7 +102,7 @@ void ScanProgress::_processFile(QString sFileName)
 
         XBinary::FT ftPref = XBinary::_getPrefFileType(&fileTypes);
 
-        bool bProcess = _pOptions->stFileTypes.contains(ftPref) || (_pOptions->bAllTypes);
+        bool bProcess = _pOptions->stFileTypes.contains(ftPref) || (_pOptions->bAllFileTypes);
         bool bIsOverlayPresent = false;
         bool bIsValid = true;
 

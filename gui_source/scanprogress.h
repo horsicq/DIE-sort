@@ -92,6 +92,7 @@ public:
         bool bShowVersion;
         bool bShowInfo;
         bool bIsSort;
+        bool bAllFileTypes;
         QSet<XBinary::FT> stFileTypes;
         bool bAllTypes;
         QSet<QString> stTypes;
