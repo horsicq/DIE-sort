@@ -86,7 +86,6 @@ void ScanProgress::scanFiles(qint64 *pnNumberOfFiles, QString sDirectoryName)
             (*pnNumberOfFiles)++;
             XBinary::setPdStructCurrent(g_pPdStruct, g_nFreeIndex, *pnNumberOfFiles);
 
-
         } else if (fi.isDir() && (_pOptions->bSubdirectories)) {
             QDir dir(sDirectoryName);
 
@@ -338,7 +337,7 @@ void ScanProgress::_processFile(QString sFileName)
 
                                 bool bCopy = true;
 
-                                int nCurrentCount = 0; // TODO
+                                int nCurrentCount = 0;  // TODO
 
                                 if (_pOptions->nCopyCount) {
                                     if (nCurrentCount >= _pOptions->nCopyCount) {
@@ -400,7 +399,7 @@ void ScanProgress::_processFile(QString sFileName)
 
                     bool bCopy = true;
 
-                    int nCurrentCount = 0; // TODO
+                    int nCurrentCount = 0;  // TODO
 
                     if (_pOptions->nCopyCount) {
                         if (nCurrentCount >= _pOptions->nCopyCount) {
