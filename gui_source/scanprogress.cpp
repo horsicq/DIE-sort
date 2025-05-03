@@ -270,7 +270,7 @@ void ScanProgress::_processFile(QString sFileName)
                 for (int i = 0; (i < nCount) && (!(g_pPdStruct->bIsStop)); i++) {
                     XScanEngine::SCANSTRUCT ss = scanResult.listRecords.at(i);
 
-                    if (_pOptions->stFileTypes.contains(ss.id.fileType) && (ss.sName != "") && (!ss.bIsUnknown)) {
+                    if ((_pOptions->stFileTypes.contains(ss.id.fileType) || (_pOptions->bAllFileTypes)) && (ss.sName != "") && (!ss.bIsUnknown)) {
                         if ((_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPBYTES) ||
                             (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPBYTES) || (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPBYTES) ||
                             (_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIG) || (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIG) ||
@@ -333,7 +333,7 @@ void ScanProgress::_processFile(QString sFileName)
 
                                 sResult = XBinary::convertFileNameSymbols(sResult);
 
-                                quint32 nCRC = XBinary::getStringCustomCRC32(XBinary::fileTypeIdToString(ss.id.fileType) + ss.id.sArch + ss.sType + sResult);
+                                // quint32 nCRC = XBinary::getStringCustomCRC32(XBinary::fileTypeIdToString(ss.id.fileType) + ss.id.sArch + ss.sType + sResult);
 
                                 bool bCopy = true;
 
@@ -394,8 +394,8 @@ void ScanProgress::_processFile(QString sFileName)
             }
 
             if ((!bIdentified) && ((_pOptions->copyType == CT_IDENT_UNK) || (_pOptions->copyType == CT_UNK))) {
-                if (_pOptions->stFileTypes.contains(_id.fileType)) {
-                    quint32 nCRC = XBinary::getStringCustomCRC32(XBinary::fileTypeIdToString(_id.fileType) + _id.sArch + "__UNKNOWN");
+                if (_pOptions->stFileTypes.contains(_id.fileType) || (_pOptions->bAllFileTypes)) {
+                    // quint32 nCRC = XBinary::getStringCustomCRC32(XBinary::fileTypeIdToString(_id.fileType) + _id.sArch + "__UNKNOWN");
 
                     bool bCopy = true;
 
