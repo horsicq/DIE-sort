@@ -57,6 +57,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     connect(ui->checkBoxJavaClass, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxIPA, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxCFBF, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxJpeg, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
 
     connect(ui->checkBox_archive, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
     connect(ui->checkBox_audio, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
@@ -219,6 +220,7 @@ void GuiMainWindow::_scan()
     if (ui->checkBoxJavaClass->isChecked()) options.stFileTypes.insert(XBinary::FT_JAVACLASS);
     if (ui->checkBoxIPA->isChecked()) options.stFileTypes.insert(XBinary::FT_IPA);
     if (ui->checkBoxCFBF->isChecked()) options.stFileTypes.insert(XBinary::FT_CFBF);
+    if (ui->checkBoxJpeg->isChecked()) options.stFileTypes.insert(XBinary::FT_JPEG);
 
     options.stTypes.clear();
 
@@ -342,6 +344,7 @@ void GuiMainWindow::on_checkBoxAllFileTypes_toggled(bool checked)
     ui->checkBoxJavaClass->setChecked(checked);
     ui->checkBoxIPA->setChecked(checked);
     ui->checkBoxCFBF->setChecked(checked);
+    ui->checkBoxJpeg->setChecked(checked);
 }
 
 // void GuiMainWindow::on_checkBoxBinary_toggled(bool checked)
@@ -523,6 +526,7 @@ void GuiMainWindow::loadSettings()
     ui->checkBoxJavaClass->setChecked(settings.value("FT_JAVACLASS", true).toBool());
     ui->checkBoxIPA->setChecked(settings.value("FT_IPA", true).toBool());
     ui->checkBoxCFBF->setChecked(settings.value("FT_CFBF", true).toBool());
+    ui->checkBoxJpeg->setChecked(settings.value("FT_JPEG", true).toBool());
 
     ui->checkBoxAllTypes->setChecked(settings.value("AllTypes", true).toBool());
     ui->checkBox_archive->setChecked(settings.value("type_archive", true).toBool());
@@ -636,6 +640,7 @@ void GuiMainWindow::saveSettings()
     settings.setValue("FT_JAVACLASS", ui->checkBoxJavaClass->isChecked());
     settings.setValue("FT_IPA", ui->checkBoxIPA->isChecked());
     settings.setValue("FT_CFBF", ui->checkBoxCFBF->isChecked());
+    settings.setValue("FT_JPEG", ui->checkBoxJpeg->isChecked());
 
     settings.setValue("AllTypes", ui->checkBoxAllTypes->isChecked());
     settings.setValue("type_archive", ui->checkBox_archive->isChecked());
