@@ -41,7 +41,7 @@ jobs:
         working-directory: ${{ env.SRC_PATH }}
         run: |
           echo on
-          set VSVARS_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars32.bat"
+          set VSVARS_PATH="C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars32.bat"
           set QMAKE_PATH="${{ github.workspace }}\Qt\5.15.2\msvc2019\bin\qmake.exe"
           set SEVENZIP_PATH="C:\Program Files\7-Zip\7z.exe"
           set X_BUILD_NAME=diesort_win32_portable
