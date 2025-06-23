@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1055</width>
-    <height>934</height>
+    <height>982</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
        <string>Directory</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <property name="leftMargin">
@@ -106,7 +106,7 @@
            <item>
             <spacer name="horizontalSpacer_8">
              <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
+              <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
@@ -139,7 +139,7 @@
            <item>
             <spacer name="horizontalSpacer">
              <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
+              <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
@@ -826,7 +826,7 @@
       <item>
        <spacer name="horizontalSpacer_3">
         <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
+         <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -1001,7 +1001,7 @@
       <item>
        <spacer name="horizontalSpacer_4">
         <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
+         <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -1086,7 +1086,7 @@
       <item>
        <spacer name="horizontalSpacer_5">
         <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
+         <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -1228,7 +1228,7 @@
        <item>
         <spacer name="horizontalSpacer_7">
          <property name="orientation">
-          <enum>Qt::Orientation::Horizontal</enum>
+          <enum>Qt::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -1241,7 +1241,7 @@
        <item>
         <spacer name="horizontalSpacer_6">
          <property name="orientation">
-          <enum>Qt::Orientation::Horizontal</enum>
+          <enum>Qt::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -1251,13 +1251,20 @@
          </property>
         </spacer>
        </item>
+       <item>
+        <widget class="QCheckBox" name="checkBoxCurrentIni">
+         <property name="text">
+          <string>current.ini</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
     <item>
      <spacer name="verticalSpacer">
       <property name="orientation">
-       <enum>Qt::Orientation::Vertical</enum>
+       <enum>Qt::Vertical</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
@@ -1279,7 +1286,7 @@
       <item>
        <spacer name="horizontalSpacer_2">
         <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
+         <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>

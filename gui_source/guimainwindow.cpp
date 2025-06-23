@@ -291,6 +291,8 @@ void GuiMainWindow::_scan()
     options.unknownPrefix = (ScanProgress::UP)ui->comboBoxUnknownPrefix->currentIndex();
     options.nUnknownCount = ui->spinBoxUnknownCount->value();
 
+    options.bCurrentIni = ui->checkBoxCurrentIni->isChecked();
+
     options.fileFormat = (ScanProgress::FF)ui->comboBoxFileNameFormat->currentIndex();
     options.overlay = (ScanProgress::OVERLAY)ui->comboBoxOverlay->currentIndex();
     options.entropy = (ScanProgress::ENTROPY)ui->comboBoxEntropy->currentIndex();
@@ -499,6 +501,8 @@ void GuiMainWindow::loadSettings()
     ui->checkBoxRemoveCopied->setChecked(settings.value("RemoveCopied", false).toBool());
     ui->checkBoxCopyTheFirstOnly->setChecked(settings.value("CopyTheFirstOnly", false).toBool());
 
+    ui->checkBoxCurrentIni->setChecked(settings.value("CurrentIni", true).toBool());
+
     ui->checkBoxAllFileTypes->setChecked(settings.value("AllFileTypes", true).toBool());
     ui->checkBoxBinary->setChecked(settings.value("FT_Binary", true).toBool());
     ui->checkBoxCOM->setChecked(settings.value("FT_COM", true).toBool());
@@ -612,6 +616,7 @@ void GuiMainWindow::saveSettings()
     settings.setValue("FileFormat", ui->comboBoxFileNameFormat->currentIndex());
     settings.setValue("RemoveCopied", ui->checkBoxRemoveCopied->isChecked());
     settings.setValue("CopyTheFirstOnly", ui->checkBoxCopyTheFirstOnly->isChecked());
+    settings.setValue("CurrentIni", ui->checkBoxCurrentIni->isChecked());
 
     settings.setValue("AllFileTypes", ui->checkBoxAllFileTypes->isChecked());
     settings.setValue("FT_Binary", ui->checkBoxBinary->isChecked());

@@ -75,7 +75,7 @@ void ScanProgress::scanFiles(qint64 *pnNumberOfFiles, QString sDirectoryName)
             QString sFileName = fi.absoluteFilePath();
             XBinary::setPdStructStatus(g_pPdStruct, g_nFreeIndex, sFileName);
 
-            {
+            if (_pOptions->bCurrentIni) {
                 QSettings curSettings(_pOptions->sResultDirectory + QDir::separator() + "current.ini", QSettings::IniFormat);
 
                 curSettings.setValue("CurrentFile", sFileName);

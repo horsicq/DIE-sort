@@ -115,6 +115,7 @@ public:
         bool bRemoveCopied;
         bool bCopyTheFirstOnly;
         bool bValidOnly;
+        bool bCurrentIni;
     };
 
     struct STATS {
