@@ -576,7 +576,7 @@ void ScanProgress::_processFile(QString sFileName)
 
                 XBinary::copyFile(scanResult.sFileName, _sFileName);
 
-                QString sErrorString = QString("%1 : %2").arg(scanResult.listErrors.at(0).sScript, scanResult.listErrors.at(0).sErrorString);
+                QString sErrorString = QString("%1 : %2 : %3").arg(scanResult.sFileName, scanResult.listErrors.at(0).sScript, scanResult.listErrors.at(0).sErrorString);
                 XBinary::appendToFile(_pOptions->sResultDirectory + QDir::separator() + "errors.txt", sErrorString);
             }
 
