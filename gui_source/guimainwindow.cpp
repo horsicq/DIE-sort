@@ -58,6 +58,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     connect(ui->checkBoxIPA, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxCFBF, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxJpeg, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxPNG, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
 
     connect(ui->checkBox_archive, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
     connect(ui->checkBox_audio, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
@@ -99,6 +100,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     connect(ui->checkBox_dos_extender, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
     connect(ui->checkBox_sign_tool, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
     connect(ui->checkBox_virtual_machine, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_malware, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
+    connect(ui->checkBox_virus, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
 
     ui->checkBoxAllFileTypes->setChecked(true);
     ui->checkBoxAllTypes->setChecked(true);
@@ -221,6 +224,7 @@ void GuiMainWindow::_scan()
     if (ui->checkBoxIPA->isChecked()) options.stFileTypes.insert(XBinary::FT_IPA);
     if (ui->checkBoxCFBF->isChecked()) options.stFileTypes.insert(XBinary::FT_CFBF);
     if (ui->checkBoxJpeg->isChecked()) options.stFileTypes.insert(XBinary::FT_JPEG);
+    if (ui->checkBoxPNG->isChecked()) options.stFileTypes.insert(XBinary::FT_PNG);
 
     options.stTypes.clear();
 
@@ -266,6 +270,8 @@ void GuiMainWindow::_scan()
     if (ui->checkBox_dos_extender->isChecked()) _appendType("dos extender");
     if (ui->checkBox_sign_tool->isChecked()) _appendType("sign tool");
     if (ui->checkBox_virtual_machine->isChecked()) _appendType("virtual machine");
+    if (ui->checkBox_malware->isChecked()) _appendType("malware");
+    if (ui->checkBox_virus->isChecked()) _appendType("virus");
 
     options.bIsRecursive = ui->checkBoxRecursive->isChecked();
     options.bIsDeepScan = ui->checkBoxDeepScan->isChecked();
@@ -347,6 +353,7 @@ void GuiMainWindow::on_checkBoxAllFileTypes_toggled(bool checked)
     ui->checkBoxIPA->setChecked(checked);
     ui->checkBoxCFBF->setChecked(checked);
     ui->checkBoxJpeg->setChecked(checked);
+    ui->checkBoxPNG->setChecked(checked);
 }
 
 // void GuiMainWindow::on_checkBoxBinary_toggled(bool checked)
@@ -401,6 +408,8 @@ void GuiMainWindow::on_checkBoxAllTypes_toggled(bool checked)
     ui->checkBox_dos_extender->setChecked(checked);
     ui->checkBox_sign_tool->setChecked(checked);
     ui->checkBox_virtual_machine->setChecked(checked);
+    ui->checkBox_malware->setChecked(checked);
+    ui->checkBox_virus->setChecked(checked);
 }
 
 void GuiMainWindow::on_pushButtonInfo_clicked()
@@ -531,6 +540,7 @@ void GuiMainWindow::loadSettings()
     ui->checkBoxIPA->setChecked(settings.value("FT_IPA", true).toBool());
     ui->checkBoxCFBF->setChecked(settings.value("FT_CFBF", true).toBool());
     ui->checkBoxJpeg->setChecked(settings.value("FT_JPEG", true).toBool());
+    ui->checkBoxPNG->setChecked(settings.value("FT_PNG", true).toBool());
 
     ui->checkBoxAllTypes->setChecked(settings.value("AllTypes", true).toBool());
     ui->checkBox_archive->setChecked(settings.value("type_archive", true).toBool());
@@ -573,6 +583,8 @@ void GuiMainWindow::loadSettings()
     ui->checkBox_dos_extender->setChecked(settings.value("type_dos_extender", true).toBool());
     ui->checkBox_sign_tool->setChecked(settings.value("type_sign_tool", true).toBool());
     ui->checkBox_virtual_machine->setChecked(settings.value("type_virtual_machine", true).toBool());
+    ui->checkBox_malware->setChecked(settings.value("type_malware", true).toBool());
+    ui->checkBox_virus->setChecked(settings.value("type_virus", true).toBool());
 
     ui->checkBoxRecursive->setChecked(settings.value("Recursive", true).toBool());
     ui->checkBoxDeepScan->setChecked(settings.value("DeepScan", true).toBool());
@@ -646,6 +658,7 @@ void GuiMainWindow::saveSettings()
     settings.setValue("FT_IPA", ui->checkBoxIPA->isChecked());
     settings.setValue("FT_CFBF", ui->checkBoxCFBF->isChecked());
     settings.setValue("FT_JPEG", ui->checkBoxJpeg->isChecked());
+    settings.setValue("FT_PNG", ui->checkBoxPNG->isChecked());
 
     settings.setValue("AllTypes", ui->checkBoxAllTypes->isChecked());
     settings.setValue("type_archive", ui->checkBox_archive->isChecked());
@@ -688,6 +701,8 @@ void GuiMainWindow::saveSettings()
     settings.setValue("type_dos_extender", ui->checkBox_dos_extender->isChecked());
     settings.setValue("type_sign_tool", ui->checkBox_sign_tool->isChecked());
     settings.setValue("type_virtual_machine", ui->checkBox_virtual_machine->isChecked());
+    settings.setValue("type_malware", ui->checkBox_malware->isChecked());
+    settings.setValue("type_virus", ui->checkBox_virus->isChecked());
 
     settings.setValue("Recursive", ui->checkBoxRecursive->isChecked());
     settings.setValue("DeepScan", ui->checkBoxDeepScan->isChecked());
