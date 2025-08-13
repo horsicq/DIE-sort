@@ -588,7 +588,7 @@ void ScanProgress::_processFile(QString sFileName)
                 XBinary::removeFile(scanResult.sFileName);
             }
         } else if ((_pOptions->bValidOnly) && (!bIsValid)) {
-            QString sTempFile = _pOptions->sResultDirectory + QDir::separator() + XBinary::fileTypeIdToString(ftPref) + QDir::separator() + "__BROKEN";
+            QString sTempFile = _pOptions->sResultDirectory + QDir::separator() + XBinary::convertFileNameSymbols(XBinary::fileTypeIdToString(ftPref)) + QDir::separator() + "__BROKEN";
 
             XBinary::createDirectory(sTempFile);
 
@@ -608,13 +608,13 @@ QString ScanProgress::createPath(ScanProgress::CF copyFormat, XScanEngine::SCANI
     QString sResult;
 
     if ((copyFormat == ScanProgress::CF_FT_TYPE_NAME) || (copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIG) || (copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIGREL)) {
-        sResult = XBinary::fileTypeIdToString(scanID.fileType);
+        sResult = XBinary::convertFileNameSymbols(XBinary::fileTypeIdToString(scanID.fileType));
     } else if ((copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME) || (copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIG) ||
                (copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIGREL) || (copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_IMPORT)) {
-        sResult = XBinary::fileTypeIdToString(scanID.fileType) + QDir::separator() + scanID.sArch;
+        sResult = XBinary::convertFileNameSymbols(XBinary::fileTypeIdToString(scanID.fileType)) + QDir::separator() + scanID.sArch;
     } else if ((copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME) || (copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIG) ||
                (copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIGREL)) {
-        sResult = scanID.sArch + QDir::separator() + XBinary::fileTypeIdToString(scanID.fileType);
+        sResult = scanID.sArch + QDir::separator() + XBinary::convertFileNameSymbols(XBinary::fileTypeIdToString(scanID.fileType));
     }
 
     // TODO
