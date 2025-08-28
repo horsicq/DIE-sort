@@ -97,13 +97,15 @@ public:
         bool bAllTypes;
         QSet<QString> stTypes;
         qint32 nCopyCount;
-        QString sResultDirectory;
+        QString sCopyDirectory;
         QString sSignatures;
         QString sSignaturesExtra;
         QString sSignaturesCustom;
         bool bSignaturesExtraUse;
         bool bSignaturesCustomUse;
         bool bDebug;
+        bool bIsCopyEnable;
+        bool bIsLogEnable;
         CF copyFormat;
         CT copyType;
         UP unknownPrefix;
@@ -115,7 +117,7 @@ public:
         bool bRemoveCopied;
         bool bCopyTheFirstOnly;
         bool bValidOnly;
-        bool bCurrentIni;
+        QString sLogDirectory;
     };
 
     struct STATS {
@@ -152,7 +154,7 @@ private:
     // #endif
     QString _sDirectoryName;
     SCAN_OPTIONS *_pOptions;
-    DiE_Script dieScript;
+    DiE_Script m_dieScript;
     qint32 g_nFreeIndex;
     XBinary::PDSTRUCT *g_pPdStruct;
 };

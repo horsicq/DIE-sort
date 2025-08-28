@@ -191,7 +191,8 @@ void GuiMainWindow::on_pushButtonScan_clicked()
 void GuiMainWindow::_scan()
 {
     options.nCopyCount = ui->spinBoxCopyCount->value();
-    options.sResultDirectory = ui->lineEditOut->text();
+    options.sCopyDirectory = ui->lineEditOut->text();
+    options.sLogDirectory = ui->lineEditLog->text();
 
     options.stFileTypes.clear();
 
@@ -273,6 +274,8 @@ void GuiMainWindow::_scan()
     if (ui->checkBox_malware->isChecked()) _appendType("malware");
     if (ui->checkBox_virus->isChecked()) _appendType("virus");
 
+    options.bIsCopyEnable = ui->groupBoxCopy->isChecked();
+    options.bIsLogEnable = ui->groupBoxLog->isChecked();
     options.bIsRecursive = ui->checkBoxRecursive->isChecked();
     options.bIsDeepScan = ui->checkBoxDeepScan->isChecked();
     options.bIsVerbose = ui->checkBoxVerbose->isChecked();
@@ -296,8 +299,6 @@ void GuiMainWindow::_scan()
 
     options.unknownPrefix = (ScanProgress::UP)ui->comboBoxUnknownPrefix->currentIndex();
     options.nUnknownCount = ui->spinBoxUnknownCount->value();
-
-    options.bCurrentIni = ui->checkBoxCurrentIni->isChecked();
 
     options.fileFormat = (ScanProgress::FF)ui->comboBoxFileNameFormat->currentIndex();
     options.overlay = (ScanProgress::OVERLAY)ui->comboBoxOverlay->currentIndex();
@@ -503,14 +504,13 @@ void GuiMainWindow::loadSettings()
     ui->lineEditSignaturesCustom->setText(settings.value("SignaturesCustom", "$app/db_custom").toString());
     ui->groupBoxSignaturesExtra->setChecked(settings.value("SignaturesExtraEnable", true).toBool());
     ui->groupBoxSignaturesCustom->setChecked(settings.value("SignaturesCustomEnable", true).toBool());
-    ui->lineEditOut->setText(settings.value("ResultName", QDir::currentPath()).toString());
+    ui->lineEditOut->setText(settings.value("ResultName", QDir::currentPath()).toString() + QDir::separator() + "out");
+    ui->lineEditLog->setText(settings.value("LogName", QDir::currentPath()).toString() + QDir::separator() + "log");
 
     ui->spinBoxCopyCount->setValue(settings.value("CopyCount", 0).toInt());
 
     ui->checkBoxRemoveCopied->setChecked(settings.value("RemoveCopied", false).toBool());
     ui->checkBoxCopyTheFirstOnly->setChecked(settings.value("CopyTheFirstOnly", false).toBool());
-
-    ui->checkBoxCurrentIni->setChecked(settings.value("CurrentIni", true).toBool());
 
     ui->checkBoxAllFileTypes->setChecked(settings.value("AllFileTypes", true).toBool());
     ui->checkBoxBinary->setChecked(settings.value("FT_Binary", true).toBool());
@@ -617,6 +617,7 @@ void GuiMainWindow::saveSettings()
 
     settings.setValue("DirectoryName", ui->lineEditDirectoryName->text());
     settings.setValue("ResultName", ui->lineEditOut->text());
+    settings.setValue("LogName", ui->lineEditLog->text());
     settings.setValue("Signatures", ui->lineEditSignatures->text());
     settings.setValue("SignaturesExtra", ui->lineEditSignaturesExtra->text());
     settings.setValue("SignaturesCustom", ui->lineEditSignaturesCustom->text());
@@ -628,7 +629,8 @@ void GuiMainWindow::saveSettings()
     settings.setValue("FileFormat", ui->comboBoxFileNameFormat->currentIndex());
     settings.setValue("RemoveCopied", ui->checkBoxRemoveCopied->isChecked());
     settings.setValue("CopyTheFirstOnly", ui->checkBoxCopyTheFirstOnly->isChecked());
-    settings.setValue("CurrentIni", ui->checkBoxCurrentIni->isChecked());
+    settings.setValue("Copy", ui->groupBoxCopy->isChecked());
+    settings.setValue("Log", ui->groupBoxLog->isChecked());
 
     settings.setValue("AllFileTypes", ui->checkBoxAllFileTypes->isChecked());
     settings.setValue("FT_Binary", ui->checkBoxBinary->isChecked());
@@ -723,3 +725,15 @@ void GuiMainWindow::saveSettings()
     settings.setValue("EntropyValue", ui->doubleSpinBoxEntropy->value());
     // settings.setValue("Threads", ui->spinBoxThreads->value());
 }
+
+void GuiMainWindow::on_pushButtonLog_clicked()
+{
+    QString sInitDirectory = ui->lineEditLog->text();
+
+    QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Open directory..."), sInitDirectory, QFileDialog::ShowDirsOnly);
+
+    if (!sDirectoryName.isEmpty()) {
+        ui->lineEditLog->setText(sDirectoryName);
+    }
+}
+

@@ -65,6 +65,8 @@ private slots:
     void loadSettings();
     void saveSettings();
 
+    void on_pushButtonLog_clicked();
+
 private:
     Ui::GuiMainWindow *ui;
 
