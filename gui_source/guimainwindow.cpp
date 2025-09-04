@@ -736,4 +736,3 @@ void GuiMainWindow::on_pushButtonLog_clicked()
         ui->lineEditLog->setText(sDirectoryName);
     }
 }
-
