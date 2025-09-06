@@ -504,8 +504,8 @@ void GuiMainWindow::loadSettings()
     ui->lineEditSignaturesCustom->setText(settings.value("SignaturesCustom", "$app/db_custom").toString());
     ui->groupBoxSignaturesExtra->setChecked(settings.value("SignaturesExtraEnable", true).toBool());
     ui->groupBoxSignaturesCustom->setChecked(settings.value("SignaturesCustomEnable", true).toBool());
-    ui->lineEditOut->setText(settings.value("ResultName", QDir::currentPath()).toString() + QDir::separator() + "out");
-    ui->lineEditLog->setText(settings.value("LogName", QDir::currentPath()).toString() + QDir::separator() + "log");
+    ui->lineEditOut->setText(settings.value("ResultName", QDir::currentPath() + QDir::separator() + "out").toString());
+    ui->lineEditLog->setText(settings.value("LogName", QDir::currentPath() + QDir::separator() + "log").toString());
 
     ui->spinBoxCopyCount->setValue(settings.value("CopyCount", 0).toInt());
 
