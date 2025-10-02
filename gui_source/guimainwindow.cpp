@@ -227,6 +227,7 @@ void GuiMainWindow::_scan()
     if (ui->checkBoxCFBF->isChecked()) options.stFileTypes.insert(XBinary::FT_CFBF);
     if (ui->checkBoxJpeg->isChecked()) options.stFileTypes.insert(XBinary::FT_JPEG);
     if (ui->checkBoxPNG->isChecked()) options.stFileTypes.insert(XBinary::FT_PNG);
+    if (ui->checkBoxAtariST->isChecked()) options.stFileTypes.insert(XBinary::FT_ATARIST);
 
     options.stTypes.clear();
 
@@ -356,6 +357,7 @@ void GuiMainWindow::on_checkBoxAllFileTypes_toggled(bool checked)
     ui->checkBoxCFBF->setChecked(checked);
     ui->checkBoxJpeg->setChecked(checked);
     ui->checkBoxPNG->setChecked(checked);
+    ui->checkBoxAtariST->setChecked(checked);
 }
 
 // void GuiMainWindow::on_checkBoxBinary_toggled(bool checked)
@@ -542,6 +544,7 @@ void GuiMainWindow::loadSettings()
     ui->checkBoxCFBF->setChecked(settings.value("FT_CFBF", true).toBool());
     ui->checkBoxJpeg->setChecked(settings.value("FT_JPEG", true).toBool());
     ui->checkBoxPNG->setChecked(settings.value("FT_PNG", true).toBool());
+    ui->checkBoxAtariST->setChecked(settings.value("FT_ATARIST", true).toBool());
 
     ui->checkBoxAllTypes->setChecked(settings.value("AllTypes", true).toBool());
     ui->checkBox_archive->setChecked(settings.value("type_archive", true).toBool());
@@ -662,6 +665,7 @@ void GuiMainWindow::saveSettings()
     settings.setValue("FT_CFBF", ui->checkBoxCFBF->isChecked());
     settings.setValue("FT_JPEG", ui->checkBoxJpeg->isChecked());
     settings.setValue("FT_PNG", ui->checkBoxPNG->isChecked());
+    settings.setValue("FT_ATARIST", ui->checkBoxAtariST->isChecked());
 
     settings.setValue("AllTypes", ui->checkBoxAllTypes->isChecked());
     settings.setValue("type_archive", ui->checkBox_archive->isChecked());
