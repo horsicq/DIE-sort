@@ -59,6 +59,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     connect(ui->checkBoxCFBF, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxJpeg, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
     connect(ui->checkBoxPNG, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
+    connect(ui->checkBoxAtariST, SIGNAL(toggled(bool)), this, SLOT(onFileTypeToggled(bool)));
 
     connect(ui->checkBox_archive, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));
     connect(ui->checkBox_audio, SIGNAL(toggled(bool)), this, SLOT(onTypeToggled(bool)));

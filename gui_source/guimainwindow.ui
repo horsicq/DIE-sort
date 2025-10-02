@@ -716,80 +716,31 @@
          <property name="spacing">
           <number>0</number>
          </property>
-         <item row="10" column="1">
-          <widget class="QCheckBox" name="checkBoxJAR">
+         <item row="10" column="3">
+          <widget class="QCheckBox" name="checkBoxPDF">
            <property name="text">
-            <string>JAR</string>
+            <string>PDF</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="0">
-          <widget class="QCheckBox" name="checkBoxAllFileTypes">
-           <property name="text">
-            <string>All</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QCheckBox" name="checkBoxMSDOS">
-           <property name="text">
-            <string>MSDOS</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="1">
-          <widget class="QCheckBox" name="checkBoxPE64">
-           <property name="text">
-            <string>PE64</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QCheckBox" name="checkBoxBinary">
-           <property name="text">
-            <string>Binary</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="0">
-          <widget class="QCheckBox" name="checkBoxPE32">
-           <property name="text">
-            <string>PE32</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QCheckBox" name="checkBoxCOM">
-           <property name="text">
-            <string>COM</string>
-           </property>
-          </widget>
-         </item>
-         <item row="10" column="0">
+         <item row="11" column="0">
           <widget class="QCheckBox" name="checkBoxZIP">
            <property name="text">
             <string>ZIP</string>
            </property>
           </widget>
          </item>
-         <item row="10" column="2">
-          <widget class="QCheckBox" name="checkBoxAPK">
+         <item row="10" column="0">
+          <widget class="QCheckBox" name="checkBoxDEX">
            <property name="text">
-            <string>APK</string>
+            <string>DEX</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="3">
-          <widget class="QCheckBox" name="checkBoxNE">
+         <item row="11" column="3">
+          <widget class="QCheckBox" name="checkBoxIPA">
            <property name="text">
-            <string>NE</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QCheckBox" name="checkBoxLE">
-           <property name="text">
-            <string>LE</string>
+            <string>IPA</string>
            </property>
           </widget>
          </item>
@@ -800,24 +751,10 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="2">
-          <widget class="QCheckBox" name="checkBoxDOS16M">
+         <item row="1" column="2">
+          <widget class="QCheckBox" name="checkBoxMSDOS">
            <property name="text">
-            <string>DOS16M</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="3">
-          <widget class="QCheckBox" name="checkBoxDOS4G">
-           <property name="text">
-            <string>DOS4G</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="2">
-          <widget class="QCheckBox" name="checkBoxELF32">
-           <property name="text">
-            <string>ELF32</string>
+            <string>MSDOS</string>
            </property>
           </widget>
          </item>
@@ -828,6 +765,34 @@
            </property>
           </widget>
          </item>
+         <item row="11" column="1">
+          <widget class="QCheckBox" name="checkBoxJAR">
+           <property name="text">
+            <string>JAR</string>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="2">
+          <widget class="QCheckBox" name="checkBoxCFBF">
+           <property name="text">
+            <string>CFBF</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QCheckBox" name="checkBoxCOM">
+           <property name="text">
+            <string>COM</string>
+           </property>
+          </widget>
+         </item>
+         <item row="11" column="2">
+          <widget class="QCheckBox" name="checkBoxAPK">
+           <property name="text">
+            <string>APK</string>
+           </property>
+          </widget>
+         </item>
          <item row="8" column="0">
           <widget class="QCheckBox" name="checkBoxMACHO32">
            <property name="text">
@@ -835,24 +800,45 @@
            </property>
           </widget>
          </item>
-         <item row="9" column="0">
-          <widget class="QCheckBox" name="checkBoxDEX">
+         <item row="7" column="2">
+          <widget class="QCheckBox" name="checkBoxELF32">
            <property name="text">
-            <string>DEX</string>
+            <string>ELF32</string>
            </property>
           </widget>
          </item>
-         <item row="8" column="1">
-          <widget class="QCheckBox" name="checkBoxMACHO64">
+         <item row="2" column="0">
+          <widget class="QCheckBox" name="checkBoxLE">
            <property name="text">
-            <string>MACHO64</string>
+            <string>LE</string>
            </property>
           </widget>
          </item>
-         <item row="8" column="2">
-          <widget class="QCheckBox" name="checkBoxMACHOFAT">
+         <item row="2" column="3">
+          <widget class="QCheckBox" name="checkBoxDOS4G">
            <property name="text">
-            <string>MACHOFAT</string>
+            <string>DOS4G</string>
+           </property>
+          </widget>
+         </item>
+         <item row="13" column="2">
+          <widget class="QCheckBox" name="checkBoxRAR">
+           <property name="text">
+            <string>RAR</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QCheckBox" name="checkBoxBinary">
+           <property name="text">
+            <string>Binary</string>
+           </property>
+          </widget>
+         </item>
+         <item row="13" column="0">
+          <widget class="QCheckBox" name="checkBoxJpeg">
+           <property name="text">
+            <string>Jpeg</string>
            </property>
           </widget>
          </item>
@@ -863,59 +849,80 @@
            </property>
           </widget>
          </item>
-         <item row="10" column="3">
-          <widget class="QCheckBox" name="checkBoxIPA">
-           <property name="text">
-            <string>IPA</string>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="1">
+         <item row="10" column="1">
           <widget class="QCheckBox" name="checkBoxJavaClass">
            <property name="text">
             <string>JavaClass</string>
            </property>
           </widget>
          </item>
-         <item row="9" column="2">
-          <widget class="QCheckBox" name="checkBoxCFBF">
+         <item row="8" column="1">
+          <widget class="QCheckBox" name="checkBoxMACHO64">
            <property name="text">
-            <string>CFBF</string>
+            <string>MACHO64</string>
            </property>
           </widget>
          </item>
-         <item row="9" column="3">
-          <widget class="QCheckBox" name="checkBoxPDF">
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="checkBoxAllFileTypes">
            <property name="text">
-            <string>PDF</string>
+            <string>All</string>
            </property>
           </widget>
          </item>
-         <item row="12" column="0">
-          <widget class="QCheckBox" name="checkBoxJpeg">
+         <item row="7" column="0">
+          <widget class="QCheckBox" name="checkBoxPE32">
            <property name="text">
-            <string>Jpeg</string>
+            <string>PE32</string>
            </property>
           </widget>
          </item>
-         <item row="12" column="3">
+         <item row="13" column="1">
+          <widget class="QCheckBox" name="checkBoxPNG">
+           <property name="text">
+            <string>PNG</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QCheckBox" name="checkBoxDOS16M">
+           <property name="text">
+            <string>DOS16M</string>
+           </property>
+          </widget>
+         </item>
+         <item row="13" column="3">
           <widget class="QCheckBox" name="checkBoxNPM">
            <property name="text">
             <string>NPM</string>
            </property>
           </widget>
          </item>
-         <item row="12" column="2">
-          <widget class="QCheckBox" name="checkBoxRAR">
+         <item row="8" column="2">
+          <widget class="QCheckBox" name="checkBoxMACHOFAT">
            <property name="text">
-            <string>RAR</string>
+            <string>MACHOFAT</string>
            </property>
           </widget>
          </item>
-         <item row="12" column="1">
-          <widget class="QCheckBox" name="checkBoxPNG">
+         <item row="1" column="3">
+          <widget class="QCheckBox" name="checkBoxNE">
            <property name="text">
-            <string>PNG</string>
+            <string>NE</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QCheckBox" name="checkBoxPE64">
+           <property name="text">
+            <string>PE64</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="0">
+          <widget class="QCheckBox" name="checkBoxAtariST">
+           <property name="text">
+            <string>Atari ST</string>
            </property>
           </widget>
          </item>
