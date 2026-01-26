@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1055</width>
-    <height>860</height>
+    <width>1063</width>
+    <height>768</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1421,6 +1421,9 @@
      </spacer>
     </item>
     <item>
+     <widget class="XScanSortWidget" name="widgetSort" native="true"/>
+    </item>
+    <item>
      <layout class="QHBoxLayout" name="horizontalLayout_5">
       <item>
        <widget class="QPushButton" name="pushButtonInfo">
@@ -1455,6 +1458,14 @@
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>XScanSortWidget</class>
+   <extends>QWidget</extends>
+   <header>xscansortwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
