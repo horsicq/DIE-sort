@@ -28,9 +28,9 @@ FORMS += \
     include(../die_script/die_script.pri)
 }
 
-!contains(XCONFIG, xdialogprocess) {
-    XCONFIG += xdialogprocess
-    include(../FormatDialogs/xdialogprocess.pri)
+!contains(XCONFIG, xscanwidgets) {
+    XCONFIG += xscanwidgets
+    include(../../_mylibs/XScanEngine/xscanwidgets.pri)
 }
 
 include(../build.pri)
