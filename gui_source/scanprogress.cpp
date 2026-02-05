@@ -296,12 +296,7 @@ void ScanProgress::_processFile(QString sFileName)
                         XScanEngine::SCANSTRUCT ss = scanResult.listRecords.at(i);
 
                         if ((_pOptions->stFileTypes.contains(ss.id.fileType) || (_pOptions->bAllFileTypes)) && (ss.sName != "") && (!ss.bIsUnknown)) {
-                            if ((_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPBYTES) ||
-                                (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPBYTES) ||
-                                (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPBYTES) || (_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIG) ||
-                                (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIG) || (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIG) ||
-                                (_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIGREL) ||
-                                (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIGREL) ||
+                            if ((_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPBYTES) || (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIG) ||
                                 (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIGREL)) {
                                 QFile _file;
                                 _file.setFileName(sFileName);
@@ -319,34 +314,6 @@ void ScanProgress::_processFile(QString sFileName)
                                     sEPREL = disasmCore.getSignature(&_file, &memoryMap, nEPAddress, XDisasmCore::ST_REL, 10).replace(".", "_");
 
                                     _file.close();
-                                }
-                            } else if (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_IMPORT) {
-                                sImport = "";
-
-                                if ((_id.fileType == XBinary::FT_PE32) || (_id.fileType == XBinary::FT_PE64)) {
-                                    QFile _file;
-                                    _file.setFileName(sFileName);
-
-                                    if (_file.open(QIODevice::ReadOnly)) {
-                                        XPE pe(&_file);
-
-                                        if (pe.isValid()) {
-                                            QList<quint32> listImportHashes = pe.getImportPositionHashes();
-
-                                            if (listImportHashes.count()) {
-                                                sImport += XBinary::valueToHex(listImportHashes.at(0));
-                                                sImport += "_";
-                                            }
-
-                                            QList<XPE::IMPORT_RECORD> listImportRecords = pe.getImportRecords();
-
-                                            sImport += XBinary::valueToHex(pe.getImportHash32(&listImportRecords));
-                                            sImport += "_";
-                                            sImport += XBinary::valueToHex(pe.getImportHash64(&listImportRecords));
-                                        }
-
-                                        _file.close();
-                                    }
                                 }
                             }
 
@@ -384,22 +351,12 @@ void ScanProgress::_processFile(QString sFileName)
                                         QString _sFileName = _pOptions->sCopyDirectory + QDir::separator() + createPath(_pOptions->copyFormat, ss.id) +
                                                              QDir::separator() + ss.sType + QDir::separator() + sResult;
 
-                                        if ((_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPBYTES) ||
-                                            (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPBYTES) ||
-                                            (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPBYTES)) {
+                                        if (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPBYTES) {
                                             _sFileName += QDir::separator() + sEPBytes;
-                                        } else if ((_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIG) ||
-                                                   (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIG) ||
-                                                   (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIG)) {
+                                        } else if (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIG) {
                                             _sFileName += QDir::separator() + sEP;
-                                        } else if ((_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIGREL) ||
-                                                   (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIGREL) ||
-                                                   (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIGREL)) {
+                                        } else if (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIGREL) {
                                             _sFileName += QDir::separator() + sEPREL;
-                                        } else if (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_IMPORT) {
-                                            if (sImport != "") {
-                                                _sFileName += QDir::separator() + sImport;
-                                            }
                                         }
 
                                         XBinary::createDirectory(_sFileName);
@@ -437,22 +394,12 @@ void ScanProgress::_processFile(QString sFileName)
                         if (bCopy) {
                             QString _sFileName = _pOptions->sCopyDirectory + QDir::separator() + createPath(_pOptions->copyFormat, _id) + QDir::separator() + "__UNKNOWN";
 
-                            if ((_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPBYTES) ||
-                                (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPBYTES) ||
-                                (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPBYTES)) {
+                            if (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPBYTES) {
                                 _sFileName += QDir::separator() + sEPBytes;
-                            } else if ((_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIG) ||
-                                       (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIG) ||
-                                       (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIG)) {
+                            } else if (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIG) {
                                 _sFileName += QDir::separator() + sEP;
-                            } else if ((_pOptions->copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIGREL) ||
-                                       (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIGREL) ||
-                                       (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIGREL)) {
+                            } else if (_pOptions->copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIGREL) {
                                 _sFileName += QDir::separator() + sEPREL;
-                            } else if (_pOptions->copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_IMPORT) {
-                                if (sImport != "") {
-                                    _sFileName += QDir::separator() + sImport;
-                                }
                             }
 
                             if (_pOptions->unknownPrefix != UP_NONE) {
@@ -644,12 +591,6 @@ QString ScanProgress::createPath(ScanProgress::CF copyFormat, XScanEngine::SCANI
 
     if ((copyFormat == ScanProgress::CF_FT_TYPE_NAME) || (copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIG) || (copyFormat == ScanProgress::CF_FT_TYPE_NAME_EPSIGREL)) {
         sResult = XBinary::convertFileNameSymbols(XBinary::fileTypeIdToString(scanID.fileType));
-    } else if ((copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME) || (copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIG) ||
-               (copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_EPSIGREL) || (copyFormat == ScanProgress::CF_FT_ARCH_TYPE_NAME_IMPORT)) {
-        sResult = XBinary::convertFileNameSymbols(XBinary::fileTypeIdToString(scanID.fileType)) + QDir::separator() + scanID.sArch;
-    } else if ((copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME) || (copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIG) ||
-               (copyFormat == ScanProgress::CF_ARCH_FT_TYPE_NAME_EPSIGREL)) {
-        sResult = scanID.sArch + QDir::separator() + XBinary::convertFileNameSymbols(XBinary::fileTypeIdToString(scanID.fileType));
     }
 
     // TODO

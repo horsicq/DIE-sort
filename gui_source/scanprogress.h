@@ -31,18 +31,9 @@ class ScanProgress : public QObject {
 public:
     enum CF {
         CF_FT_TYPE_NAME = 0,
-        CF_ARCH_FT_TYPE_NAME,
-        CF_FT_ARCH_TYPE_NAME,
         CF_FT_TYPE_NAME_EPBYTES,
-        CF_ARCH_FT_TYPE_NAME_EPBYTES,
-        CF_FT_ARCH_TYPE_NAME_EPBYTES,
         CF_FT_TYPE_NAME_EPSIG,
-        CF_ARCH_FT_TYPE_NAME_EPSIG,
-        CF_FT_ARCH_TYPE_NAME_EPSIG,
         CF_FT_TYPE_NAME_EPSIGREL,
-        CF_ARCH_FT_TYPE_NAME_EPSIGREL,
-        CF_FT_ARCH_TYPE_NAME_EPSIGREL,
-        CF_FT_ARCH_TYPE_NAME_IMPORT,
     };
 
     enum CT {
