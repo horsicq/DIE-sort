@@ -49,13 +49,8 @@ private slots:
     void _scan();
     void _appendType(QString sType);
 
-    void on_checkBoxAllFileTypes_toggled(bool checked);
-    void on_checkBoxAllTypes_toggled(bool checked);
-
     void on_pushButtonInfo_clicked();
 
-    void onFileTypeToggled(bool checked);
-    void onTypeToggled(bool checked);
     void on_pushButtonSignatures_clicked();
 
     void on_doubleSpinBoxEntropy_valueChanged(double arg1);
