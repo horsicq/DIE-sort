@@ -148,6 +148,7 @@ private:
     DiE_Script m_dieScript;
     qint32 g_nFreeIndex;
     XBinary::PDSTRUCT *g_pPdStruct;
+    XScanEngine::SCAN_OPTIONS m_scanOptions;
 };
 
 #endif  // SCANPROGRESS_H

@@ -199,24 +199,9 @@ void ScanProgress::_processFile(QString sFileName)
                 XBinary::copyFile(sFileName, sTempFile);
             }
 
-            XScanEngine::SCAN_OPTIONS scanOptions = {};
+            m_scanOptions.fileType = ftPref;
 
-            scanOptions.bIsDeepScan = _pOptions->bIsDeepScan;
-            scanOptions.bIsVerbose = _pOptions->bIsVerbose;
-            scanOptions.bIsRecursiveScan = _pOptions->bIsRecursive;
-            scanOptions.bIsHeuristicScan = _pOptions->bIsHeuristicScan;
-            scanOptions.bIsAggressiveScan = _pOptions->bIsAggressive;
-            scanOptions.bShowType = true;
-            scanOptions.bShowVersion = _pOptions->bShowVersion;
-            scanOptions.bShowInfo = _pOptions->bShowInfo;
-            scanOptions.bIsSort = _pOptions->bIsSort;
-            scanOptions.nBufferSize = 8 * 1024 * 1024;
-            scanOptions.bUseExtraDatabase = _pOptions->bSignaturesExtraUse;
-            scanOptions.bUseCustomDatabase = _pOptions->bSignaturesCustomUse;
-            scanOptions.fileType = ftPref;
-            // scanOptions.bShowUnknown = false;
-
-            DiE_Script::SCAN_RESULT scanResult = dieScript.scanFile(sFileName, &scanOptions, g_pPdStruct);
+            DiE_Script::SCAN_RESULT scanResult = dieScript.scanFile(sFileName, &m_scanOptions, g_pPdStruct);
 
             if (_pOptions->bIsLogEnable) {
                 int nCount = scanResult.listRecords.count();
@@ -225,7 +210,7 @@ void ScanProgress::_processFile(QString sFileName)
                     const XScanEngine::SCANSTRUCT &ss = scanResult.listRecords.at(i);
 
                     QString sScanResult = XBinary::fileTypeIdToString(ss.id.fileType);
-                    QString sScanResultTmp = XScanEngine::createResultStringEx(&scanOptions, &ss);
+                    QString sScanResultTmp = XScanEngine::createResultStringEx(&m_scanOptions, &ss);
 
                     if (sScanResultTmp != "") {
                         sScanResult += "." + sScanResultTmp;
@@ -321,7 +306,7 @@ void ScanProgress::_processFile(QString sFileName)
                                 bIdentified = true;
 
                                 if ((_pOptions->copyType == CT_IDENT) || (_pOptions->copyType == CT_IDENT_UNK)) {
-                                    XScanEngine::SCAN_OPTIONS _scanOptions = scanOptions;
+                                    XScanEngine::SCAN_OPTIONS _scanOptions = m_scanOptions;
                                     _scanOptions.bShowType = false;
                                     QString sResult = XScanEngine::createResultStringEx(&_scanOptions, &ss);
 
@@ -621,10 +606,6 @@ void ScanProgress::process()
         XBinary::setPdStructFinished(g_pPdStruct, g_nFreeIndex);
     }
 
-    m_dieScript.loadDatabase(_pOptions->sSignatures, DiE_ScriptEngine::DT_MAIN, g_pPdStruct);
-    m_dieScript.loadDatabase(_pOptions->sSignaturesExtra, DiE_ScriptEngine::DT_EXTRA, g_pPdStruct);
-    m_dieScript.loadDatabase(_pOptions->sSignaturesCustom, DiE_ScriptEngine::DT_CUSTOM, g_pPdStruct);
-
     {
         g_nFreeIndex = XBinary::getFreeIndex(g_pPdStruct);
         XBinary::setPdStructInit(g_pPdStruct, g_nFreeIndex, nNumberOfFiles);
@@ -638,6 +619,26 @@ void ScanProgress::process()
         if (_pOptions->bIsCopyEnable) {
             XBinary::createDirectory(_pOptions->sCopyDirectory);
         }
+
+        m_scanOptions.bIsDeepScan = _pOptions->bIsDeepScan;
+        m_scanOptions.bIsVerbose = _pOptions->bIsVerbose;
+        m_scanOptions.bIsRecursiveScan = _pOptions->bIsRecursive;
+        m_scanOptions.bIsHeuristicScan = _pOptions->bIsHeuristicScan;
+        m_scanOptions.bIsAggressiveScan = _pOptions->bIsAggressive;
+        m_scanOptions.bShowType = true;
+        m_scanOptions.bShowVersion = _pOptions->bShowVersion;
+        m_scanOptions.bShowInfo = _pOptions->bShowInfo;
+        m_scanOptions.bIsSort = _pOptions->bIsSort;
+        m_scanOptions.nBufferSize = 8 * 1024 * 1024;
+        m_scanOptions.bUseExtraDatabase = _pOptions->bSignaturesExtraUse;
+        m_scanOptions.bUseCustomDatabase = _pOptions->bSignaturesCustomUse;
+
+        m_scanOptions.sMainDatabasePath = _pOptions->sSignatures;
+        m_scanOptions.sExtraDatabasePath = _pOptions->sSignaturesExtra;
+        m_scanOptions.sCustomDatabasePath = _pOptions->sSignaturesCustom;
+        // scanOptions.bShowUnknown = false;
+
+        m_dieScript.loadDatabase(&m_scanOptions, g_pPdStruct);
 
         scanFiles(&nCurrentCount, _sDirectoryName);
 
