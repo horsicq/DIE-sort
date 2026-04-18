@@ -82,7 +82,7 @@ jobs:
           call %X_SOURCE_PATH%\build_tools\windows.cmd make_clear
           
       - name: Upload Release as Download
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         env:
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
