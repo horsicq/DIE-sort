@@ -89,7 +89,7 @@ void GuiMainWindow::on_pushButtonOpenDirectory_clicked()
 {
     QString sInitDirectory = ui->lineEditDirectoryName->text();
 
-    QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Open directory..."), sInitDirectory, QFileDialog::ShowDirsOnly);
+    QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Open directory") + QString("..."), sInitDirectory, QFileDialog::ShowDirsOnly);
 
     if (!sDirectoryName.isEmpty()) {
         ui->lineEditDirectoryName->setText(sDirectoryName);
@@ -100,7 +100,7 @@ void GuiMainWindow::on_pushButtonOut_clicked()
 {
     QString sInitDirectory = ui->lineEditOut->text();
 
-    QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Open directory..."), sInitDirectory, QFileDialog::ShowDirsOnly);
+    QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Open directory") + QString("..."), sInitDirectory, QFileDialog::ShowDirsOnly);
 
     if (!sDirectoryName.isEmpty()) {
         ui->lineEditOut->setText(sDirectoryName);
@@ -193,7 +193,7 @@ void GuiMainWindow::on_pushButtonSignatures_clicked()
 {
     QString sInitDirectory = XBinary::convertPathName(ui->lineEditSignatures->text());
 
-    QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Open directory..."), sInitDirectory, QFileDialog::ShowDirsOnly);
+    QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Open directory") + QString("..."), sInitDirectory, QFileDialog::ShowDirsOnly);
 
     if (!sDirectoryName.isEmpty()) {
         ui->lineEditSignatures->setText(sDirectoryName);
@@ -213,7 +213,7 @@ void GuiMainWindow::on_pushButtonSignaturesCustom_clicked()
 {
     QString sInitDirectory = XBinary::convertPathName(ui->lineEditSignaturesCustom->text());
 
-    QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Open directory..."), sInitDirectory, QFileDialog::ShowDirsOnly);
+    QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Open directory") + QString("..."), sInitDirectory, QFileDialog::ShowDirsOnly);
 
     if (!sDirectoryName.isEmpty()) {
         ui->lineEditSignaturesCustom->setText(sDirectoryName);
@@ -224,7 +224,7 @@ void GuiMainWindow::on_pushButtonSignaturesExtra_clicked()
 {
     QString sInitDirectory = XBinary::convertPathName(ui->lineEditSignaturesExtra->text());
 
-    QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Open directory..."), sInitDirectory, QFileDialog::ShowDirsOnly);
+    QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Open directory") + QString("..."), sInitDirectory, QFileDialog::ShowDirsOnly);
 
     if (!sDirectoryName.isEmpty()) {
         ui->lineEditSignaturesExtra->setText(sDirectoryName);
@@ -335,7 +335,7 @@ void GuiMainWindow::on_pushButtonLog_clicked()
 {
     QString sInitDirectory = ui->lineEditLog->text();
 
-    QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Open directory..."), sInitDirectory, QFileDialog::ShowDirsOnly);
+    QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Open directory") + QString("..."), sInitDirectory, QFileDialog::ShowDirsOnly);
 
     if (!sDirectoryName.isEmpty()) {
         ui->lineEditLog->setText(sDirectoryName);
