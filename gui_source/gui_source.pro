@@ -26,7 +26,7 @@ FORMS += \
 
 !contains(XCONFIG, xscanwidgets) {
     XCONFIG += xscanwidgets
-    include(../../_mylibs/XScanEngine/xscanwidgets.pri)
+    include(../XScanEngine/xscanwidgets.pri)
 }
 
 include(../build.pri)
