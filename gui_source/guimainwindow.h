@@ -28,7 +28,6 @@
 #include <QSettings>
 
 #include "../global.h"
-#include "dialogscanprogress.h"
 
 namespace Ui {
 class GuiMainWindow;
@@ -43,29 +42,10 @@ public:
 
 private slots:
     void on_pushButtonExit_clicked();
-    void on_pushButtonOpenDirectory_clicked();
-    void on_pushButtonOut_clicked();
-    void on_pushButtonScan_clicked();
-    void _scan();
-    void _appendType(QString sType);
-
     void on_pushButtonInfo_clicked();
-
-    void on_pushButtonSignatures_clicked();
-
-    void on_doubleSpinBoxEntropy_valueChanged(double arg1);
-    void on_pushButtonSignaturesCustom_clicked();
-    void on_pushButtonSignaturesExtra_clicked();
-
-    void loadSettings();
-    void saveSettings();
-
-    void on_pushButtonLog_clicked();
 
 private:
     Ui::GuiMainWindow *ui;
-
-    ScanProgress::SCAN_OPTIONS options;
 };
 
 #endif  // GUIMAINWINDOW_H

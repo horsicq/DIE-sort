@@ -9,16 +9,12 @@ TEMPLATE = app
 XCONFIG += use_archive
 
 SOURCES += \
-        dialogscanprogress.cpp \
         guimainwindow.cpp \
-        main_gui.cpp \
-        scanprogress.cpp
+        main_gui.cpp
 
 HEADERS += \
-        dialogscanprogress.h \
         guimainwindow.h \
-        ../global.h \
-        scanprogress.h
+        ../global.h
 
 FORMS += \
         guimainwindow.ui
