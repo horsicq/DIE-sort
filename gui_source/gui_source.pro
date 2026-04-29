@@ -6,7 +6,12 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = die-sort
 TEMPLATE = app
 
+XCONFIG += use_dex
+XCONFIG += use_pdf
 XCONFIG += use_archive
+XCONFIG += use_yara
+XCONFIG += use_die
+XCONFIG += use_xsimd
 
 SOURCES += \
         guimainwindow.cpp \
