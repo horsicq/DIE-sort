@@ -27,6 +27,10 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 {
     ui->setupUi(this);
 
+#ifdef USE_XSIMD
+    xsimd_init();
+#endif
+
     setWindowTitle(QString("%1 v%2").arg(X_APPLICATIONNAME, X_APPLICATIONVERSION));
 
     ui->widgetSort->setEngine(&m_dieScript);
