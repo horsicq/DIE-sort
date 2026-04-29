@@ -28,6 +28,7 @@
 #include <QSettings>
 
 #include "../global.h"
+#include "die_script.h"
 
 namespace Ui {
 class GuiMainWindow;
@@ -46,6 +47,7 @@ private slots:
 
 private:
     Ui::GuiMainWindow *ui;
+    DiE_Script m_dieScript;
 };
 
 #endif  // GUIMAINWINDOW_H
