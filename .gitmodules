@@ -46,3 +46,9 @@
 [submodule "XDisasmCore"]
 	path = XDisasmCore
 	url = https://github.com/horsicq/XDisasmCore.git
+[submodule "Controls"]
+	path = Controls
+	url = https://github.com/horsicq/Controls
+[submodule "XStaticUnpacker"]
+	path = XStaticUnpacker
+	url = https://github.com/horsicq/XStaticUnpacker
