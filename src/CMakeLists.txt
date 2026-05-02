@@ -33,6 +33,13 @@ endif()
 file(STRINGS "${CMAKE_CURRENT_LIST_DIR}/../release_version.txt" X_PROJECT_VERSION)
 project(DIESort VERSION ${X_PROJECT_VERSION} LANGUAGES CXX)
 
+if(NOT PROJECT_VERSION_PATCH)
+    set(PROJECT_VERSION_PATCH 0)
+endif()
+if(NOT PROJECT_VERSION_TWEAK)
+    set(PROJECT_VERSION_TWEAK 0)
+endif()
+
 set(X_COMPANYNAME       "ntinfo")
 set(X_PROJECTNAME       "DIESort")
 set(X_MAINTAINER        "horsicq@gmail.com")
