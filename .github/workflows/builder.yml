@@ -9,22 +9,53 @@ on:
 
 env:
   SRC_PATH: ${{ github.workspace }}/src
-  SRC_PATH_WIN: ${{ github.workspace }}\src
-  RELEASE_PATH: ${{ github.workspace }}/src/release
 
-jobs:       
+jobs:
+  build-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        path: ${{ env.SRC_PATH }}
+
+    - name: Install Qt (Ubuntu)
+      run: |
+        sudo apt-get update
+        sudo apt-get install cmake qtbase5-dev qtscript5-dev qttools5-dev qttools5-dev-tools libqt5svg5-dev qtchooser qt5-qmake build-essential -y
+
+    - name: Build
+      working-directory: ${{ env.SRC_PATH }}
+      run: |
+        mkdir tmp_build
+        cd tmp_build
+        cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_PREFIX_PATH="/usr/lib/x86_64-linux-gnu/cmake/Qt5" ..
+        make
+        cpack -G DEB
+
+    - name: Upload Release as Download
+      uses: softprops/action-gh-release@v2
+      env:
+        RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      with:
+        tag_name: Beta
+        draft: false
+        prerelease: true
+        files: |
+          ${{ env.SRC_PATH }}/tmp_build/*.deb
+
   build-windows-32:
     runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
-         submodules: 'recursive'
-         path: ${{ env.SRC_PATH }}
-         
+          submodules: 'recursive'
+          path: ${{ env.SRC_PATH }}
+
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
         with:
-         arch: x86
+          arch: x86
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
@@ -40,49 +71,15 @@ jobs:
         shell: cmd
         working-directory: ${{ env.SRC_PATH }}
         run: |
-          echo on
-          set VSVARS_PATH="C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars32.bat"
-          set QMAKE_PATH="${{ github.workspace }}\Qt\5.15.2\msvc2019\bin\qmake.exe"
-          set SEVENZIP_PATH="C:\Program Files\7-Zip\7z.exe"
-          set X_BUILD_NAME=diesort_win32_portable
-          set X_SOURCE_PATH=${{ env.SRC_PATH_WIN }}
-          for /f "delims=" %%x in ('type "%X_SOURCE_PATH%\release_version.txt"') do set X_RELEASE_VERSION=%%x
-          
-          rem call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %VSVARS_PATH%
-          rem call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %QMAKE_PATH%
-          rem call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %SEVENZIP_PATH%
-          
-          IF NOT [%X_ERROR%] == [] goto exit
-          
-          call %X_SOURCE_PATH%\build_tools\windows.cmd make_init
-          call %X_SOURCE_PATH%\build_tools\windows.cmd make_build %X_SOURCE_PATH%\DIE_sort_source.pro
-          
-          rem call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %X_SOURCE_PATH%\build\release\die-sort.exe
-          
-          IF NOT [%X_ERROR%] == [] goto exit
-          
-          copy %X_SOURCE_PATH%\build\release\die-sort.exe %X_SOURCE_PATH%\release\%X_BUILD_NAME%\
-          xcopy %X_SOURCE_PATH%\Detect-It-Easy\db %X_SOURCE_PATH%\release\%X_BUILD_NAME%\db /E /I
-          xcopy %X_SOURCE_PATH%\Detect-It-Easy\db_extra %X_SOURCE_PATH%\release\%X_BUILD_NAME%\db_extra /E /I
-          xcopy %X_SOURCE_PATH%\Detect-It-Easy\db_custom %X_SOURCE_PATH%\release\%X_BUILD_NAME%\db_custom /E /I
-          
-          call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Widgets
-          call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Gui
-          call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Core
-          call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Widgets
-          call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Script
-          call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Sql
-          call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_plugin platforms qwindows
-          call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_plugin sqldrivers qsqlite
-          call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_vc_redist
-          
-          call %X_SOURCE_PATH%\build_tools\windows.cmd make_release
-          
-          :exit
-          call %X_SOURCE_PATH%\build_tools\windows.cmd make_clear
-          
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86
+          mkdir tmp_build
+          cd tmp_build
+          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_PREFIX_PATH="${{ github.workspace }}\Qt\5.15.2\msvc2019" -G "NMake Makefiles" ..
+          nmake
+          cpack -G ZIP
+
       - name: Upload Release as Download
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v2
         env:
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
@@ -90,5 +87,49 @@ jobs:
           draft: false
           prerelease: true
           files: |
-            ${{ env.RELEASE_PATH }}/*.zip
+            ${{ env.SRC_PATH }}/tmp_build/*.zip
 
+  build-windows-64:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          path: ${{ env.SRC_PATH }}
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '5.15.2'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2019_64'
+          dir: ${{ github.workspace }}
+          modules: qtscript
+
+      - name: Build
+        shell: cmd
+        working-directory: ${{ env.SRC_PATH }}
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
+          mkdir tmp_build
+          cd tmp_build
+          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_PREFIX_PATH="${{ github.workspace }}\Qt\5.15.2\msvc2019_64" -G "NMake Makefiles" ..
+          nmake
+          cpack -G ZIP
+
+      - name: Upload Release as Download
+        uses: softprops/action-gh-release@v2
+        env:
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          tag_name: Beta
+          draft: false
+          prerelease: true
+          files: |
+            ${{ env.SRC_PATH }}/tmp_build/*.zip
