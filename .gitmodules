@@ -1,0 +1,51 @@
+[submodule "dep/build_tools"]
+	path = dep/build_tools
+	url = https://github.com/horsicq/build_tools
+[submodule "dep/Controls"]
+	path = dep/Controls
+	url = https://github.com/horsicq/Controls
+[submodule "dep/Detect-It-Easy"]
+	path = dep/Detect-It-Easy
+	url = https://github.com/horsicq/Detect-It-Easy
+[submodule "dep/die_script"]
+	path = dep/die_script
+	url = https://github.com/horsicq/die_script
+[submodule "dep/FormatDialogs"]
+	path = dep/FormatDialogs
+	url = https://github.com/horsicq/FormatDialogs
+[submodule "dep/Formats"]
+	path = dep/Formats
+	url = https://github.com/horsicq/Formats
+[submodule "dep/XArchive"]
+	path = dep/XArchive
+	url = https://github.com/horsicq/XArchive
+[submodule "dep/XCapstone"]
+	path = dep/XCapstone
+	url = https://github.com/horsicq/XCapstone
+[submodule "dep/XDEX"]
+	path = dep/XDEX
+	url = https://github.com/horsicq/XDEX
+[submodule "dep/XDisasmCore"]
+	path = dep/XDisasmCore
+	url = https://github.com/horsicq/XDisasmCore
+[submodule "dep/XOptions"]
+	path = dep/XOptions
+	url = https://github.com/horsicq/XOptions
+[submodule "dep/XPDF"]
+	path = dep/XPDF
+	url = https://github.com/horsicq/XPDF
+[submodule "dep/XScanEngine"]
+	path = dep/XScanEngine
+	url = https://github.com/horsicq/XScanEngine
+[submodule "dep/XShortcuts"]
+	path = dep/XShortcuts
+	url = https://github.com/horsicq/XShortcuts
+[submodule "dep/XStaticUnpacker"]
+	path = dep/XStaticUnpacker
+	url = https://github.com/horsicq/XStaticUnpacker
+[submodule "dep/XStyles"]
+	path = dep/XStyles
+	url = https://github.com/horsicq/XStyles
+[submodule "dep/XYara"]
+	path = dep/XYara
+	url = https://github.com/horsicq/XYara
