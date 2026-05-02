@@ -1,0 +1,5 @@
+build/
+translations/*.qm
+res/windows/resource.rc
+res/windows/resource_icon.rc
+res/macos/Info.plist

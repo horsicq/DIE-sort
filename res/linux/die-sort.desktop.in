@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=@PROJECT_VERSION@
+Type=Application
+Name=DIE-sort
+Comment=DIE sort utility
+TryExec=die-sort
+Exec=die-sort
+Icon=die-sort
+Terminal=false
+Categories=Development;
