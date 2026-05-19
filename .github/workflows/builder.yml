@@ -27,11 +27,15 @@ jobs:
     - name: Build
       working-directory: ${{ env.SRC_PATH }}
       run: |
+        set -euo pipefail
+        rm -rf tmp_build
         mkdir tmp_build
         cd tmp_build
         cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_PREFIX_PATH="/usr/lib/x86_64-linux-gnu/cmake/Qt5" ..
-        make
+        cmake --build . --config MinSizeRel --parallel
+        test -x src/gui/die-sort
         cpack -G DEB
+        test -n "$(find packages -maxdepth 1 -name '*.deb' -print -quit)"
 
     - name: Upload Release as Download
       uses: softprops/action-gh-release@v2
@@ -71,12 +75,23 @@ jobs:
         shell: cmd
         working-directory: ${{ env.SRC_PATH }}
         run: |
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86
-          mkdir tmp_build
+          if exist tmp_build rmdir /s /q tmp_build
+          cmake -S . -B tmp_build -G "Visual Studio 17 2022" -A Win32 -DCMAKE_PREFIX_PATH="${{ github.workspace }}\Qt\5.15.2\msvc2019"
+          if errorlevel 1 exit /b 1
+          cmake --build tmp_build --config MinSizeRel --parallel
+          if errorlevel 1 exit /b 1
+          if not exist "tmp_build\src\gui\MinSizeRel\die-sort.exe" (
+            echo Built executable not found
+            exit /b 1
+          )
           cd tmp_build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_PREFIX_PATH="${{ github.workspace }}\Qt\5.15.2\msvc2019" -G "NMake Makefiles" ..
-          nmake
-          cpack -G ZIP
+          cpack -G ZIP -C MinSizeRel
+          if errorlevel 1 exit /b 1
+          dir packages\*.zip >nul 2>nul
+          if errorlevel 1 (
+            echo ZIP package was not produced
+            exit /b 1
+          )
 
       - name: Upload Release as Download
         uses: softprops/action-gh-release@v2
@@ -116,12 +131,23 @@ jobs:
         shell: cmd
         working-directory: ${{ env.SRC_PATH }}
         run: |
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
-          mkdir tmp_build
+          if exist tmp_build rmdir /s /q tmp_build
+          cmake -S . -B tmp_build -G "Visual Studio 17 2022" -A x64 -DCMAKE_PREFIX_PATH="${{ github.workspace }}\Qt\5.15.2\msvc2019_64"
+          if errorlevel 1 exit /b 1
+          cmake --build tmp_build --config MinSizeRel --parallel
+          if errorlevel 1 exit /b 1
+          if not exist "tmp_build\src\gui\MinSizeRel\die-sort.exe" (
+            echo Built executable not found
+            exit /b 1
+          )
           cd tmp_build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_PREFIX_PATH="${{ github.workspace }}\Qt\5.15.2\msvc2019_64" -G "NMake Makefiles" ..
-          nmake
-          cpack -G ZIP
+          cpack -G ZIP -C MinSizeRel
+          if errorlevel 1 exit /b 1
+          dir packages\*.zip >nul 2>nul
+          if errorlevel 1 (
+            echo ZIP package was not produced
+            exit /b 1
+          )
 
       - name: Upload Release as Download
         uses: softprops/action-gh-release@v2
