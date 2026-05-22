@@ -7,6 +7,9 @@ on:
   schedule:
     - cron: '0 0 * * MON'
 
+permissions:
+  contents: read
+
 env:
   SRC_PATH: ${{ github.workspace }}/src
 
@@ -22,7 +25,7 @@ jobs:
     - name: Install Qt (Ubuntu)
       run: |
         sudo apt-get update
-        sudo apt-get install cmake qtbase5-dev qtscript5-dev qttools5-dev qttools5-dev-tools libqt5svg5-dev qtchooser qt5-qmake build-essential -y
+        sudo apt-get install cmake qtbase5-dev qtscript5-dev qttools5-dev qttools5-dev-tools libqt5svg5-dev libqt5opengl5-dev qtchooser qt5-qmake build-essential -y
 
     - name: Build
       working-directory: ${{ env.SRC_PATH }}
@@ -32,21 +35,18 @@ jobs:
         mkdir tmp_build
         cd tmp_build
         cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_PREFIX_PATH="/usr/lib/x86_64-linux-gnu/cmake/Qt5" ..
-        cmake --build . --config MinSizeRel --parallel
+        cmake --build . --config MinSizeRel --parallel 2
         test -x src/gui/die-sort
         cpack -G DEB
         test -n "$(find packages -maxdepth 1 -name '*.deb' -print -quit)"
 
-    - name: Upload Release as Download
-      uses: softprops/action-gh-release@v2
-      env:
-        RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v4
       with:
-        tag_name: Beta
-        draft: false
-        prerelease: true
-        files: |
+        name: die-sort-ubuntu
+        path: |
           ${{ env.SRC_PATH }}/tmp_build/packages/*.deb
+        if-no-files-found: error
 
   build-windows-32:
     runs-on: windows-2022
@@ -93,16 +93,13 @@ jobs:
             exit /b 1
           )
 
-      - name: Upload Release as Download
-        uses: softprops/action-gh-release@v2
-        env:
-          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: Beta
-          draft: false
-          prerelease: true
-          files: |
+          name: die-sort-windows-x86
+          path: |
             ${{ env.SRC_PATH }}/tmp_build/packages/*.zip
+          if-no-files-found: error
 
   build-windows-64:
     runs-on: windows-2022
@@ -149,13 +146,37 @@ jobs:
             exit /b 1
           )
 
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: die-sort-windows-x64
+          path: |
+            ${{ env.SRC_PATH }}/tmp_build/packages/*.zip
+          if-no-files-found: error
+
+  publish-release:
+    runs-on: ubuntu-latest
+    needs:
+      - build-ubuntu
+      - build-windows-32
+      - build-windows-64
+    permissions:
+      contents: write
+    steps:
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+
       - name: Upload Release as Download
         uses: softprops/action-gh-release@v2
-        env:
-          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
+          token: ${{ secrets.RELEASE_TOKEN || github.token }}
           tag_name: Beta
+          target_commitish: ${{ github.sha }}
           draft: false
           prerelease: true
+          fail_on_unmatched_files: true
           files: |
-            ${{ env.SRC_PATH }}/tmp_build/packages/*.zip
+            release-assets/*
