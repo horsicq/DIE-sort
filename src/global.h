@@ -24,10 +24,10 @@
 #include <QtGlobal>
 
 #define X_APPLICATIONDISPLAYNAME "DIE-sort"
-#define X_APPLICATIONNAME        "die-sort"
-#define X_APPLICATIONVERSION     "0.02"
-#define X_ORGANIZATIONNAME       "NTInfo"
-#define X_ORGANIZATIONDOMAIN     "ntinfo.biz"
-#define X_OPTIONSFILE            "die-sort.ini"
+#define X_APPLICATIONNAME "die-sort"
+#define X_APPLICATIONVERSION "0.02"
+#define X_ORGANIZATIONNAME "NTInfo"
+#define X_ORGANIZATIONDOMAIN "ntinfo.biz"
+#define X_OPTIONSFILE "die-sort.ini"
 
 #endif  // GLOBAL_H
