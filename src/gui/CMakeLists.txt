@@ -54,6 +54,15 @@ set_target_properties(DIESort PROPERTIES
     OUTPUT_NAME "die-sort"
 )
 
+if(X_ENABLE_ASAN)
+    if(MSVC)
+        target_compile_options(DIESort PRIVATE /fsanitize=address)
+    else()
+        target_compile_options(DIESort PRIVATE -fsanitize=address -fno-omit-frame-pointer)
+        target_link_options(DIESort PRIVATE -fsanitize=address)
+    endif()
+endif()
+
 target_include_directories(DIESort PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(DIESort PRIVATE
