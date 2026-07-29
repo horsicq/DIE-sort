@@ -97,6 +97,7 @@ if(EXISTS "${DIE_SORT_TRANSLATION_HELPER}")
         "${CMAKE_CURRENT_LIST_DIR}/../translations/die-sort_tr_TR.ts"
         "${CMAKE_CURRENT_LIST_DIR}/../translations/die-sort_uk_UA.ts"
         "${CMAKE_CURRENT_LIST_DIR}/../translations/die-sort_vi_VN.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/die-sort_sq_AL.ts"
         "${CMAKE_CURRENT_LIST_DIR}/../translations/die-sort_zh_CN.ts"
         "${CMAKE_CURRENT_LIST_DIR}/../translations/die-sort_zh_TW.ts"
     )
