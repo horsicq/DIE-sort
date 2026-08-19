@@ -35,7 +35,7 @@ jobs:
         mkdir tmp_build
         cd tmp_build
         cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_PREFIX_PATH="/usr/lib/x86_64-linux-gnu/cmake/Qt5" ..
-        cmake --build . --config MinSizeRel --parallel 2
+        cmake --build . --config MinSizeRel
         test -x src/gui/die-sort
         cpack -G DEB
         test -n "$(find packages -maxdepth 1 -name '*.deb' -print -quit)"
@@ -78,7 +78,7 @@ jobs:
           if exist tmp_build rmdir /s /q tmp_build
           cmake -S . -B tmp_build -G "Visual Studio 17 2022" -A Win32 -DCMAKE_PREFIX_PATH="${{ github.workspace }}\Qt\5.15.2\msvc2019"
           if errorlevel 1 exit /b 1
-          cmake --build tmp_build --config MinSizeRel --parallel
+          cmake --build tmp_build --config MinSizeRel
           if errorlevel 1 exit /b 1
           if not exist "tmp_build\src\gui\MinSizeRel\die-sort.exe" (
             echo Built executable not found
@@ -131,7 +131,7 @@ jobs:
           if exist tmp_build rmdir /s /q tmp_build
           cmake -S . -B tmp_build -G "Visual Studio 17 2022" -A x64 -DCMAKE_PREFIX_PATH="${{ github.workspace }}\Qt\5.15.2\msvc2019_64"
           if errorlevel 1 exit /b 1
-          cmake --build tmp_build --config MinSizeRel --parallel
+          cmake --build tmp_build --config MinSizeRel
           if errorlevel 1 exit /b 1
           if not exist "tmp_build\src\gui\MinSizeRel\die-sort.exe" (
             echo Built executable not found
