@@ -6,7 +6,9 @@ add_definitions(-DUSE_PDF)
 option(WITH_PDFJSEMUL "Use PDF JavaScript emulator" ON)
 add_definitions(-DUSE_ARCHIVE)
 add_definitions(-DUSE_YARA)
-add_definitions(-DUSE_DIE)
+if(USE_DIE)
+    add_definitions(-DUSE_DIE)
+endif()
 add_definitions(-DUSE_XSIMD)
 
 # Include xscanwidgets first so its xscanengine dependency is marked defined

@@ -32,6 +32,7 @@ endif()
 
 file(STRINGS "${CMAKE_CURRENT_LIST_DIR}/../release_version.txt" X_PROJECT_VERSION)
 project(DIESort VERSION ${X_PROJECT_VERSION} LANGUAGES CXX)
+option(USE_DIE "Enable Detect It Easy integration" ON)
 
 if(NOT PROJECT_VERSION_PATCH)
     set(PROJECT_VERSION_PATCH 0)
