@@ -77,7 +77,6 @@ target_link_libraries(DIESort PRIVATE
     lzma
     ppmd
     zlib
-    xarchive_7zip
     capstone
     yara
     xsimd
