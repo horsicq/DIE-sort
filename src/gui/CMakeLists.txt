@@ -2,7 +2,6 @@ include(../../dep/build_tools/cmake/cpp_standart_setup.cmake)
 
 # Adds the xjs* sources to XPDF and defines USE_PDFJSEMUL (see xpdf.cmake)
 option(WITH_PDFJSEMUL "Use PDF JavaScript emulator" ON)
-add_definitions(-DUSE_ARCHIVE)
 add_definitions(-DUSE_YARA)
 if(USE_DIE)
     add_definitions(-DUSE_DIE)
