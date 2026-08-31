@@ -48,7 +48,7 @@ mkdir "%WORK_ROOT%"
 if errorlevel 1 exit /b 1
 
 echo Configuring %PACKAGE_SUFFIX% build...
-cmake -S "%PROJECT_ROOT%" -B "%BUILD_DIR%" -G "Visual Studio 17 2022" -A %CMAKE_PLATFORM% -DCMAKE_PREFIX_PATH="%QT_PREFIX_PATH%"
+cmake -S "%PROJECT_ROOT%" -B "%BUILD_DIR%" -G "Visual Studio 17 2022" -A %CMAKE_PLATFORM% -DCMAKE_PREFIX_PATH="%QT_PREFIX_PATH%" -DX_ENABLE_ASAN=OFF
 if errorlevel 1 exit /b 1
 
 echo Building %PACKAGE_SUFFIX% Release...
