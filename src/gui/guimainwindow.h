@@ -29,6 +29,8 @@
 
 #include "../global.h"
 #include "die_script.h"
+#include "xoptions.h"
+#include "xshortcuts.h"
 
 namespace Ui {
 class GuiMainWindow;
@@ -48,6 +50,8 @@ private slots:
 private:
     Ui::GuiMainWindow *ui;
     DiE_Script m_dieScript;
+    XOptions m_xOptions;
+    XShortcuts m_xShortcuts;
 };
 
 #endif  // GUIMAINWINDOW_H

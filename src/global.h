@@ -29,5 +29,6 @@
 #define X_ORGANIZATIONNAME "NTInfo"
 #define X_ORGANIZATIONDOMAIN "ntinfo.biz"
 #define X_OPTIONSFILE "die-sort.ini"
+#define X_SHORTCUTSFILE "shortcuts.ini"
 
 #endif  // GLOBAL_H

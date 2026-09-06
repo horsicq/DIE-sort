@@ -23,6 +23,8 @@
 
 #include "ui_guimainwindow.h"
 
+#include <QDir>
+
 GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::GuiMainWindow)
 {
     ui->setupUi(this);
@@ -31,13 +33,42 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     xsimd_init();
 #endif
 
-    setWindowTitle(QString("%1 v%2").arg(X_APPLICATIONNAME, X_APPLICATIONVERSION));
+    setWindowTitle(XOptions::getTitle(X_APPLICATIONDISPLAYNAME, X_APPLICATIONVERSION));
 
+    m_xOptions.setName(X_OPTIONSFILE);
+
+    m_xOptions.addID(XOptions::ID_VIEW_STYLE, "Fusion");
+    m_xOptions.addID(XOptions::ID_VIEW_LANG, "System");
+    m_xOptions.addID(XOptions::ID_VIEW_FONT_CONTROLS, XOptions::getDefaultFont().toString());
+    m_xOptions.addID(XOptions::ID_FEATURE_READBUFFERSIZE, 4 * 1024);
+    m_xOptions.addID(XOptions::ID_FEATURE_FILEBUFFERSIZE, 64 * 1024 * 1024);
+    m_xOptions.addID(XOptions::ID_FEATURE_SSE2, true);
+    m_xOptions.addID(XOptions::ID_FEATURE_AVX2, true);
+    m_xOptions.addID(XOptions::ID_VIEW_SIZES, "");
+    m_xOptions.load();
+
+    m_xShortcuts.setName(X_SHORTCUTSFILE);
+    m_xShortcuts.setNative(m_xOptions.isNative(), m_xOptions.getApplicationDataPath());
+    m_xShortcuts.load();
+
+    // setGlobal() must run before setEngine(): setEngine() reads the global options to
+    // seed its per-engine defaults, and XDialogProcess is handed the same pair on Scan.
+    ui->widgetSort->setGlobal(&m_xShortcuts, &m_xOptions);
     ui->widgetSort->setEngine(&m_dieScript);
+
+    QByteArray baGeometry = m_xOptions.getSizeRecord("MainWindow");
+
+    if (!baGeometry.isEmpty()) {
+        restoreGeometry(baGeometry);
+    }
 }
 
 GuiMainWindow::~GuiMainWindow()
 {
+    m_xOptions.setSizeRecord("MainWindow", saveGeometry());
+    m_xOptions.save();
+    m_xShortcuts.save();
+
     delete ui;
 }
 
@@ -48,5 +79,9 @@ void GuiMainWindow::on_pushButtonExit_clicked()
 
 void GuiMainWindow::on_pushButtonInfo_clicked()
 {
-    QMessageBox::information(this, tr("Info"), tr("Bugreports: horsicq@gmail.com"));
+    QString sInfo = QString("%1 v%2\n\n%3\n%4")
+                        .arg(X_APPLICATIONDISPLAYNAME, X_APPLICATIONVERSION, tr("Bugreports: horsicq@gmail.com"),
+                             tr("Settings") + ": " + QDir::toNativeSeparators(m_xOptions.getApplicationDataPath()));
+
+    QMessageBox::information(this, tr("Info"), sInfo);
 }

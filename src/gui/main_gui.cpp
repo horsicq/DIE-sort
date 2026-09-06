@@ -21,6 +21,7 @@
 #include <QApplication>
 #include <QIcon>
 #include <cstdio>
+#include <cstring>
 
 #include "guimainwindow.h"
 
@@ -53,6 +54,24 @@ void configureMacPluginPath(char *argv[])
 
 int main(int argc, char *argv[])
 {
+    // Handled before QApplication so that it stays a pure link/deploy check: at this point a
+    // missing Qt DLL or platform plugin has already had its chance to fail.
+    for (int i = 1; i < argc; i++) {
+        if ((strcmp(argv[i], "--version") == 0) || (strcmp(argv[i], "-v") == 0)) {
+            printf("%s v%s\n", X_APPLICATIONDISPLAYNAME, X_APPLICATIONVERSION);
+            fflush(stdout);
+            return 0;
+        }
+    }
+
+    bool bStartupSmoke = false;
+
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--startup-smoke") == 0) {
+            bStartupSmoke = true;
+        }
+    }
+
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
@@ -71,11 +90,25 @@ int main(int argc, char *argv[])
     XOptions options;
     options.setName(X_OPTIONSFILE);
     options.addID(XOptions::ID_VIEW_STYLE, QStringLiteral("Fusion"));
+    // adjustApplicationView() installs the QTranslator/QSS only for IDs registered on the
+    // object it is handed, so these have to live here and not only on the window's XOptions.
+    options.addID(XOptions::ID_VIEW_LANG, QStringLiteral("System"));
+    options.addID(XOptions::ID_VIEW_QSS, QStringLiteral(""));
     options.load();
     XOptions::adjustApplicationView(X_APPLICATIONNAME, &options);
 
     GuiMainWindow window;
     window.show();
+
+    if (bStartupSmoke) {
+        // Construct, realise and tear down the whole stack without entering the event loop.
+        application.processEvents();
+        window.close();
+        printf("DIESORT_GUI_STARTUP_READY\n");
+        fflush(stdout);
+
+        return 0;
+    }
 
     return application.exec();
 }

@@ -119,3 +119,4 @@ add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/../dep/XYara"     "${CMAKE_CURRENT_B
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/../dep/Formats/xsimd" "${CMAKE_CURRENT_BINARY_DIR}/XSIMD")
 
 add_subdirectory(gui)
+
