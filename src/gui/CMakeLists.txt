@@ -75,10 +75,6 @@ target_link_libraries(diesort_gui_objects PUBLIC
     Qt${DIE_SORT_QT_MAJOR}::Widgets
     Qt${DIE_SORT_QT_MAJOR}::Concurrent
     Qt${DIE_SORT_QT_MAJOR}::Sql
-    bzip2
-    lzma
-    ppmd
-    zlib
     capstone
     yara
     xsimd
